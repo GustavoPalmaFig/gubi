@@ -1,0 +1,84 @@
+{
+  "[typescript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "importSorter.sortOnSave": true,
+  "importSorter.method": "alphabetical",
+  "importSorter.order": "ascending",
+
+  "commit-message-editor.view.defaultView": "form",
+  "commit-message-editor.dynamicTemplate": [
+    "{type}{scope}{breaking_change}: {description}"
+  ],
+  "commit-message-editor.tokens": [
+    {
+      "label": "Type",
+      "name": "type",
+      "type": "enum",
+      "options": [
+        {
+          "label": "🚧 chore",
+          "description": "🚧 Updating grunt tasks etc; no production code change \"grunt task\" means nothing that an external user would see."
+        },
+        {
+          "label": "✏️ docs",
+          "description": "✏️ Documentation only changes"
+        },
+        {
+          "label": "✨ feat",
+          "description": "✨ A new feature"
+        },
+        {
+          "label": "🐛 fix",
+          "description": "🐛 A bug fix"
+        },
+        {
+          "label": "🚀 perf",
+          "description": "🚀 A code change that improves performance"
+        },
+        {
+          "label": "📦 refactor",
+          "description": "📦 A code change that neither fixes a bug nor adds a feature"
+        },
+        {
+          "label": "⏪️ revert",
+          "description": "⏪️ revert"
+        },
+        {
+          "label": "💄 style",
+          "description": "💄 Changes that do not affect the meaning of the code (white-space, formatting, missing semi-colons, etc)"
+        },
+        {
+          "label": "🌐 i18n",
+          "description": "🌐 Internationalization and localization"
+        },
+        {
+          "label": "🎉 initial",
+          "description": "🎉 only used once at the initial commit of the repository"
+        }
+      ],
+      "description": "Type of changes"
+    },
+    {
+      "label": "Short description",
+      "name": "description",
+      "description": "Short description in the subject line.",
+      "type": "text",
+      "multiline": false
+    },
+    {
+      "label": "Scope",
+      "name": "scope",
+      "description": "Scope of changes",
+      "type": "text",
+      "prefix": "(",
+      "suffix": ")"
+    },
+    {
+      "label": "Breaking change",
+      "name": "breaking_change",
+      "type": "boolean",
+      "default": false
+    }
+  ]
+}
