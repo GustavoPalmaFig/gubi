@@ -1,3 +1,14 @@
 {
-  "singleQuote": true
+  "singleQuote": true,
+  "printWidth": 180,
+  "arrowParens": "avoid",
+  "trailingComma": "none",
+  "overrides": [
+    {
+      "files": "*.html",
+      "options": {
+        "parser": "html"
+      }
+    }
+  ]
 }

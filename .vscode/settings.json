@@ -2,6 +2,7 @@
   "[typescript]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
+  "explorer.compactFolders": false,
   "importSorter.sortOnSave": true,
   "importSorter.method": "alphabetical",
   "importSorter.order": "ascending",
