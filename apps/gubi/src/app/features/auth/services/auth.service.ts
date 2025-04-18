@@ -1,11 +1,33 @@
-import { inject, Injectable } from '@angular/core';
+import { inject, Injectable, signal } from '@angular/core';
 import { SupabaseService } from '@shared/services/supabase/supabase.service';
+import { User } from '@supabase/supabase-js';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
+  public currentUser = signal<User | null>(null);
+
   private supabaseService = inject(SupabaseService);
+
+  constructor() {
+    this.supabaseService.client.auth.onAuthStateChange((event, session) => {
+      if (session) {
+        this.currentUser.set(session.user);
+      } else {
+        this.currentUser.set(null);
+      }
+    });
+
+    this.loadUser();
+  }
+
+  async loadUser() {
+    const { data } = await this.supabaseService.client.auth.getSession();
+    if (data.session) {
+      this.currentUser.set(data.session.user);
+    }
+  }
 
   async login(email: string, password: string): Promise<{ success: boolean; error?: string }> {
     try {
@@ -14,7 +36,8 @@ export class AuthService {
       if (error) throw error.message;
       return { success: true };
     } catch (error) {
-      return { success: false, error: (error as any).message };
+      const errorMessage = typeof error === 'string' ? error : (error as any).message;
+      return { success: false, error: errorMessage };
     }
   }
 
@@ -39,7 +62,8 @@ export class AuthService {
       if (error) throw error.message;
       return { success: true };
     } catch (error) {
-      return { success: false, error: (error as any).message };
+      const errorMessage = typeof error === 'string' ? error : (error as any).message;
+      return { success: false, error: errorMessage };
     }
   }
 
