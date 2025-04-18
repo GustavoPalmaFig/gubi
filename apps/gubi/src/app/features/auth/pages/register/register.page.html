@@ -1,1 +1,56 @@
-<p>register works!</p>
+<p-card>
+  <ng-template #title>Boas Vindas</ng-template>
+  <ng-template #subtitle>Crie sua conta para acessar o site</ng-template>
+  <ng-template #content>
+    <form class="mt-6" [formGroup]="registerForm" (ngSubmit)="register()">
+      <div class="my-6">
+        <label for="name" class="text-sm font-medium">Nome</label>
+        <input id="name" class="w-full mt-2" type="text" pInputText formControlName="name" placeholder="Seu nome completo" />
+      </div>
+      <div class="my-6">
+        <label for="email" class="text-sm font-medium">Email</label>
+        <input id="email" class="w-full mt-2" type="email" pInputText formControlName="email" placeholder="exemplo@email.com" />
+      </div>
+      <div class="my-6 p-password-w-full">
+        <label for="password" class="text-sm font-medium">Senha</label>
+        <p-password
+          id="password"
+          class="flex mt-2"
+          formControlName="password"
+          placeholder="••••••••"
+          appendTo="body"
+          [feedback]="true"
+          [toggleMask]="true"
+          promptLabel="Digite sua senha"
+          weakLabel="Senha Fraca"
+          mediumLabel="Senha Média"
+          strongLabel="Senha Forte"
+        >
+          <ng-template #footer>
+            <p-divider />
+            <ul class="my-0 leading-normal">
+              <li *ngFor="let rule of passwordRules">
+                <i [ngClass]="rule.regex.test(passwordFormField?.value) ? 'mr-2 pi pi-check-circle text-green-600' : 'mr-2 pi pi-times-circle text-red-500'"></i>
+                {{ rule.message }}
+              </li>
+            </ul>
+          </ng-template>
+        </p-password>
+      </div>
+
+      <div class="text-center mt-8">
+        <button
+          type="submit"
+          [disabled]="loading"
+          class="w-full h-10 px-4 py-2 rounded-md text-sm font-medium bg-black text-white hover:bg-black/80 disabled:pointer-events-none disabled:opacity-50"
+        >
+          {{ loading ? 'Criando conta...' : 'Criar conta' }}
+        </button>
+      </div>
+    </form>
+    <div class="mt-4 flex items-center text-sm font-medium justify-center">
+      <span>Não tem uma conta?</span>
+      <button (click)="router.navigate(['/auth/login'])" class="ml-1 hover:underline cursor-pointer">Cadastre-se</button>
+    </div>
+  </ng-template>
+</p-card>
