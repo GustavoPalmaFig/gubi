@@ -11,7 +11,8 @@
     "paths": {
       "@core/*": ["apps/gubi/src/app/core/*"],
       "@features/*": ["apps/gubi/src/app/features/*"],
-      "@shared/*": ["apps/gubi/src/app/shared/*"]
+      "@shared/*": ["apps/gubi/src/app/shared/*"],
+      "@env/*": ["apps/gubi/src/environments/*"]
     }
   },
   "files": [],
