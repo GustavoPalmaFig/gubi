@@ -1,4 +1,5 @@
 import { AuthService } from '@features/auth/services/auth.service';
+import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
 import { CommonModule } from '@angular/common';
 import { Component, inject } from '@angular/core';
@@ -12,7 +13,7 @@ import { Router } from '@angular/router';
 @Component({
   selector: 'app-register',
   standalone: true,
-  imports: [CardModule, InputTextModule, PasswordModule, ReactiveFormsModule, DividerModule, CommonModule],
+  imports: [CardModule, InputTextModule, PasswordModule, ReactiveFormsModule, DividerModule, CommonModule, ButtonModule],
   templateUrl: './register.page.html',
   styleUrl: './register.page.scss'
 })

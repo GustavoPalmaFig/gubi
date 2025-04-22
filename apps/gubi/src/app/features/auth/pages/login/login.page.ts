@@ -1,4 +1,5 @@
 import { AuthService } from '@features/auth/services/auth.service';
+import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
 import { Component, inject } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -10,7 +11,7 @@ import { Router } from '@angular/router';
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [CardModule, InputTextModule, PasswordModule, ReactiveFormsModule],
+  imports: [CardModule, InputTextModule, PasswordModule, ReactiveFormsModule, ButtonModule],
   templateUrl: './login.page.html',
   styleUrl: './login.page.scss'
 })
