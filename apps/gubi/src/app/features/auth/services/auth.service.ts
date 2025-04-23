@@ -78,4 +78,9 @@ export class AuthService {
   async logout() {
     await this.supabaseService.client.auth.signOut();
   }
+
+  get userName() {
+    const userName = this.currentUser()?.user_metadata?.['name'];
+    return userName.split(' ')[0] || userName;
+  }
 }

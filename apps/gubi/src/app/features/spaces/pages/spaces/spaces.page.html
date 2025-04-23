@@ -1,0 +1,12 @@
+<div class="flex justify-between items-center mb-6">
+  <div>
+    <h1 class="text-4xl font-bold">Seus Espaços</h1>
+    <p class="">Olá, {{authService.userName}}</p>
+  </div>
+  <p-button label="Novo Espaço" icon="pi pi-plus-circle" (onClick)="createSpace()"></p-button>
+</div>
+
+<div class="text-center p-24 border rounded-lg h-1/2">
+  <h3 class="text-xl font-medium mb-2">Você ainda não participa de nenhum Space</h3>
+  <p class="text-muted-foreground mb-4">Crie um novo Space ou solicite para ser adicionado a um existente.</p>
+</div>

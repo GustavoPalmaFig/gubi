@@ -1,4 +1,5 @@
 import { authGuard } from '@shared/guards/auth.guard';
+import { noAuthGuard } from '@shared/guards/no-auth.guard';
 import { Route } from '@angular/router';
 
 export const appRoutes: Route[] = [
@@ -10,6 +11,22 @@ export const appRoutes: Route[] = [
       {
         path: '',
         loadChildren: () => import('./features/auth/auth.routes').then(m => m.AUTH_ROUTES)
+      }
+    ]
+  },
+  {
+    path: '',
+    loadComponent: () => import('./core/layout/main/main.layout').then(m => m.MainLayout),
+    canActivate: [noAuthGuard],
+    children: [
+      {
+        path: '',
+        redirectTo: 'spaces',
+        pathMatch: 'full'
+      },
+      {
+        path: 'spaces',
+        loadComponent: () => import('./features/spaces/pages/spaces/spaces.page').then(m => m.SpacesPage)
       }
     ]
   }
