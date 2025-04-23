@@ -79,7 +79,7 @@ export class AuthService {
     await this.supabaseService.client.auth.signOut();
   }
 
-  get userName() {
+  get userFirstName() {
     const userName = this.currentUser()?.user_metadata?.['name'];
     return userName.split(' ')[0] || userName;
   }
