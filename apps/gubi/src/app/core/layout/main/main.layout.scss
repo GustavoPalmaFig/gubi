@@ -5,3 +5,9 @@
   flex: 1;
   padding: 1rem 4rem;
 }
+
+::ng-deep {
+  .dialog-with-subtitle .p-dialog-header {
+    padding-bottom: 0 !important;
+  }
+}

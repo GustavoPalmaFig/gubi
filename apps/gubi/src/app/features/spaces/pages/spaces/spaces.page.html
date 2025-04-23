@@ -1,12 +1,36 @@
 <div class="flex justify-between items-center mb-6">
   <div>
     <h1 class="text-4xl font-bold">Seus Espaços</h1>
-    <p class="">Olá, {{authService.userName}}</p>
+    <p class="">Olá, {{authService.userFirstName}}</p>
   </div>
-  <p-button label="Novo Espaço" icon="pi pi-plus-circle" (onClick)="createSpace()"></p-button>
+  <p-button label="Novo Espaço" icon="pi pi-plus-circle" (click)="handleDialogVisibility(true, false)"></p-button>
 </div>
 
-<div class="text-center p-24 border rounded-lg h-1/2">
-  <h3 class="text-xl font-medium mb-2">Você ainda não participa de nenhum Space</h3>
-  <p class="text-muted-foreground mb-4">Crie um novo Space ou solicite para ser adicionado a um existente.</p>
+<div class="text-center p-12 border rounded-lg h-1/2">
+  @if(!isLoading) { 
+    @if(spaces.length > 0) {
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        @for(space of spaces; track space.id) {''
+          <app-space-card
+            [space]="space"
+            (spaceSelected)="setSelectedSpace($event)"
+            (updateDialogvisibleChange)="handleDialogVisibility($event)"
+            (spaceDeleted)="handleSpaceDeleted($event)"
+          />
+        }
+      </div>
+    } @else {
+      <h3 class="text-xl font-medium mb-2">Você ainda não participa de nenhum Space</h3>
+      <p class="text-muted-foreground mb-4">Crie um novo Space ou solicite para ser adicionado a um existente.</p>
+    } 
+  } @else {
+    <i class="pi pi-spin pi-spinner loading-icon"></i>
+  }
 </div>
+
+<app-space-dialog
+  [visible]="isOpenDialog"
+  [spaceToEdit]="selectedSpace"
+  (visibleChange)="handleDialogVisibility($event)"
+  (spaceSaved)="handleSpaceSaved($event)"
+/>

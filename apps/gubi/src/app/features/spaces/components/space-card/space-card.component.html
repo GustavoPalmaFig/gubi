@@ -1,0 +1,17 @@
+<div class="bg-card text-card-foreground rounded-lg border shadow-sm h-64 flex flex-col justify-between">
+  <div class="flex items-center p-4">
+    <p-menu #menu [model]="items" [popup]="true" />
+    <h3 class="text-2xl font-semibold flex-1">{{ space.name }}</h3>
+    <i
+      class="pi pi-ellipsis-v cursor-pointer ml-auto"
+      tabindex="0"
+      (click)="menu.toggle($event); spaceSelected.emit(space)"
+      (keydown.enter)="menu.toggle($event)"
+      (keydown.space)="menu.toggle($event)"
+    ></i>
+  </div>
+  <p class="line-clamp-4 p-4">{{ space.description || 'Gerencie contas e despesas compartilhadas neste space.' }}</p>
+  <a [routerLink]="['/spaces', space.id]" class="w-full p-4">
+    <button class="text-sm font-medium hover:bg-primary/90 h-10 px-4 py-2 w-full">Acessar</button>
+  </a>
+</div>
