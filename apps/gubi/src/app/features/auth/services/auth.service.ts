@@ -1,4 +1,5 @@
 import { inject, Injectable, signal } from '@angular/core';
+import { Router } from '@angular/router';
 import { SupabaseService } from '@shared/services/supabase/supabase.service';
 import { User } from '@supabase/supabase-js';
 
@@ -9,6 +10,7 @@ export class AuthService {
   public currentUser = signal<User | null>(null);
 
   private supabaseService = inject(SupabaseService);
+  private router = inject(Router);
 
   constructor() {
     this.supabaseService.client.auth.onAuthStateChange((event, session) => {
@@ -16,6 +18,7 @@ export class AuthService {
         this.currentUser.set(session.user);
       } else {
         this.currentUser.set(null);
+        this.router.navigate(['auth/login']);
       }
     });
 
@@ -70,5 +73,9 @@ export class AuthService {
   async checkEmail(email: string): Promise<boolean> {
     const { data } = await this.supabaseService.client.rpc('email_registered', { email_address: email });
     return data;
+  }
+
+  async logout() {
+    await this.supabaseService.client.auth.signOut();
   }
 }
