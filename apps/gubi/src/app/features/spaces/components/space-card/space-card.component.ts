@@ -31,6 +31,13 @@ export class SpaceCardComponent {
         command: () => {
           this.addMembers();
         }
+      },
+      {
+        label: 'Editar',
+        icon: 'pi pi-pencil',
+        command: () => {
+          this.updateDialogvisibleChange.emit(true);
+        }
       }
     ];
   }
@@ -43,25 +50,16 @@ export class SpaceCardComponent {
     const isCreator = this.spaceService.checkIfUserIsCreator(this.space);
 
     if (isCreator) {
-      this.items.push(
-        {
-          label: 'Editar',
-          icon: 'pi pi-pencil',
-          command: () => {
-            this.updateDialogvisibleChange.emit(true);
-          }
-        },
-        {
-          label: 'Excluir',
-          icon: 'pi pi-trash',
-          styleClass: 'danger',
-          command: event => {
-            if (event.originalEvent) {
-              this.openDeleteConfirmDialog(event.originalEvent);
-            }
+      this.items.push({
+        label: 'Excluir',
+        icon: 'pi pi-trash',
+        styleClass: 'danger',
+        command: event => {
+          if (event.originalEvent) {
+            this.openDeleteConfirmDialog(event.originalEvent);
           }
         }
-      );
+      });
     }
   }
 
