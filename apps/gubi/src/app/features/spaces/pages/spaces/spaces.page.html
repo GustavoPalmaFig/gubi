@@ -3,7 +3,7 @@
     <h1 class="text-4xl font-bold">Seus Espaços</h1>
     <p class="">Olá, {{authService.userFirstName}}</p>
   </div>
-  <p-button label="Novo Espaço" icon="pi pi-plus-circle" (click)="handleDialogVisibility(true, false)"></p-button>
+  <p-button label="Novo Espaço" icon="pi pi-plus-circle" (click)="handleUpdateDialogVisibility(true, false)"></p-button>
 </div>
 
 <div class="text-center p-12 border rounded-lg h-1/2">
@@ -14,7 +14,8 @@
           <app-space-card
             [space]="space"
             (spaceSelected)="setSelectedSpace($event)"
-            (updateDialogvisibleChange)="handleDialogVisibility($event)"
+            (updateDialogVisibleChange)="handleUpdateDialogVisibility($event)"
+            (addMembersDialogVisibleChange)="handleAddMemberDialogVisibility($event)"
             (spaceDeleted)="handleSpaceDeleted($event)"
           />
         }
@@ -31,6 +32,13 @@
 <app-space-dialog
   [visible]="isOpenDialog"
   [spaceToEdit]="selectedSpace"
-  (visibleChange)="handleDialogVisibility($event)"
+  (visibleChange)="handleUpdateDialogVisibility($event)"
   (spaceSaved)="handleSpaceSaved($event)"
+/>
+
+
+<app-add-members
+  [visible]="isAddMemberOpenDialog"
+  [spaceToAdd]="selectedSpace"
+  (visibleChange)="handleAddMemberDialogVisibility($event)"
 />

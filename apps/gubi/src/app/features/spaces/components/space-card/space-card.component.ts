@@ -18,10 +18,12 @@ export class SpaceCardComponent {
 
   @Input() space!: iSpace;
   @Output() spaceSelected = new EventEmitter<iSpace>();
-  @Output() updateDialogvisibleChange = new EventEmitter<boolean>();
+  @Output() updateDialogVisibleChange = new EventEmitter<boolean>();
+  @Output() addMembersDialogVisibleChange = new EventEmitter<boolean>();
   @Output() spaceDeleted = new EventEmitter<number>();
 
   protected items: MenuItem[];
+  protected isAddMembersOpen = false;
 
   constructor() {
     this.items = [
@@ -29,14 +31,14 @@ export class SpaceCardComponent {
         label: 'Adicionar Membros',
         icon: 'pi pi-plus',
         command: () => {
-          this.addMembers();
+          this.addMembersDialogVisibleChange.emit(true);
         }
       },
       {
         label: 'Editar',
         icon: 'pi pi-pencil',
         command: () => {
-          this.updateDialogvisibleChange.emit(true);
+          this.updateDialogVisibleChange.emit(true);
         }
       }
     ];

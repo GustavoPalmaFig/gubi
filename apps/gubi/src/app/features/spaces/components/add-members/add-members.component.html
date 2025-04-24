@@ -1,0 +1,48 @@
+<p-dialog
+  header="Adicionar membros ao Space"
+  [modal]="true"
+  [(visible)]="visible"
+  [closeOnEscape]="true"
+  [dismissableMask]="true"
+  (visibleChange)="close()"
+  styleClass="w-1/4 h-80 dialog-with-subtitle"
+>
+  <div class="flex flex-col h-full">
+    <div class="flex-grow">
+      <p class="text-sm text-muted-foreground pb-4">Digite o e-mail do usuário</p>
+
+      <p-autoComplete
+        [(ngModel)]="selectedUser"
+        [suggestions]="filteredUsers"
+        [unique]="true"
+        field="email"
+        (completeMethod)="searchUsers($event)"
+        [minLength]="5"
+        placeholder="Buscar usuário pelo e-mail..."
+        emptyMessage="Nenhum usuário encontrado"
+        styleClass="w-full mt-6 space-y-4"
+        inputStyleClass="w-full"
+      >
+        <ng-template let-user pTemplate="item">
+          <div class="flex flex-col">
+            <span class="font-medium">{{ user.fullname }}</span>
+            <small class="text-muted">{{ user.email }}</small>
+          </div>
+        </ng-template>
+        <ng-template pTemplate="header">
+          <div class="font-medium px-3 py-2">Usuários Disponíveis</div>
+        </ng-template>
+      </p-autoComplete>
+    </div>
+
+    <div class="flex justify-end mt-4">
+      <p-button
+        type="submit"
+        [label]="isLoading ? 'Adicionando usuário...' : 'Adicionar usuário'"
+        [disabled]="isLoading || !selectedUser"
+        [loading]="isLoading"
+        (click)="handleSubmit()"
+      ></p-button>
+    </div>
+  </div>
+</p-dialog>

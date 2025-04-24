@@ -1,5 +1,6 @@
 import { AuthService } from '@features/auth/services/auth.service';
 import { inject, Injectable } from '@angular/core';
+import { iUser } from '@features/auth/interfaces/user.interface';
 import { SupabaseService } from '@shared/services/supabase/supabase.service';
 import { iSpace } from '../interfaces/space.interface';
 
@@ -33,7 +34,7 @@ export class SpaceService {
 
   async updateSpace(spaceId: number, name: string, description: string): Promise<{ data: iSpace; error?: string }> {
     const updated_at = new Date().toISOString();
-    const { data, error } = await this.supabaseService.client.from('space').update({ name, description, creator_id: this.userId, updated_at }).eq('id', spaceId).select().single();
+    const { data, error } = await this.supabaseService.client.from('space').update({ name, description, updated_at }).eq('id', spaceId).select().single();
 
     return { data: data as iSpace, error: error?.message };
   }
@@ -41,6 +42,16 @@ export class SpaceService {
   async deleteSpace(spaceId: number): Promise<{ error?: string }> {
     const { error } = await this.supabaseService.client.from('space').delete().eq('id', spaceId);
     return { error: error?.message };
+  }
+
+  async addMemberToSpace(spaceId: number, userId: string): Promise<{ error?: string }> {
+    const { error } = await this.supabaseService.client.from('space_membership').insert([{ space_id: spaceId, user_id: userId }]);
+    return { error: error?.message };
+  }
+
+  async getMembersToInvite(spaceId: number): Promise<iUser[]> {
+    const { data } = await this.supabaseService.client.rpc('get_eligible_users_for_space', { target_space_id: spaceId });
+    return data as iUser[];
   }
 
   checkIfUserIsCreator(space: iSpace): boolean {
