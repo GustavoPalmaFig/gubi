@@ -4,7 +4,7 @@ import { CardModule } from 'primeng/card';
 import { Component, inject } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { InputTextModule } from 'primeng/inputtext';
-import { MessageService } from 'primeng/api';
+import { MessageService } from '@shared/services/message.service';
 import { PasswordModule } from 'primeng/password';
 import { Router } from '@angular/router';
 
@@ -32,20 +32,20 @@ export class LoginPage {
 
   async login() {
     if (this.loginForm.invalid) {
-      this.messageService.add({ severity: 'warn', summary: 'Erro', detail: 'Preencha os campos corretamente', life: 30000 });
+      this.messageService.showMessage('warn', 'Erro', 'Preencha os campos corretamente');
       return;
     }
 
     this.loading = true;
     const { email, password } = this.loginForm.value;
-    const result = await this.authService.login(email, password);
+    const { error } = await this.authService.login(email, password);
 
-    if (result.success) {
-      this.router.navigate(['']);
-    } else {
-      this.messageService.add({ severity: 'error', summary: 'Erro', detail: result.error, life: 30000 });
+    if (error) {
+      this.messageService.showMessage('error', 'Erro', error);
+      this.loading = false;
+      return;
     }
 
-    this.loading = false;
+    this.router.navigate(['']);
   }
 }

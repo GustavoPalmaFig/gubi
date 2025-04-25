@@ -5,7 +5,7 @@ import { DialogModule } from 'primeng/dialog';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { InputTextModule } from 'primeng/inputtext';
 import { iSpace } from '@features/spaces/interfaces/space.interface';
-import { MessageService } from 'primeng/api';
+import { MessageService } from '@shared/services/message.service';
 import { SpaceService } from '@features/spaces/services/space.service';
 import { TextareaModule } from 'primeng/textarea';
 
@@ -36,7 +36,7 @@ export class SpaceDialogComponent {
   }
 
   ngOnChanges(): void {
-    if (this.spaceToEdit) {
+    if (this.visible && this.spaceToEdit) {
       this.spaceForm.patchValue({
         name: this.spaceToEdit.name,
         description: this.spaceToEdit.description
@@ -55,19 +55,18 @@ export class SpaceDialogComponent {
   async handleSubmit(): Promise<void> {
     if (this.spaceForm.invalid) {
       if (this.spaceForm.get('description')?.invalid) {
-        this.messageService.add({ severity: 'error', summary: 'Erro', detail: 'Descrição muito grande.', life: 10000 });
+        this.messageService.showMessage('error', 'Erro', 'Descrição muito grande.');
       }
       return;
     }
 
     this.isLoading = true;
     const { name, description } = this.spaceForm.value;
-    const { data, error } = this.isEditMode && this.spaceToEdit ? 
-      await this.spaceService.updateSpace(this.spaceToEdit.id, name, description) : 
-      await this.spaceService.createSpace(name, description);
+    const { data, error } =
+      this.isEditMode && this.spaceToEdit ? await this.spaceService.updateSpace(this.spaceToEdit.id, name, description) : await this.spaceService.createSpace(name, description);
 
     if (error) {
-      this.messageService.add({ severity: 'error', summary: 'Erro', detail: error, life: 10000 });
+      this.messageService.showMessage('error', 'Erro', error);
       this.isLoading = false;
       return;
     }
