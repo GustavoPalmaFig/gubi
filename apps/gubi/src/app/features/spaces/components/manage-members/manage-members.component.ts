@@ -77,15 +77,14 @@ export class ManageMembersComponent {
     const { error } = await this.spaceService.addMembersToSpace(this.spaceToManage.id, this.newSelectedUsers);
 
     if (error) {
-      // Criar função utils para tratar mensagem diretamente no service
-      const errorMessage = typeof error === 'string' ? error : (error as any).message;
-      this.messageService.add({ severity: 'error', summary: 'Erro', detail: errorMessage, life: 10000 });
+      this.messageService.add({ severity: 'error', summary: 'Erro', detail: error, life: 10000 });
       this.isLoading = false;
       return;
     }
 
     const detailMessage = this.newSelectedUsers.length > 1 ? 'Usuários adicionados ao Espaço' : 'Usuário adicionado ao Espaço';
     this.messageService.add({ severity: 'success', summary: 'Sucesso', detail: detailMessage, life: 10000 });
+    this.close();
   }
 
   memberCanBeRemoved(member: iUser): boolean {
@@ -130,8 +129,7 @@ export class ManageMembersComponent {
     const { error } = await this.spaceService.removeMemberFromSpace(this.spaceToManage!.id, user.id);
 
     if (error) {
-      const errorMessage = typeof error === 'string' ? error : (error as any).message;
-      this.messageService.add({ severity: 'error', summary: 'Erro', detail: errorMessage, life: 10000 });
+      this.messageService.add({ severity: 'error', summary: 'Erro', detail: error, life: 10000 });
       this.isLoading = false;
       return;
     }

@@ -2,6 +2,7 @@ import { inject, Injectable, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { SupabaseService } from '@shared/services/supabase/supabase.service';
 import { User } from '@supabase/supabase-js';
+import Utils from '@shared/utils/utils';
 
 @Injectable({
   providedIn: 'root'
@@ -39,8 +40,7 @@ export class AuthService {
       if (error) throw error.message;
       return { success: true };
     } catch (error) {
-      const errorMessage = typeof error === 'string' ? error : (error as any).message;
-      return { success: false, error: errorMessage };
+      return { success: false, error: Utils.handleErrorMessage(error) };
     }
   }
 
@@ -65,8 +65,7 @@ export class AuthService {
       if (error) throw error.message;
       return { success: true };
     } catch (error) {
-      const errorMessage = typeof error === 'string' ? error : (error as any).message;
-      return { success: false, error: errorMessage };
+      return { success: false, error: Utils.handleErrorMessage(error) };
     }
   }
 

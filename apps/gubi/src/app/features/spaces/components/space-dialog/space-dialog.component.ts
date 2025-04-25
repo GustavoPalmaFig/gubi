@@ -67,8 +67,7 @@ export class SpaceDialogComponent {
       await this.spaceService.createSpace(name, description);
 
     if (error) {
-      const errorMessage = typeof error === 'string' ? error : (error as any).message;
-      this.messageService.add({ severity: 'error', summary: 'Erro', detail: errorMessage, life: 10000 });
+      this.messageService.add({ severity: 'error', summary: 'Erro', detail: error, life: 10000 });
       this.isLoading = false;
       return;
     }
