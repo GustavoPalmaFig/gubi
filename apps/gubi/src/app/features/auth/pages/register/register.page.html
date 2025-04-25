@@ -18,7 +18,6 @@
           class="flex mt-2"
           formControlName="password"
           placeholder="••••••••"
-          appendTo="body"
           [feedback]="true"
           [toggleMask]="true"
           promptLabel="Digite sua senha"
@@ -28,11 +27,13 @@
         >
           <ng-template #footer>
             <p-divider />
-            <ul class="my-0 leading-normal">
-              <li *ngFor="let rule of passwordRules">
+            <ul>
+              @for(rule of passwordRules; track rule.regex) {
+              <li>
                 <i [ngClass]="rule.regex.test(passwordFormField?.value) ? 'mr-2 pi pi-check-circle text-green-600' : 'mr-2 pi pi-times-circle text-red-500'"></i>
                 {{ rule.message }}
               </li>
+              }
             </ul>
           </ng-template>
         </p-password>
