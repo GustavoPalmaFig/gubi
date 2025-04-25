@@ -25,9 +25,12 @@
       appendTo="body"
     >
       <ng-template let-user pTemplate="item">
-        <div class="flex flex-col">
-          <span class="font-medium">{{ user.fullname }}</span>
-          <small class="text-muted">{{ user.email }}</small>
+        <div class="flex items-center justify-start">
+          <div class="w-8 h-8 rounded-full flex items-center justify-center bg-blue-500 text-white font-400">{{ user.fullname.charAt(0) }}</div>
+          <div class="ml-2">
+            <p class="text-sm font-medium">{{ user.fullname }}</p>
+            <p class="text-xs text-gray-500">{{ user.email }}</p>
+          </div>
         </div>
       </ng-template>
       <ng-template pTemplate="header">
