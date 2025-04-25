@@ -1,6 +1,6 @@
 export interface iUser {
   id: string;
-  full_name: string;
+  fullname: string;
   email: string;
   avatar_url: string;
   updatedAt: Date;

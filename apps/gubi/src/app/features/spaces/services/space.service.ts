@@ -65,7 +65,7 @@ export class SpaceService {
     return data as iUser[];
   }
 
-  checkIfUserIsCreator(space: iSpace): boolean {
+  checkIfCurrentUserIsCreator(space: iSpace): boolean {
     return space.creator_id === this.userId;
   }
 }

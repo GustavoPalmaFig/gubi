@@ -49,7 +49,7 @@ export class SpaceCardComponent {
   }
 
   setItemsForCreator() {
-    const isCreator = this.spaceService.checkIfUserIsCreator(this.space);
+    const isCreator = this.spaceService.checkIfCurrentUserIsCreator(this.space);
 
     if (isCreator) {
       this.items.push({

@@ -33,7 +33,7 @@ export class ManageMembersComponent {
 
   ngOnChanges() {
     if (!this.spaceToManage) return;
-    this.isCreator = this.spaceService.checkIfUserIsCreator(this.spaceToManage);
+    this.isCreator = this.spaceService.checkIfCurrentUserIsCreator(this.spaceToManage);
     this.getSpaceMembers();
   }
 
