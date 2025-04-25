@@ -5,45 +5,66 @@
   [closeOnEscape]="true"
   [dismissableMask]="true"
   (visibleChange)="close()"
-  styleClass="w-1/4 h-80 dialog-with-subtitle"
+  styleClass="w-1/3 h-100 dialog-with-subtitle"
 >
   <div class="flex flex-col h-full">
-    <div class="flex-grow">
-      <p class="text-sm text-muted-foreground pb-4">Digite o e-mail do usuário</p>
+    <p class="text-sm pb-4">Procure usuários por nome ou e-mail</p>
 
-      <p-autoComplete
-        [(ngModel)]="selectedUser"
-        [suggestions]="filteredUsers"
-        [unique]="true"
-        field="email"
-        (completeMethod)="searchUsers($event)"
-        [minLength]="5"
-        placeholder="Buscar usuário pelo e-mail..."
-        emptyMessage="Nenhum usuário encontrado"
-        styleClass="w-full mt-6 space-y-4"
-        inputStyleClass="w-full"
-        appendTo="body"
-      >
-        <ng-template let-user pTemplate="item">
-          <div class="flex flex-col">
-            <span class="font-medium">{{ user.fullname }}</span>
-            <small class="text-muted">{{ user.email }}</small>
+    <p-autoComplete
+      [(ngModel)]="searchValue"
+      [suggestions]="filteredUsers"
+      [unique]="false"
+      (onSelect)="setNewUsers($event)"
+      field="email"
+      (completeMethod)="searchUsers($event)"
+      [minLength]="5"
+      placeholder="Buscar usuário por nome ou e-mail"
+      emptyMessage="Nenhum usuário encontrado"
+      styleClass="w-full mt-6 space-y-4"
+      inputStyleClass="w-full"
+      appendTo="body"
+    >
+      <ng-template let-user pTemplate="item">
+        <div class="flex flex-col">
+          <span class="font-medium">{{ user.fullname }}</span>
+          <small class="text-muted">{{ user.email }}</small>
+        </div>
+      </ng-template>
+      <ng-template pTemplate="header">
+        <div class="font-medium px-3 py-2">Usuários Disponíveis</div>
+      </ng-template>
+    </p-autoComplete>
+
+    <div class="flex flex-col mt-6">
+      <h1 class="text-md font-bold mb-4">Usuários com acesso</h1>
+
+      @for(member of members; track member.id) {
+        <div class="flex items-center justify-between mb-6">
+          <div class="flex items-center justify-start">
+            <div class="w-8 h-8 rounded-full flex items-center justify-center bg-blue-500 text-white font-400">{{ member.fullname.charAt(0) }}</div>
+            <div class="ml-2">
+              <p class="text-sm font-medium">{{ member.fullname }}</p>
+              <p class="text-xs text-gray-500">{{ member.email }}</p>
+            </div>
           </div>
-        </ng-template>
-        <ng-template pTemplate="header">
-          <div class="font-medium px-3 py-2">Usuários Disponíveis</div>
-        </ng-template>
-      </p-autoComplete>
-    </div>
-
-    <div class="flex justify-end mt-4">
-      <p-button
-        type="submit"
-        [label]="isLoading ? 'Adicionando usuário...' : 'Adicionar usuário'"
-        [disabled]="isLoading || !selectedUser"
-        [loading]="isLoading"
-        (click)="handleSubmit()"
-      ></p-button>
+          <div class="flex items-center">
+            @if(isCreator && spaceToManage && spaceToManage.creator_id !== member.id){
+              <p-button icon="pi pi-times" severity="danger" [rounded]="true" [text]="true" styleClass="ml-2" (click)="handleRemoveMember(member)"></p-button>
+            }
+            <div class="flex flex-col items-end justify-end">
+              <p class="text-sm" [ngClass]="{'font-medium' : spaceToManage && spaceToManage.creator_id === member.id }">
+                {{ spaceToManage && spaceToManage.creator_id === member.id ? 'Criador' : 'Membro'}}
+              </p>
+              @if(isNewMember(member)) {
+                <p class="text-sm">(Novo)</p>
+              }
+            </div>
+          </div>
+        </div>
+      }
     </div>
   </div>
+  <ng-template #footer>
+    <p-button type="submit" label="Confirmar" [disabled]="isLoading || newSelectedUsers.length === 0" [loading]="isLoading" (click)="handleSubmit()"></p-button>
+  </ng-template>
 </p-dialog>

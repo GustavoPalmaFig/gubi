@@ -29,4 +29,4 @@
 
 <app-space-dialog [visible]="isOpenDialog" [spaceToEdit]="selectedSpace" (visibleChange)="handleUpdateDialogVisibility($event)" (spaceSaved)="handleSpaceSaved($event)" />
 
-<app-manage-members [visible]="isMembersDialogOpen" [spaceTomanage]="selectedSpace" (visibleChange)="handleMembersDialogVisibility($event)" />
+<app-manage-members [visible]="isMembersDialogOpen" [spaceToManage]="selectedSpace" (visibleChange)="handleMembersDialogVisibility($event)" />

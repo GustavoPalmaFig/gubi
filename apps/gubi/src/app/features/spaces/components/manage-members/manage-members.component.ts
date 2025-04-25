@@ -1,53 +1,128 @@
 import { AutoCompleteModule } from 'primeng/autocomplete';
 import { Button } from 'primeng/button';
-import { Component, EventEmitter, inject, Input, Output, signal } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { Component, EventEmitter, inject, Input, Output } from '@angular/core';
+import { ConfirmationService, MessageService } from 'primeng/api';
 import { DialogModule } from 'primeng/dialog';
 import { FormsModule } from '@angular/forms';
 import { iSpace } from '@features/spaces/interfaces/space.interface';
 import { iUser } from '@features/auth/interfaces/user.interface';
-import { MessageService } from 'primeng/api';
 import { SpaceService } from '@features/spaces/services/space.service';
-import { SupabaseService } from '@shared/services/supabase/supabase.service';
 
 @Component({
   selector: 'app-manage-members',
-  imports: [DialogModule, Button, FormsModule, AutoCompleteModule],
+  imports: [DialogModule, Button, FormsModule, AutoCompleteModule, CommonModule],
   templateUrl: './manage-members.component.html',
   styleUrl: './manage-members.component.scss'
 })
 export class ManageMembersComponent {
-  private supabaseService = inject(SupabaseService);
   private spaceService = inject(SpaceService);
   private messageService = inject(MessageService);
+  private confirmationService = inject(ConfirmationService);
 
   @Input() visible = false;
-  @Input() spaceTomanage: iSpace | null = null;
+  @Input() spaceToManage: iSpace | null = null;
   @Output() visibleChange = new EventEmitter<boolean>();
 
-  selectedUser: iUser | null = null;
+  searchValue: iUser | null = null;
+  members: iUser[] = [];
   filteredUsers: iUser[] = [];
+  newSelectedUsers: iUser[] = [];
   isLoading = false;
+  isCreator = false;
+
+  ngOnChanges() {
+    if (!this.spaceToManage) return;
+    this.isCreator = this.spaceService.checkIfUserIsCreator(this.spaceToManage);
+    this.getSpaceMembers();
+  }
+
+  async getSpaceMembers() {
+    if (!this.spaceToManage) return;
+    this.members = await this.spaceService.getSpaceMembers(this.spaceToManage.id);
+  }
 
   async searchUsers(event: any) {
-    if (this.spaceTomanage === null) return;
+    if (!this.spaceToManage) return;
     const query = event.query;
-    this.filteredUsers = await this.spaceService.getMembersToInvite(this.spaceTomanage.id, query);
+    const availableUsers = await this.spaceService.getMembersToInvite(this.spaceToManage.id, query);
+    this.filteredUsers = availableUsers.filter(user => !this.newSelectedUsers.some(selectedUser => selectedUser.id === user.id));
+  }
+
+  setNewUsers(event: any) {
+    this.newSelectedUsers.push(event.value);
+    this.searchValue = null;
+    this.members.push(event.value);
+  }
+
+  isNewMember(user: iUser): boolean {
+    return this.newSelectedUsers.some(selectedUser => selectedUser.id === user.id);
   }
 
   close(): void {
-    this.selectedUser = null;
+    this.searchValue = null;
+    this.newSelectedUsers = [];
     this.filteredUsers = [];
     this.isLoading = false;
     this.visibleChange.emit(false);
   }
 
   async handleSubmit(): Promise<void> {
-    if (this.selectedUser === null || this.spaceTomanage === null) {
+    if (this.newSelectedUsers.length === 0 || !this.spaceToManage) {
       return;
     }
 
     this.isLoading = true;
-    const { error } = await this.spaceService.addMemberToSpace(this.spaceTomanage.id, this.selectedUser.id);
+    const { error } = await this.spaceService.addMembersToSpace(this.spaceToManage.id, this.newSelectedUsers);
+
+    if (error) {
+      // Criar função utils para tratar mensagem diretamente no service
+      const errorMessage = typeof error === 'string' ? error : (error as any).message;
+      this.messageService.add({ severity: 'error', summary: 'Erro', detail: errorMessage, life: 10000 });
+      this.isLoading = false;
+      return;
+    }
+
+    const detailMessage = this.newSelectedUsers.length > 1 ? 'Usuários adicionados ao Espaço' : 'Usuário adicionado ao Espaço';
+    this.messageService.add({ severity: 'success', summary: 'Sucessos', detail: detailMessage, life: 10000 });
+  }
+
+  handleRemoveMember(user: iUser) {
+    if (!this.spaceToManage) return;
+    if (this.isNewMember(user)) {
+      this.newSelectedUsers = this.newSelectedUsers.filter(selectedUser => selectedUser.id !== user.id);
+      this.members = this.members.filter(member => member.id !== user.id);
+      return;
+    }
+
+    this.confirmationService.confirm({
+      target: event?.target || undefined,
+      message: 'Tem certeza que deseja remover este usuário do Espaço?',
+      header: 'Aviso',
+      icon: 'pi pi-info-circle',
+      rejectLabel: 'Cancelar',
+      rejectButtonProps: {
+        label: 'Cancelar',
+        severity: 'secondary',
+        outlined: true
+      },
+      acceptButtonProps: {
+        label: 'Remover',
+        severity: 'danger'
+      },
+
+      accept: () => {
+        this.removeMember(user);
+      },
+      reject: () => {
+        this.messageService.add({ severity: 'warn', summary: 'Cancelado', detail: 'Operação cancelada' });
+      }
+    });
+  }
+
+  async removeMember(user: iUser): Promise<void> {
+    this.isLoading = true;
+    const { error } = await this.spaceService.removeMemberFromSpace(this.spaceToManage!.id, user.id);
 
     if (error) {
       const errorMessage = typeof error === 'string' ? error : (error as any).message;
@@ -56,7 +131,8 @@ export class ManageMembersComponent {
       return;
     }
 
-    this.messageService.add({ severity: 'success', summary: 'Sucessos', detail: 'Usuário adicionado ao Espaço', life: 10000 });
-    this.close();
+    this.messageService.add({ severity: 'success', summary: 'Sucessos', detail: 'Usuário removido do Espaço', life: 10000 });
+    this.members = this.members.filter(member => member.id !== user.id);
+    this.isLoading = false;
   }
 }

@@ -28,7 +28,7 @@ export class SpaceCardComponent {
   constructor() {
     this.items = [
       {
-        label: 'Adicionar Membros',
+        label: 'Gerenciar Membros',
         icon: 'pi pi-plus',
         command: () => {
           this.membersDialogVisibleChange.emit(true);
