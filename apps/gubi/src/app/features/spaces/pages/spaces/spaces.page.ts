@@ -1,9 +1,9 @@
-import { AddMembersComponent } from '@features/spaces/components/add-members/add-members.component';
 import { AuthService } from '@features/auth/services/auth.service';
 import { ButtonModule } from 'primeng/button';
 import { Component, inject } from '@angular/core';
 import { InputTextModule } from 'primeng/inputtext';
 import { iSpace } from '@features/spaces/interfaces/space.interface';
+import { ManageMembersComponent } from '@features/spaces/components/manage-members/manage-members.component';
 import { MenuModule } from 'primeng/menu';
 import { RouterModule } from '@angular/router';
 import { SpaceCardComponent } from '@features/spaces/components/space-card/space-card.component';
@@ -13,7 +13,7 @@ import { TextareaModule } from 'primeng/textarea';
 
 @Component({
   selector: 'app-spaces',
-  imports: [ButtonModule, InputTextModule, TextareaModule, RouterModule, MenuModule, SpaceDialogComponent, SpaceCardComponent, AddMembersComponent],
+  imports: [ButtonModule, InputTextModule, TextareaModule, RouterModule, MenuModule, SpaceDialogComponent, SpaceCardComponent, ManageMembersComponent],
   templateUrl: './spaces.page.html',
   styleUrl: './spaces.page.scss'
 })
@@ -22,7 +22,7 @@ export class SpacesPage {
   private spaceService = inject(SpaceService);
 
   protected isOpenDialog = false;
-  protected isAddMemberOpenDialog = false;
+  protected isMembersDialogOpen = false;
   protected isLoading = true;
   protected spaces: iSpace[] = [];
   protected selectedSpace: iSpace | null = null;
@@ -61,7 +61,7 @@ export class SpacesPage {
     this.spaces = this.spaces.filter(space => space.id !== spaceId);
   }
 
-  handleAddMemberDialogVisibility(visible: boolean) {
-    this.isAddMemberOpenDialog = visible;
+  handleMembersDialogVisibility(visible: boolean) {
+    this.isMembersDialogOpen = visible;
   }
 }

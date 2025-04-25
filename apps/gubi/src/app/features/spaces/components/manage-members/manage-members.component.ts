@@ -10,18 +10,18 @@ import { SpaceService } from '@features/spaces/services/space.service';
 import { SupabaseService } from '@shared/services/supabase/supabase.service';
 
 @Component({
-  selector: 'app-add-members',
+  selector: 'app-manage-members',
   imports: [DialogModule, Button, FormsModule, AutoCompleteModule],
-  templateUrl: './add-members.component.html',
-  styleUrl: './add-members.component.scss'
+  templateUrl: './manage-members.component.html',
+  styleUrl: './manage-members.component.scss'
 })
-export class AddMembersComponent {
+export class ManageMembersComponent {
   private supabaseService = inject(SupabaseService);
   private spaceService = inject(SpaceService);
   private messageService = inject(MessageService);
 
   @Input() visible = false;
-  @Input() spaceToAdd: iSpace | null = null;
+  @Input() spaceTomanage: iSpace | null = null;
   @Output() visibleChange = new EventEmitter<boolean>();
 
   selectedUser: iUser | null = null;
@@ -29,13 +29,9 @@ export class AddMembersComponent {
   isLoading = false;
 
   async searchUsers(event: any) {
-    if (this.spaceToAdd === null) return;
+    if (this.spaceTomanage === null) return;
     const query = event.query;
-    const { data, error } = await this.supabaseService.client.from('user').select('*').ilike('email', `%${query}%`).neq('id', this.spaceToAdd.creator_id).limit(5);
-
-    if (!error) {
-      this.filteredUsers = data;
-    }
+    this.filteredUsers = await this.spaceService.getMembersToInvite(this.spaceTomanage.id, query);
   }
 
   close(): void {
@@ -46,12 +42,12 @@ export class AddMembersComponent {
   }
 
   async handleSubmit(): Promise<void> {
-    if (this.selectedUser === null || this.spaceToAdd === null) {
+    if (this.selectedUser === null || this.spaceTomanage === null) {
       return;
     }
 
     this.isLoading = true;
-    const { error } = await this.spaceService.addMemberToSpace(this.spaceToAdd.id, this.selectedUser.id);
+    const { error } = await this.spaceService.addMemberToSpace(this.spaceTomanage.id, this.selectedUser.id);
 
     if (error) {
       const errorMessage = typeof error === 'string' ? error : (error as any).message;

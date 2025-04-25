@@ -49,8 +49,8 @@ export class SpaceService {
     return { error: error?.message };
   }
 
-  async getMembersToInvite(spaceId: number): Promise<iUser[]> {
-    const { data } = await this.supabaseService.client.rpc('get_eligible_users_for_space', { target_space_id: spaceId });
+  async getMembersToInvite(target_space_id: number, query: string): Promise<iUser[]> {
+    const { data } = await this.supabaseService.client.rpc('search_eligible_users_for_space', { target_space_id, query });
     return data as iUser[];
   }
 
