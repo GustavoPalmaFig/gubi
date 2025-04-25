@@ -1,5 +1,5 @@
 <div class="bg-card text-card-foreground rounded-lg border shadow-sm h-64 flex flex-col justify-between">
-  <div class="flex items-center p-4">
+  <div class="flex items-center py-4 px-6">
     <p-menu #menu [model]="items" [popup]="true" />
     <h3 class="text-2xl font-semibold flex-1">{{ space.name }}</h3>
     <i
@@ -10,8 +10,8 @@
       (keydown.space)="menu.toggle($event)"
     ></i>
   </div>
-  <p class="line-clamp-4 p-4">{{ space.description || 'Gerencie contas e despesas compartilhadas neste space.' }}</p>
-  <a [routerLink]="['/spaces', space.id]" class="w-full p-4">
-    <button class="text-sm font-medium hover:bg-primary/90 h-10 px-4 py-2 w-full">Acessar</button>
+  <p class="line-clamp-4 py-4 px-6">{{ space.description || 'Gerencie contas e despesas compartilhadas neste space.' }}</p>
+  <a [routerLink]="['/spaces', space.id]" class="w-full py-4 px-6">
+    <p-button label="Acessar" styleClass="w-full" severity="contrast"></p-button>
   </a>
 </div>

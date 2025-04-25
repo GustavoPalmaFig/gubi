@@ -1,3 +1,4 @@
+import { Button } from 'primeng/button';
 import { Component, EventEmitter, inject, Input, Output } from '@angular/core';
 import { ConfirmationService, MenuItem, MessageService } from 'primeng/api';
 import { iSpace } from '@features/spaces/interfaces/space.interface';
@@ -7,7 +8,7 @@ import { SpaceService } from '@features/spaces/services/space.service';
 
 @Component({
   selector: 'app-space-card',
-  imports: [MenuModule, RouterLink],
+  imports: [MenuModule, RouterLink, Button],
   templateUrl: './space-card.component.html',
   styleUrl: './space-card.component.scss'
 })
