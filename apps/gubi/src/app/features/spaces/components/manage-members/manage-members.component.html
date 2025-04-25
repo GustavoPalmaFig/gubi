@@ -44,24 +44,32 @@
       @for(member of members; track member.id) {
         <div class="flex items-center justify-between mb-6">
           <div class="flex items-center justify-start">
-            <div class="w-8 h-8 rounded-full flex items-center justify-center bg-blue-500 text-white font-400">{{ member.fullname.charAt(0) }}</div>
+            @if(memberCanBeRemoved(member)) {
+              <div
+                class="relative group w-8 h-8 rounded-full flex items-center justify-center bg-blue-500 text-white font-400 cursor-pointer hover:bg-red-100 text-red-500"
+                pTooltip="Remover Membro"
+              >
+                <span class="group-hover:hidden"> {{ member.fullname.charAt(0) }} </span>
+                <p-button class="hidden group-hover:inline" icon="pi pi-times" severity="danger" [rounded]="true" [text]="true" (click)="handleRemoveMember(member)"></p-button>
+              </div>
+              } @else {
+              <div class="relative group w-8 h-8 rounded-full flex items-center justify-center bg-blue-500 text-white font-400">
+                <span> {{ member.fullname.charAt(0) }} </span>
+              </div>
+            }
+
             <div class="ml-2">
               <p class="text-sm font-medium">{{ member.fullname }}</p>
               <p class="text-xs text-gray-500">{{ member.email }}</p>
             </div>
           </div>
-          <div class="flex items-center">
-            @if(isCreator && spaceToManage && spaceToManage.creator_id !== member.id){
-              <p-button icon="pi pi-times" severity="danger" [rounded]="true" [text]="true" styleClass="ml-2" (click)="handleRemoveMember(member)"></p-button>
+          <div class="flex flex-col items-center justify-end">
+            <p class="text-sm" [ngClass]="{'font-medium' : spaceToManage && spaceToManage.creator_id === member.id }">
+              {{ spaceToManage && spaceToManage.creator_id === member.id ? 'Criador' : 'Membro'}}
+            </p>
+            @if(isNewMember(member)) {
+              <p class="text-sm">(Novo)</p>
             }
-            <div class="flex flex-col items-end justify-end">
-              <p class="text-sm" [ngClass]="{'font-medium' : spaceToManage && spaceToManage.creator_id === member.id }">
-                {{ spaceToManage && spaceToManage.creator_id === member.id ? 'Criador' : 'Membro'}}
-              </p>
-              @if(isNewMember(member)) {
-                <p class="text-sm">(Novo)</p>
-              }
-            </div>
           </div>
         </div>
       }

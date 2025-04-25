@@ -8,10 +8,11 @@ import { FormsModule } from '@angular/forms';
 import { iSpace } from '@features/spaces/interfaces/space.interface';
 import { iUser } from '@features/auth/interfaces/user.interface';
 import { SpaceService } from '@features/spaces/services/space.service';
+import { TooltipModule } from 'primeng/tooltip';
 
 @Component({
   selector: 'app-manage-members',
-  imports: [DialogModule, Button, FormsModule, AutoCompleteModule, CommonModule],
+  imports: [DialogModule, Button, FormsModule, AutoCompleteModule, CommonModule, TooltipModule],
   templateUrl: './manage-members.component.html',
   styleUrl: './manage-members.component.scss'
 })
@@ -84,7 +85,11 @@ export class ManageMembersComponent {
     }
 
     const detailMessage = this.newSelectedUsers.length > 1 ? 'Usuários adicionados ao Espaço' : 'Usuário adicionado ao Espaço';
-    this.messageService.add({ severity: 'success', summary: 'Sucessos', detail: detailMessage, life: 10000 });
+    this.messageService.add({ severity: 'success', summary: 'Sucesso', detail: detailMessage, life: 10000 });
+  }
+
+  memberCanBeRemoved(member: iUser): boolean {
+    return this.isCreator && !!this.spaceToManage && this.spaceToManage.creator_id !== member.id;
   }
 
   handleRemoveMember(user: iUser) {
@@ -131,7 +136,7 @@ export class ManageMembersComponent {
       return;
     }
 
-    this.messageService.add({ severity: 'success', summary: 'Sucessos', detail: 'Usuário removido do Espaço', life: 10000 });
+    this.messageService.add({ severity: 'success', summary: 'Sucesso', detail: 'Usuário removido do Espaço', life: 10000 });
     this.members = this.members.filter(member => member.id !== user.id);
     this.isLoading = false;
   }
