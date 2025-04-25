@@ -31,6 +31,7 @@ export class ManageMembersComponent {
   filteredUsers: iUser[] = [];
   newSelectedUsers: iUser[] = [];
   isLoading = false;
+  isLoadingMembers = true;
   isCreator = false;
 
   ngOnChanges(changes: SimpleChanges) {
@@ -46,6 +47,7 @@ export class ManageMembersComponent {
 
   async getSpaceMembers() {
     this.members = await this.spaceService.getSpaceMembers(this.spaceId);
+    this.isLoadingMembers = false;
   }
 
   async searchUsers(event: AutoCompleteCompleteEvent) {
@@ -66,8 +68,10 @@ export class ManageMembersComponent {
   resetState(): void {
     this.searchValue = null;
     this.newSelectedUsers = [];
+    this.members = [];
     this.filteredUsers = [];
     this.isLoading = false;
+    this.isLoadingMembers = true;
   }
 
   close(): void {
