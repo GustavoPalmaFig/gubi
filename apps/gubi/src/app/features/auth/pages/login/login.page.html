@@ -13,7 +13,7 @@
       </div>
 
       <div class="text-center mt-8">
-        <p-button [label]="loading ? 'Entrando...' : 'Entrar'" type="submit" [loading]="loading" severity="contrast" styleClass="w-full"> </p-button>
+        <p-button [label]="loading ? 'Entrando...' : 'Entrar'" type="submit" [loading]="loading" [disabled]="loginForm.invalid" severity="contrast" styleClass="w-full"> </p-button>
       </div>
     </form>
     <div class="mt-4 flex items-center text-sm font-medium justify-center">

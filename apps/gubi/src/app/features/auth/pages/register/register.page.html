@@ -29,10 +29,10 @@
             <p-divider />
             <ul>
               @for(rule of passwordRules; track rule.regex) {
-                <li>
-                  <i [ngClass]="rule.regex.test(passwordFormField?.value) ? 'mr-2 pi pi-check-circle text-green-600' : 'mr-2 pi pi-times-circle text-red-500'"></i>
-                  <span>{{ rule.message }}</span>
-                </li>
+              <li>
+                <i [ngClass]="rule.regex.test(passwordFormField?.value) ? 'mr-2 pi pi-check-circle text-green-600' : 'mr-2 pi pi-times-circle text-red-500'"></i>
+                <span>{{ rule.message }}</span>
+              </li>
               }
             </ul>
           </ng-template>
@@ -40,7 +40,15 @@
       </div>
 
       <div class="text-center mt-8">
-        <p-button [label]="loading ? 'Criando conta...' : 'Criar Conta'" type="submit" [loading]="loading" severity="contrast" styleClass="w-full"> </p-button>
+        <p-button
+          [label]="loading ? 'Criando conta...' : 'Criar Conta'"
+          type="submit"
+          [loading]="loading"
+          [disabled]="registerForm.invalid"
+          severity="contrast"
+          styleClass="w-full"
+        >
+        </p-button>
       </div>
     </form>
     <div class="mt-4 flex items-center text-sm font-medium justify-center">
