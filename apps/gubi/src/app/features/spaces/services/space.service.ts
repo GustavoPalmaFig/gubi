@@ -14,29 +14,23 @@ export class SpaceService {
   protected userId = this.authService.currentUser()?.id;
 
   async getUserSpaces(): Promise<iSpace[]> {
-    const { data } = await this.supabaseService.client.rpc('get_user_spaces');
+    const { data } = await this.supabaseService.client.from('space').select('*');
     return data as iSpace[];
   }
 
   async getSpaceById(spaceId: number): Promise<iSpace | null> {
-    const { data } = await this.supabaseService.client.from('spaces').select('*').eq('id', spaceId).single();
+    const { data } = await this.supabaseService.client.from('space').select('*').eq('id', spaceId).single();
     return data as iSpace | null;
   }
 
   async createSpace(name: string, description: string): Promise<{ data: iSpace; error?: string }> {
-    const { data, error } = await this.supabaseService.client
-      .from('space')
-      .insert([{ name, description, creator_id: this.userId }])
-      .select()
-      .single();
+    const { data, error } = await this.supabaseService.client.from('space').insert([{ name, description }]).select().single();
 
     return { data: data as iSpace, error: Utils.handleErrorMessage(error) };
   }
 
   async updateSpace(spaceId: number, name: string, description: string): Promise<{ data: iSpace; error?: string }> {
-    const updated_at = new Date().toISOString();
-    const { data, error } = await this.supabaseService.client.from('space').update({ name, description, updated_at }).eq('id', spaceId).select().single();
-
+    const { data, error } = await this.supabaseService.client.from('space').update({ name, description }).eq('id', spaceId).select().single();
     return { data: data as iSpace, error: Utils.handleErrorMessage(error) };
   }
 
@@ -46,13 +40,13 @@ export class SpaceService {
   }
 
   async addMembersToSpace(spaceId: number, users: iUser[]): Promise<{ error?: string }> {
-    const usersIds = users.map(user => user.id);
-    const { error } = await this.supabaseService.client.from('space_membership').insert(usersIds.map(userId => ({ space_id: spaceId, user_id: userId })));
+    const space_members = users.map(({ id }) => ({ space_id: spaceId, user_id: id }));
+    const { error } = await this.supabaseService.client.from('space_members').insert(space_members);
     return { error: Utils.handleErrorMessage(error) };
   }
 
-  async removeMemberFromSpace(spaceId: number, userId: string): Promise<{ error?: string }> {
-    const { error } = await this.supabaseService.client.from('space_membership').delete().eq('space_id', spaceId).eq('user_id', userId);
+  async removeMemberFromSpace(space_id: number, user_id: string): Promise<{ error?: string }> {
+    const { error } = await this.supabaseService.client.from('space_members').delete().match({ space_id, user_id });
     return { error: Utils.handleErrorMessage(error) };
   }
 

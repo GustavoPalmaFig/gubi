@@ -35,21 +35,19 @@
     <div class="flex flex-col mt-6">
       <h1 class="text-md font-bold mb-4">Usuários com acesso</h1>
 
-      @if(!isLoadingMembers) {
-        @for (member of members; track member.email) {
-          <div class="flex items-center justify-between mb-6">
-            <ng-container *ngTemplateOutlet="userTemplate; context: { user: member, isEditable: true }"></ng-container>
-            <div class="flex flex-col items-center justify-end">
-              <p class="text-sm" [ngClass]="{'font-medium' : spaceToManage && spaceToManage.creator_id === member.id }">
-                {{ spaceToManage && spaceToManage.creator_id === member.id ? 'Criador' : 'Membro'}}
-              </p>
-              @if(isNewMember(member)) {
-                <p class="text-sm">(Novo)</p>
-              }
-            </div>
-          </div>
-        }
-      } @else {
+      @if(!isLoadingMembers) { @for (member of members; track member.email) {
+      <div class="flex items-center justify-between mb-6">
+        <ng-container *ngTemplateOutlet="userTemplate; context: { user: member, isEditable: true }"></ng-container>
+        <div class="flex flex-col items-center justify-end">
+          <p class="text-sm" [ngClass]="{'font-medium' : spaceToManage && spaceToManage.creator_id === member.id }">
+            {{ spaceToManage && spaceToManage.creator_id === member.id ? 'Criador' : 'Membro'}}
+          </p>
+          @if(isNewMember(member)) {
+          <p class="text-sm">(Novo)</p>
+          }
+        </div>
+      </div>
+      } } @else {
       <div class="flex items-center justify-center mt-4">
         <i class="pi pi-spin pi-spinner loading-icon"></i>
       </div>
@@ -65,14 +63,21 @@
   <div class="flex items-center justify-start">
     @if(isEditable && memberCanBeRemoved(user)) {
       <div
-        class="relative group w-8 h-8 rounded-full flex items-center justify-center bg-blue-500 text-white font-400 cursor-pointer hover:bg-red-100 text-red-500"
+        class="size-8 rounded-full flex items-center justify-center bg-blue-500 text-white font-400 relative group cursor-pointer hover:bg-red-100 text-red-500"
         pTooltip="Remover Membro"
       >
-        <span class="group-hover:hidden"> {{ user.fullname.charAt(0) }} </span>
-        <p-button class="hidden group-hover:inline" icon="pi pi-times" severity="danger" [rounded]="true" [text]="true" (click)="handleRemoveMember(user)"></p-button>
+        <span class="absolute opacity-100 transition-opacity duration-300 ease-in-out group-hover:opacity-0"> {{ user.fullname.charAt(0) }} </span>
+        <p-button
+          class="hidden group-hover:inline transition-opacity duration-300 ease-in-out"
+          icon="pi pi-times"
+          severity="danger"
+          [rounded]="true"
+          [text]="true"
+          (click)="handleRemoveMember(user)"
+        ></p-button>
       </div>
     } @else {
-      <div class="relative group w-8 h-8 rounded-full flex items-center justify-center bg-blue-500 text-white font-400">
+      <div class="size-8 rounded-full flex items-center justify-center bg-blue-500 text-white font-400">
         <span> {{ user.fullname.charAt(0) }} </span>
       </div>
     }
