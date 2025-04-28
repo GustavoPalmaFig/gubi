@@ -5,7 +5,7 @@
   [closeOnEscape]="true"
   [dismissableMask]="true"
   (visibleChange)="close()"
-  styleClass="w-1/3 h-100 dialog-with-subtitle"
+  styleClass="w-full md:w-1/2 lg:w-1/3 mx-4 h-100 dialog-with-subtitle"
 >
   <div class="flex flex-col h-full">
     <p class="text-sm pb-4">Procure usuários por nome ou e-mail</p>
@@ -35,21 +35,21 @@
     <div class="flex flex-col mt-6">
       <h1 class="text-md font-bold mb-4">Usuários com acesso</h1>
 
-    @if(!isLoadingMembers) {
-      @for (member of members; track member.email) {
-        <div class="flex items-center justify-between mb-6">
-          <ng-container *ngTemplateOutlet="userTemplate; context: { user: member, isEditable: true }"></ng-container>
-          <div class="flex flex-col items-center justify-end">
-            <p class="text-sm" [ngClass]="{'font-medium' : spaceToManage && spaceToManage.creator_id === member.id }">
-              {{ spaceToManage && spaceToManage.creator_id === member.id ? 'Criador' : 'Membro'}}
-            </p>
-            @if(isNewMember(member)) {
-              <p class="text-sm">(Novo)</p>
-            }
+      @if(!isLoadingMembers) {
+        @for (member of members; track member.email) {
+          <div class="flex items-center justify-between mb-6">
+            <ng-container *ngTemplateOutlet="userTemplate; context: { user: member, isEditable: true }"></ng-container>
+            <div class="flex flex-col items-center justify-end">
+              <p class="text-sm" [ngClass]="{'font-medium' : spaceToManage && spaceToManage.creator_id === member.id }">
+                {{ spaceToManage && spaceToManage.creator_id === member.id ? 'Criador' : 'Membro'}}
+              </p>
+              @if(isNewMember(member)) {
+                <p class="text-sm">(Novo)</p>
+              }
+            </div>
           </div>
-        </div>
-      }
-    } @else {
+        }
+      } @else {
       <div class="flex items-center justify-center mt-4">
         <i class="pi pi-spin pi-spinner loading-icon"></i>
       </div>
