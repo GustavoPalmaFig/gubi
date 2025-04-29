@@ -10,10 +10,11 @@ import { SpaceCardComponent } from '@features/spaces/components/space-card/space
 import { SpaceDialogComponent } from '@features/spaces/components/space-dialog/space-dialog.component';
 import { SpaceService } from '@features/spaces/services/space.service';
 import { TextareaModule } from 'primeng/textarea';
+import { LoadingComponent } from '../../../../shared/components/loading/loading.component';
 
 @Component({
   selector: 'app-spaces',
-  imports: [ButtonModule, InputTextModule, TextareaModule, RouterModule, MenuModule, SpaceDialogComponent, SpaceCardComponent, ManageMembersComponent],
+  imports: [ButtonModule, InputTextModule, TextareaModule, RouterModule, MenuModule, SpaceDialogComponent, SpaceCardComponent, ManageMembersComponent, LoadingComponent],
   templateUrl: './spaces.page.html',
   styleUrl: './spaces.page.scss'
 })

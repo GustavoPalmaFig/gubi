@@ -6,7 +6,9 @@
   <p-button label="Novo" icon="pi pi-plus-circle" severity="contrast" (click)="handleUpdateDialogVisibility(true, false)"></p-button>
 </div>
 
-<div class="flex items-center justify-center h-full">
+<div class="flex items-center justify-center">
+  <app-loading [isLoading]="isLoading" [size]="'3rem'"></app-loading>
+
   @if(!isLoading) {
     @if(spaces.length > 0) {
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -21,11 +23,11 @@
         }
       </div>
     } @else {
-      <h3 class="text-xl font-medium mb-2">Você ainda não participa de nenhum Space</h3>
-      <p class="text-muted-foreground mb-4">Crie um novo Space ou solicite para ser adicionado a um existente.</p>
+      <div class="text-center mt-20">
+        <h3 class="text-xl font-medium mb-2">Você ainda não participa de nenhum Space</h3>
+        <p class="text-muted-foreground mb-4">Crie um novo Space ou solicite para ser adicionado a um existente.</p>
+      </div>
     }
-  } @else {
-    <i class="pi pi-spin pi-spinner loading-icon"></i>
   }
 </div>
 

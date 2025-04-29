@@ -34,23 +34,22 @@
 
     <div class="flex flex-col mt-6">
       <h1 class="text-md font-bold mb-4">Usuários com acesso</h1>
+      <app-loading [isLoading]="isLoadingMembers"></app-loading>
 
-      @if(!isLoadingMembers) { @for (member of members; track member.email) {
-      <div class="flex items-center justify-between mb-6">
-        <ng-container *ngTemplateOutlet="userTemplate; context: { user: member, isEditable: true }"></ng-container>
-        <div class="flex flex-col items-center justify-end">
-          <p class="text-sm" [ngClass]="{'font-medium' : spaceToManage && spaceToManage.creator_id === member.id }">
-            {{ spaceToManage && spaceToManage.creator_id === member.id ? 'Criador' : 'Membro'}}
-          </p>
-          @if(isNewMember(member)) {
-          <p class="text-sm">(Novo)</p>
-          }
-        </div>
-      </div>
-      } } @else {
-      <div class="flex items-center justify-center mt-4">
-        <i class="pi pi-spin pi-spinner loading-icon"></i>
-      </div>
+      @if(!isLoadingMembers) { 
+        @for (member of members; track member.email) {
+          <div class="flex items-center justify-between mb-6">
+            <ng-container *ngTemplateOutlet="userTemplate; context: { user: member, isEditable: true }"></ng-container>
+            <div class="flex flex-col items-center justify-end">
+              <p class="text-sm" [ngClass]="{'font-medium' : spaceToManage && spaceToManage.creator_id === member.id }">
+                {{ spaceToManage && spaceToManage.creator_id === member.id ? 'Criador' : 'Membro'}}
+              </p>
+              @if(isNewMember(member)) {
+                <p class="text-sm">(Novo)</p>
+              }
+            </div>
+          </div>
+        }
       }
     </div>
   </div>

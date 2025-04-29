@@ -7,13 +7,14 @@ import { DialogModule } from 'primeng/dialog';
 import { FormsModule } from '@angular/forms';
 import { iSpace } from '@features/spaces/interfaces/space.interface';
 import { iUser } from '@features/auth/interfaces/user.interface';
+import { LoadingComponent } from '@shared/components/loading/loading.component';
 import { MessageService } from '@shared/services/message.service';
 import { SpaceService } from '@features/spaces/services/space.service';
 import { TooltipModule } from 'primeng/tooltip';
 
 @Component({
   selector: 'app-manage-members',
-  imports: [DialogModule, Button, FormsModule, AutoCompleteModule, CommonModule, TooltipModule],
+  imports: [DialogModule, Button, FormsModule, AutoCompleteModule, CommonModule, TooltipModule, LoadingComponent],
   templateUrl: './manage-members.component.html',
   styleUrl: './manage-members.component.scss'
 })
