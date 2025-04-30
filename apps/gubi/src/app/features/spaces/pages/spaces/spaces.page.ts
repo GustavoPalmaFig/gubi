@@ -1,6 +1,8 @@
 import { AuthService } from '@features/auth/services/auth.service';
 import { ButtonModule } from 'primeng/button';
+import { CommonModule } from '@angular/common';
 import { Component, inject } from '@angular/core';
+import { DataViewModule } from 'primeng/dataview';
 import { InputTextModule } from 'primeng/inputtext';
 import { iSpace } from '@features/spaces/interfaces/space.interface';
 import { ManageMembersComponent } from '@features/spaces/components/manage-members/manage-members.component';
@@ -10,11 +12,21 @@ import { SpaceCardComponent } from '@features/spaces/components/space-card/space
 import { SpaceDialogComponent } from '@features/spaces/components/space-dialog/space-dialog.component';
 import { SpaceService } from '@features/spaces/services/space.service';
 import { TextareaModule } from 'primeng/textarea';
-import { LoadingComponent } from '../../../../shared/components/loading/loading.component';
 
 @Component({
   selector: 'app-spaces',
-  imports: [ButtonModule, InputTextModule, TextareaModule, RouterModule, MenuModule, SpaceDialogComponent, SpaceCardComponent, ManageMembersComponent, LoadingComponent],
+  imports: [
+    CommonModule,
+    ButtonModule,
+    InputTextModule,
+    TextareaModule,
+    RouterModule,
+    MenuModule,
+    SpaceDialogComponent,
+    SpaceCardComponent,
+    ManageMembersComponent,
+    DataViewModule
+  ],
   templateUrl: './spaces.page.html',
   styleUrl: './spaces.page.scss'
 })
@@ -24,8 +36,7 @@ export class SpacesPage {
 
   protected isOpenDialog = false;
   protected isMembersDialogOpen = false;
-  protected isLoading = true;
-  protected spaces: iSpace[] = [];
+  protected spaces: iSpace[] = Array(6).fill({});
   protected selectedSpace: iSpace | null = null;
 
   ngOnInit() {
@@ -34,7 +45,6 @@ export class SpacesPage {
 
   async getAvailableSpaces() {
     this.spaces = await this.spaceService.getUserSpaces();
-    this.isLoading = false;
   }
 
   handleUpdateDialogVisibility(visible: boolean, isEdit = true) {

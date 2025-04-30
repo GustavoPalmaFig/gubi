@@ -31,7 +31,7 @@ export class SpaceDialogComponent {
   constructor() {
     this.spaceForm = new FormGroup({
       name: new FormControl('', [Validators.required]),
-      description: new FormControl('', [Validators.maxLength(255)])
+      description: new FormControl('')
     });
   }
 
@@ -53,12 +53,7 @@ export class SpaceDialogComponent {
   }
 
   async handleSubmit(): Promise<void> {
-    if (this.spaceForm.invalid) {
-      if (this.spaceForm.get('description')?.invalid) {
-        this.messageService.showMessage('error', 'Erro', 'Descrição muito grande.');
-      }
-      return;
-    }
+    if (this.spaceForm.invalid) return;
 
     this.isLoading = true;
     const { name, description } = this.spaceForm.value;

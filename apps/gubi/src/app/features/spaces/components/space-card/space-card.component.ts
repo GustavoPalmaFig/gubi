@@ -1,14 +1,16 @@
 import { Button } from 'primeng/button';
+import { Card } from 'primeng/card';
 import { Component, EventEmitter, inject, Input, Output } from '@angular/core';
 import { ConfirmationService, MenuItem, MessageService } from 'primeng/api';
 import { iSpace } from '@features/spaces/interfaces/space.interface';
 import { MenuModule } from 'primeng/menu';
 import { RouterLink } from '@angular/router';
+import { SkeletonModule } from 'primeng/skeleton';
 import { SpaceService } from '@features/spaces/services/space.service';
 
 @Component({
   selector: 'app-space-card',
-  imports: [MenuModule, RouterLink, Button],
+  imports: [MenuModule, RouterLink, Button, SkeletonModule, Card],
   templateUrl: './space-card.component.html',
   styleUrl: './space-card.component.scss'
 })
@@ -46,7 +48,7 @@ export class SpaceCardComponent {
   }
 
   ngOnInit() {
-    this.setItemsForCreator();
+    if (this.space) this.setItemsForCreator();
   }
 
   setItemsForCreator() {

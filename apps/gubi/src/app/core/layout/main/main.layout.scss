@@ -5,10 +5,10 @@
   width: 100%;
   flex-direction: column;
   flex: 1;
-  padding: 1rem 4rem;
+  padding: 1rem 4rem 2rem;
 
   @include max-tablet {
-    padding: 1rem 2rem;
+    padding: 1rem 2rem 4rem;
   }
 }
 

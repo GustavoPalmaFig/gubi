@@ -1,5 +1,5 @@
 <p-dialog
-  [header]="isEditMode ? 'Editar Space' : 'Criar novo Space'"
+  [header]="isEditMode ? 'Editar Space' : 'Criar Space'"
   [modal]="true"
   [(visible)]="visible"
   [closeOnEscape]="true"
@@ -15,7 +15,16 @@
     </div>
     <div class="my-6">
       <label for="description" class="text-sm font-medium">Descrição</label>
-      <textarea rows="3" cols="30" pTextarea id="description" class="w-full mt-2" formControlName="description" placeholder="Ex: Gerenciar contas e despesas da casa"></textarea>
+      <textarea
+        rows="3"
+        cols="30"
+        maxlength="255"
+        pTextarea
+        id="description"
+        class="w-full mt-2"
+        formControlName="description"
+        placeholder="Ex: Gerenciar contas e despesas da casa"
+      ></textarea>
     </div>
     <div class="flex justify-end">
       <p-button
