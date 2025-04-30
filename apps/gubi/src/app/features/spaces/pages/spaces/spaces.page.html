@@ -7,7 +7,7 @@
 </div>
 
 <div class="flex items-center justify-center">
-  <p-dataView [value]="spaces" layout="grid" [paginator]="false" class="w-full">
+  <p-dataView [value]="spaces" layout="grid" [paginator]="false" class="w-full transparent-dataview">
     <ng-template #grid let-items>
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
         @for (space of items; track space ? space.id : ($index + 1)) {
