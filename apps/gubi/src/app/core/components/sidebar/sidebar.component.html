@@ -1,0 +1,47 @@
+<p-drawer [visible]="true" [modal]="false" [closable]="false" [styleClass]="'!bg-[#fafafa] ' + (isExpanded() ? '!w-44' : '!w-16')">
+  <ng-template #header>
+    <div class="flex items-center justify-between">
+      <a class="cursor-pointer" [routerLink]="'/spaces'">
+        <img [src]="isExpanded() ? 'gb_gubi_logo.svg' : 'gb_icon.svg'" alt="Gubi" class="logo w-full" />
+      </a>
+    </div>
+  </ng-template>
+
+  <ng-template #content>
+    <div class="flex flex-col h-full pt-40" [ngClass]="{ 'items-center': !isExpanded() }">
+      <div class="flex flex-col gap-3 justify-start">
+        <a [routerLink]="'/spaces'">
+          <p-button
+            [label]="isExpanded() ? 'Espaços' : undefined"
+            icon="pi pi-home"
+            severity="secondary"
+            [styleClass]="(isExpanded() ? 'w-full !justify-start ' : '') + (isActive('/spaces') ? ' brightness-90' : '')"
+          ></p-button>
+        </a>
+        <a [routerLink]="'/pagamentos'">
+          <p-button
+            [label]="isExpanded() ? 'Pagamentos' : undefined"
+            icon="pi pi-credit-card"
+            severity="secondary"
+            [styleClass]="(isExpanded() ? 'w-full !justify-start' : '') + (isActive('/pagamentos') ? ' brightness-90' : '')"
+          ></p-button>
+        </a>
+      </div>
+
+      <div class="mt-auto">
+        <div class="flex" [ngClass]="{ 'justify-end': isExpanded() }">
+          <p-button
+            icon="pi pi-chevron-right"
+            class="transition-transform duration-1000 ease-in-out"
+            [ngClass]="{ 'rotate-180': isExpanded() }"
+            severity="secondary"
+            [rounded]="true"
+            (click)="toggle()"
+          ></p-button>
+        </div>
+        <hr class="my-4 mx-1 border-t border-0 border-surface" />
+        <p-button [label]="isExpanded() ? 'Sair' : undefined" icon="pi pi-power-off" severity="secondary" [styleClass]="isExpanded() ? 'w-full' : ''" (click)="logout()"></p-button>
+      </div>
+    </div>
+  </ng-template>
+</p-drawer>

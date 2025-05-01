@@ -1,14 +1,15 @@
 @use './../../../styles/medias.scss' as *;
 
 .layout-content {
-  display: flex;
+  padding: 1rem 1.5rem;
+  border: 1px solid #fafafa;
+  background: #fafafa;
+  border-radius: 0.5rem;
   width: 100%;
-  flex-direction: column;
-  flex: 1;
-  padding: 1rem 4rem 2rem;
+  height: 100%;
 
   @include max-tablet {
-    padding: 1rem 2rem 4rem;
+    margin-bottom: 4rem;
   }
 }
 

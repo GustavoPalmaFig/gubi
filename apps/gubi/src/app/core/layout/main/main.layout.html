@@ -1,6 +1,9 @@
-<app-header></app-header>
-<div class="layout-content">
-  <router-outlet></router-outlet>
+<app-sidebar (toggleSidebar)="resizeBody($event)"></app-sidebar>
+<div class="mr-4 h-[calc(100vh-5.5rem)] transition-width duration-500 ease-in-out" [ngClass]="sidebarIsExpanded() ? 'ml-48' : 'ml-20'">
+  <app-header></app-header>
+  <div class="layout-content">
+    <router-outlet></router-outlet>
+  </div>
 </div>
 
 <p-confirmdialog styleClass="w-1/3"></p-confirmdialog>

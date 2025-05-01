@@ -1,15 +1,13 @@
-<p-menubar class="header-menu">
-  <ng-template #start>
-    <a class="cursor-pointer" [routerLink]="'/spaces'">
-      <img src="gb_icon.svg" alt="Gubi" class="w-1/2 logo" />
-    </a>
-  </ng-template>
-  <ng-template #end>
-    <div class="flex gap-4">
-      <a [routerLink]="'/spaces'">
-        <p-button label="Espaços" variant="text" [rounded]="true" severity="primary"></p-button>
-      </a>
-      <p-button label="Sair" variant="text" [rounded]="true" severity="warn" (click)="logout()"></p-button>
-    </div>
-  </ng-template>
-</p-menubar>
+<div class="flex items-center justify-between p-3 pl-0">
+  <p-breadcrumb class="max-w-full" [model]="crumbItems" [home]="home" class="transparent-breadcrumb" />
+  <div
+    class="size-8 rounded-full flex items-center justify-center bg-blue-500 text-white font-400 cursor-pointer hover:bg-blue-600"
+    tabindex="0"
+    (click)="menu.toggle($event)"
+    (keydown)="menu.toggle($event)"
+  >
+    <span>{{ authService.userFirstName.charAt(0) }}</span>
+  </div>
+</div>
+
+<p-menu #menu [model]="userItems" [popup]="true" styleClass="!min-w-fit" />
