@@ -12,7 +12,8 @@
       "@core/*": ["apps/gubi/src/app/core/*"],
       "@features/*": ["apps/gubi/src/app/features/*"],
       "@shared/*": ["apps/gubi/src/app/shared/*"],
-      "@env/*": ["apps/gubi/src/environments/*"]
+      "@env/*": ["apps/gubi/src/environments/*"],
+      "@styles/*": ["apps/gubi/src/app/styles/*"]
     }
   },
   "files": [],

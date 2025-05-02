@@ -1,7 +1,8 @@
 import { CommonModule } from '@angular/common';
-import { Component, signal } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { ConfirmationService } from 'primeng/api';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { LayoutService } from '@core/services/layout.service';
 import { RouterModule } from '@angular/router';
 import { SidebarComponent } from '@core/components/sidebar/sidebar.component';
 import { HeaderComponent } from '../../components/header/header.component';
@@ -14,9 +15,5 @@ import { HeaderComponent } from '../../components/header/header.component';
   providers: [ConfirmationService]
 })
 export class MainLayout {
-  protected sidebarIsExpanded = signal(false);
-
-  resizeBody(isExpanded: boolean) {
-    this.sidebarIsExpanded.set(isExpanded);
-  }
+  protected readonly layoutService = inject(LayoutService);
 }

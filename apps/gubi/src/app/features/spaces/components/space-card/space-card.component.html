@@ -1,41 +1,17 @@
-<p-card styleClass="h-64">
-  @if(space.id) {
-    <ng-template #title>
-      <div class="flex items-center">
-        <h3 class="text-2xl text-center font-semibold flex-1">{{ space.name }}</h3>
-        <div class="flex flex-col items-end justify-end">
-          <p-button
-            icon="pi pi-ellipsis-v cursor-pointer"
-            tabindex="0"
-            [rounded]="true"
-            [text]="true"
-            severity="contrast"
-            (click)="menu.toggle($event); spaceSelected.emit(space)"
-            (keydown.enter)="menu.toggle($event)"
-            (keydown.space)="menu.toggle($event)"
-          ></p-button>
-        </div>
-      </div>
-    </ng-template>
-
-    <ng-template #content>
-      <div class="flex items-center text-center h-28">
-        <p class="line-clamp-3 w-full">{{ space.description || 'Gerencie contas e despesas compartilhadas neste space.' }}</p>
-      </div>
-    </ng-template>
-
-    <ng-template #footer>
-      <a [routerLink]="['/spaces', space.id]">
-        <p-button label="Acessar" styleClass="w-full" severity="contrast"></p-button>
-      </a>
-    </ng-template>
-  } @else {
-    <div class="flex flex-col items-center">
-      <p-skeleton width="25rem" height="2rem" styleClass="mb-4 px-6" />
-      <p-skeleton width="25rem" height="5rem" styleClass="my-4 px-6" />
-      <p-skeleton width="25rem" height="3rem" styleClass="my-4 px-6" />
-    </div>
-  }
-</p-card>
-
-<p-menu #menu [model]="items" [popup]="true" />
+<div class="bg-card text-card-foreground rounded-lg border shadow-sm h-64 flex flex-col justify-between">
+  <div class="flex items-center py-4 px-6">
+    <p-menu #menu [model]="items" [popup]="true" />
+    <h3 class="text-2xl font-semibold flex-1">{{ space.name }}</h3>
+    <i
+      class="pi pi-ellipsis-v cursor-pointer ml-auto"
+      tabindex="0"
+      (click)="menu.toggle($event); spaceSelected.emit(space)"
+      (keydown.enter)="menu.toggle($event)"
+      (keydown.space)="menu.toggle($event)"
+    ></i>
+  </div>
+  <p class="line-clamp-3 md:line-clamp-3 lg:line-clamp-4 px-6">{{ space.description || 'Gerencie contas e despesas compartilhadas neste space.' }}</p>
+  <a [routerLink]="['/spaces', space.id]" class="w-full py-4 px-6">
+    <p-button label="Acessar" styleClass="w-full" severity="contrast"></p-button>
+  </a>
+</div>
