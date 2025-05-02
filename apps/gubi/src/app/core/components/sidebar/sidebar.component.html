@@ -8,11 +8,9 @@
   aria-label="Menu principal"
 >
   <ng-template #header>
-    <div class="flex items-center justify-between">
-      <a class="cursor-pointer" [routerLink]="'/spaces'" aria-label="Ir para Espaços">
-        <img [src]="isSidebarExpanded() ? 'gb_gubi_logo.svg' : 'gb_icon.svg'" alt="Gubi" class="logo w-full" />
-      </a>
-    </div>
+    <a class="flex flex-col items-center justify-center w-full cursor-pointer" [routerLink]="'/spaces'" aria-label="Ir para Espaços">
+      <img [src]="isSidebarExpanded() ? 'gb_name.svg' : 'gb_logo.svg'" alt="Gubi" class="logo w-1/2" />
+    </a>
   </ng-template>
 
   <ng-template #content>
