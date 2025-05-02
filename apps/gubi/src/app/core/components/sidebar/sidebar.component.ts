@@ -1,7 +1,7 @@
 import { AuthService } from '@features/auth/services/auth.service';
 import { Button } from 'primeng/button';
 import { CommonModule } from '@angular/common';
-import { Component, effect, inject, Input, signal } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { Drawer } from 'primeng/drawer';
 import { LayoutService } from '@core/services/layout.service';
 import { Router, RouterLink } from '@angular/router';
