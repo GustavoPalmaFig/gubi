@@ -8,19 +8,13 @@ export class LayoutService {
   private readonly _isSidebarExpanded = signal<boolean>(false);
   private readonly _isSidebarOpen = signal<boolean>(true);
 
-  public readonly mainContentClass = computed(() => {
-    if (this.isMobile) {
-      return 'ml-4';
-    }
-    return this.isSidebarExpanded ? 'ml-48' : 'ml-20';
-  });
+  public readonly isMobile = computed(() => this._isMobile());
+  public readonly isSidebarOpen = computed(() => this._isSidebarOpen());
+  public readonly isSidebarExpanded = computed(() => this._isSidebarExpanded());
 
-  public readonly sidebarClass = computed(() => {
-    if (this.isMobile) {
-      return '!w-64';
-    }
-    return this.isSidebarExpanded ? '!w-44' : '!w-16';
-  });
+  public readonly mainContentClass = computed(() => (this.isMobile() ? 'ml-4' : this.isSidebarExpanded() ? 'ml-48' : 'ml-20'));
+
+  public readonly sidebarClass = computed(() => (this.isMobile() ? '!w-64' : this.isSidebarExpanded() ? '!w-44' : '!w-16'));
 
   constructor() {
     effect(() => {
@@ -31,50 +25,30 @@ export class LayoutService {
 
   private isMobileListener() {
     window.addEventListener('resize', () => {
-      this.setIsMobile(window.innerWidth <= 600);
+      this._isMobile.set(window.innerWidth <= 600);
     });
   }
 
   private setupResponsiveBehavior(): void {
-    this.setIsSidebarOpen(!this.isMobile);
-    this.setIsSidebarExpanded(false);
-  }
-
-  get isMobile() {
-    return this._isMobile();
-  }
-
-  get isSidebarOpen() {
-    return this._isSidebarOpen();
-  }
-
-  get isSidebarExpanded() {
-    return this._isSidebarExpanded();
+    this._isSidebarOpen.set(!this._isMobile());
+    this._isSidebarExpanded.set(false);
   }
 
   toggleSidebarVisibility(): void {
-    if (this.isMobile) {
-      this.setIsSidebarOpen(!this.isSidebarOpen);
+    if (this.isMobile()) {
+      this._isSidebarOpen.set(!this.isSidebarOpen());
     }
-    this.setIsSidebarExpanded(this.isSidebarOpen);
+    this._isSidebarExpanded.set(this._isSidebarOpen());
   }
 
   toggleSidebarExpansion(): void {
-    if (this.isMobile) {
-      this.setIsSidebarOpen(false);
+    if (this.isMobile()) {
+      this._isSidebarOpen.set(false);
     }
-    this.setIsSidebarExpanded(!this.isSidebarExpanded);
+    this._isSidebarExpanded.update(expanded => !expanded);
   }
 
-  setIsMobile(sizeMatches: boolean): void {
-    this._isMobile.set(sizeMatches);
-  }
-
-  setIsSidebarOpen(open: boolean): void {
-    this._isSidebarOpen.set(open);
-  }
-
-  setIsSidebarExpanded(expanded: boolean): void {
-    this._isSidebarExpanded.set(expanded);
+  setIsSidebarOpen(isOpen: boolean): void {
+    this._isSidebarOpen.set(isOpen);
   }
 }

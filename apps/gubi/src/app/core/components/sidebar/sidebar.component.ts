@@ -22,8 +22,13 @@ interface MenuItem {
 })
 export class SidebarComponent {
   private readonly router = inject(Router);
-  private readonly authService = inject(AuthService);
+  protected readonly authService = inject(AuthService);
   protected readonly layoutService = inject(LayoutService);
+
+  protected readonly isSidebarOpen = this.layoutService.isSidebarOpen;
+  protected readonly isMobile = this.layoutService.isMobile;
+  protected readonly isSidebarExpanded = this.layoutService.isSidebarExpanded;
+  protected readonly sidebarClass = this.layoutService.sidebarClass;
 
   protected menuItems: MenuItem[] = [
     { label: 'Espaços', icon: 'pi pi-home', route: '/spaces' },
@@ -32,9 +37,5 @@ export class SidebarComponent {
 
   isActive(route: string): boolean {
     return this.router.url === route;
-  }
-
-  async logout(): Promise<void> {
-    await this.authService.logout();
   }
 }
