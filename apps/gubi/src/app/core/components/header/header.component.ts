@@ -18,7 +18,7 @@ export class HeaderComponent {
   protected authService = inject(AuthService);
   protected layoutService = inject(LayoutService);
 
-  userItems: MenuItem[] = [
+  protected userItems: MenuItem[] = [
     {
       label: 'Sair',
       icon: 'pi pi-power-off',
@@ -26,9 +26,9 @@ export class HeaderComponent {
     }
   ];
 
-  home: MenuItem = { icon: 'pi pi-home', label: 'Página Inicial', routerLink: '/spaces' };
-  crumbItems: MenuItem[] = [{ label: 'Espaços', styleClass: 'text-md font-medium' }];
+  protected home: MenuItem = { icon: 'pi pi-home', label: 'Página Inicial', routerLink: '/spaces' };
+  protected crumbItems: MenuItem[] = [{ label: 'Espaços', styleClass: 'text-md font-medium' }];
 
-  isMobile = this.layoutService.isMobile;
-  openMobileSidebar = this.layoutService.toggleSidebarVisibility.bind(this.layoutService);
+  protected isMobile = this.layoutService.isMobile;
+  protected openMobileSidebar = this.layoutService.toggleSidebarVisibility.bind(this.layoutService);
 }

@@ -21,14 +21,14 @@ interface MenuItem {
   standalone: true
 })
 export class SidebarComponent {
-  private readonly router = inject(Router);
-  protected readonly authService = inject(AuthService);
-  protected readonly layoutService = inject(LayoutService);
+  private router = inject(Router);
+  protected authService = inject(AuthService);
+  protected layoutService = inject(LayoutService);
 
-  protected readonly isSidebarOpen = this.layoutService.isSidebarOpen;
-  protected readonly isMobile = this.layoutService.isMobile;
-  protected readonly isSidebarExpanded = this.layoutService.isSidebarExpanded;
-  protected readonly sidebarClass = this.layoutService.sidebarClass;
+  protected isSidebarOpen = this.layoutService.isSidebarOpen;
+  protected isMobile = this.layoutService.isMobile;
+  protected isSidebarExpanded = this.layoutService.isSidebarExpanded;
+  protected sidebarClass = this.layoutService.sidebarClass;
 
   protected menuItems: MenuItem[] = [
     { label: 'Espaços', icon: 'pi pi-home', route: '/spaces' },

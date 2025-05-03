@@ -1,31 +1,32 @@
 import { AutoCompleteCompleteEvent, AutoCompleteModule, AutoCompleteSelectEvent } from 'primeng/autocomplete';
 import { Button } from 'primeng/button';
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, inject, Input, Output, SimpleChanges } from '@angular/core';
+import { Component, computed, effect, inject } from '@angular/core';
 import { ConfirmationService } from 'primeng/api';
 import { DialogModule } from 'primeng/dialog';
 import { FormsModule } from '@angular/forms';
-import { iSpace } from '@features/spaces/interfaces/space.interface';
 import { iUser } from '@features/auth/interfaces/user.interface';
 import { LoadingComponent } from '@shared/components/loading/loading.component';
 import { MessageService } from '@shared/services/message.service';
+import { SpaceApiService } from '@features/spaces/services/space-api.service';
 import { SpaceService } from '@features/spaces/services/space.service';
 import { TooltipModule } from 'primeng/tooltip';
 
 @Component({
-  selector: 'app-manage-members',
+  selector: 'app-manage-space-members',
   imports: [DialogModule, Button, FormsModule, AutoCompleteModule, CommonModule, TooltipModule, LoadingComponent],
-  templateUrl: './manage-members.component.html',
-  styleUrl: './manage-members.component.scss'
+  templateUrl: './manage-space-members.component.html',
+  styleUrl: './manage-space-members.component.scss'
 })
-export class ManageMembersComponent {
-  private spaceService = inject(SpaceService);
+export class ManageSpaceMembersComponent {
+  protected spaceService = inject(SpaceService);
+  protected spaceApiService = inject(SpaceApiService);
   private messageService = inject(MessageService);
   private confirmationService = inject(ConfirmationService);
 
-  @Input() visible = false;
-  @Input() spaceToManage!: iSpace;
-  @Output() visibleChange = new EventEmitter<boolean>();
+  protected isDialogOpen = this.spaceService.isMembersDialogOpen;
+  protected selectedSpace = this.spaceService.selectedSpace;
+  protected spaceId = computed(() => this.spaceService.selectedSpace()?.id);
 
   searchValue: iUser | null = null;
   members: iUser[] = [];
@@ -35,24 +36,30 @@ export class ManageMembersComponent {
   isLoadingMembers = true;
   isCreator = false;
 
-  ngOnChanges(changes: SimpleChanges) {
-    if (changes['visible']?.currentValue) {
-      this.isCreator = this.spaceService.checkIfCurrentUserIsCreator(this.spaceToManage);
+  constructor() {
+    effect(() => this.setUpMembers());
+  }
+
+  setUpMembers() {
+    const selectedSpace = this.selectedSpace();
+
+    if (this.isDialogOpen() && selectedSpace) {
+      this.isCreator = this.spaceService.checkIfCurrentUserIsCreator(selectedSpace);
       this.getSpaceMembers();
     }
   }
 
-  private get spaceId(): number {
-    return this.spaceToManage.id;
-  }
-
   async getSpaceMembers() {
-    this.members = await this.spaceService.getSpaceMembers(this.spaceId);
+    const spaceId = this.spaceId();
+    if (!spaceId) return;
+    this.members = await this.spaceApiService.getSpaceMembers(spaceId);
     this.isLoadingMembers = false;
   }
 
   async searchUsers(event: AutoCompleteCompleteEvent) {
-    const availableUsers = await this.spaceService.getMembersToInvite(this.spaceId, event.query);
+    const spaceId = this.spaceId();
+    if (!spaceId) return;
+    const availableUsers = await this.spaceApiService.getMembersToInvite(spaceId, event.query);
     this.filteredUsers = availableUsers.filter(user => !this.newSelectedUsers.some(selectedUser => selectedUser.id === user.id));
   }
 
@@ -77,7 +84,7 @@ export class ManageMembersComponent {
 
   close(): void {
     this.resetState();
-    this.visibleChange.emit(false);
+    this.spaceService.toggleMembersDialog(false);
   }
 
   async handleSubmit(): Promise<void> {
@@ -86,7 +93,9 @@ export class ManageMembersComponent {
     }
 
     this.isLoading = true;
-    const { error } = await this.spaceService.addMembersToSpace(this.spaceId, this.newSelectedUsers);
+    const spaceId = this.spaceId();
+    if (!spaceId) return;
+    const { error } = await this.spaceApiService.addMembersToSpace(spaceId, this.newSelectedUsers);
 
     if (error) {
       this.messageService.showMessage('error', 'Erro', error);
@@ -100,7 +109,7 @@ export class ManageMembersComponent {
   }
 
   memberCanBeRemoved(member: iUser): boolean {
-    return this.isCreator && this.spaceToManage.creator_id !== member.id;
+    return this.isCreator && this.selectedSpace()?.creator_id !== member.id;
   }
 
   handleRemoveMember(user: iUser) {
@@ -132,7 +141,9 @@ export class ManageMembersComponent {
 
   async removeMember(user: iUser): Promise<void> {
     this.isLoading = true;
-    const { error } = await this.spaceService.removeMemberFromSpace(this.spaceId, user.id);
+    const spaceId = this.spaceId();
+    if (!spaceId) return;
+    const { error } = await this.spaceApiService.removeMemberFromSpace(spaceId, user.id);
 
     if (error) {
       this.messageService.showMessage('error', 'Erro', error);

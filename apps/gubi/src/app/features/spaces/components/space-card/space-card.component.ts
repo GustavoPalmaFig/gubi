@@ -1,9 +1,10 @@
 import { Button } from 'primeng/button';
 import { Card } from 'primeng/card';
-import { Component, EventEmitter, inject, Input, Output } from '@angular/core';
-import { ConfirmationService, MenuItem, MessageService } from 'primeng/api';
+import { Component, inject, Input } from '@angular/core';
+import { ConfirmationService, MenuItem } from 'primeng/api';
 import { iSpace } from '@features/spaces/interfaces/space.interface';
 import { MenuModule } from 'primeng/menu';
+import { MessageService } from '@shared/services/message.service';
 import { RouterLink } from '@angular/router';
 import { SkeletonModule } from 'primeng/skeleton';
 import { SpaceService } from '@features/spaces/services/space.service';
@@ -17,13 +18,9 @@ import { SpaceService } from '@features/spaces/services/space.service';
 export class SpaceCardComponent {
   private messageService = inject(MessageService);
   private confirmationService = inject(ConfirmationService);
-  private spaceService = inject(SpaceService);
+  protected spaceService = inject(SpaceService);
 
   @Input() space!: iSpace;
-  @Output() spaceSelected = new EventEmitter<iSpace>();
-  @Output() updateDialogVisibleChange = new EventEmitter<boolean>();
-  @Output() membersDialogVisibleChange = new EventEmitter<boolean>();
-  @Output() spaceDeleted = new EventEmitter<number>();
 
   protected items: MenuItem[];
   protected isAddMembersOpen = false;
@@ -34,14 +31,14 @@ export class SpaceCardComponent {
         label: 'Gerenciar Membros',
         icon: 'pi pi-plus',
         command: () => {
-          this.membersDialogVisibleChange.emit(true);
+          this.spaceService.toggleMembersDialog(true);
         }
       },
       {
         label: 'Editar',
         icon: 'pi pi-pencil',
         command: () => {
-          this.updateDialogVisibleChange.emit(true);
+          this.spaceService.toggleFormDialog(true);
         }
       }
     ];
@@ -68,12 +65,6 @@ export class SpaceCardComponent {
     }
   }
 
-  addMembers() {
-    if (this.space) {
-      this.messageService.add({ severity: 'info', summary: 'Info', detail: 'Funcionalidade em desenvolvimento', life: 30000 });
-    }
-  }
-
   openDeleteConfirmDialog(event: Event) {
     this.confirmationService.confirm({
       target: event?.target || undefined,
@@ -91,23 +82,19 @@ export class SpaceCardComponent {
         severity: 'danger'
       },
 
-      accept: () => {
-        this.deleteSelectedSpace();
-      },
-      reject: () => {
-        this.messageService.add({ severity: 'warn', summary: 'Cancelado', detail: 'Operação cancelada' });
-      }
+      accept: async () => this.handleDelete(),
+      reject: () => this.messageService.showMessage('warn', 'Cancelado', 'Operação cancelada')
     });
   }
 
-  async deleteSelectedSpace() {
-    const { error } = await this.spaceService.deleteSpace(this.space.id);
+  async handleDelete() {
+    const { error } = await this.spaceService.deleteSelectedSpace();
+
     if (error) {
-      this.messageService.add({ severity: 'error', summary: 'Erro', detail: error, life: 10000 });
+      this.messageService.showMessage('error', 'Erro', error);
       return;
     }
 
-    this.spaceDeleted.emit(this.space.id);
-    this.messageService.add({ severity: 'info', summary: 'Excluído', detail: 'Espaço excluído com sucesso' });
+    this.messageService.showMessage('success', 'Excluído', 'Espaço excluído com sucesso');
   }
 }

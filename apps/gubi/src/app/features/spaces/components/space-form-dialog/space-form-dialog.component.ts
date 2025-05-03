@@ -1,30 +1,27 @@
 import { ButtonModule } from 'primeng/button';
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, Output, inject } from '@angular/core';
+import { Component, computed, effect, inject } from '@angular/core';
 import { DialogModule } from 'primeng/dialog';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { InputTextModule } from 'primeng/inputtext';
-import { iSpace } from '@features/spaces/interfaces/space.interface';
 import { MessageService } from '@shared/services/message.service';
 import { SpaceService } from '@features/spaces/services/space.service';
 import { TextareaModule } from 'primeng/textarea';
 
 @Component({
-  selector: 'app-space-dialog',
+  selector: 'app-space-form-dialog',
   standalone: true,
   imports: [CommonModule, DialogModule, ButtonModule, InputTextModule, TextareaModule, ReactiveFormsModule],
-  templateUrl: './space-dialog.component.html',
-  styleUrl: './space-dialog.component.scss'
+  templateUrl: './space-form-dialog.component.html',
+  styleUrl: './space-form-dialog.component.scss'
 })
-export class SpaceDialogComponent {
-  private spaceService = inject(SpaceService);
+export class SpaceFormDialogComponent {
+  protected spaceService = inject(SpaceService);
   private messageService = inject(MessageService);
 
-  @Input() visible = false;
-  @Input() spaceToEdit: iSpace | null = null;
-  @Output() visibleChange = new EventEmitter<boolean>();
-  @Output() spaceSaved = new EventEmitter<iSpace>();
-
+  protected isDialogOpen = this.spaceService.isFormDialogOpen;
+  protected selectedSpace = this.spaceService.selectedSpace;
+  protected isEditMode = computed(() => !!this.spaceService.selectedSpace());
   protected isLoading = false;
   protected spaceForm: FormGroup;
 
@@ -33,13 +30,17 @@ export class SpaceDialogComponent {
       name: new FormControl('', [Validators.required]),
       description: new FormControl('')
     });
+
+    effect(() => this.initializeForm());
   }
 
-  ngOnChanges(): void {
-    if (this.visible && this.spaceToEdit) {
+  initializeForm() {
+    const selectedSpace = this.selectedSpace();
+
+    if (this.isDialogOpen() && selectedSpace) {
       this.spaceForm.patchValue({
-        name: this.spaceToEdit.name,
-        description: this.spaceToEdit.description
+        name: selectedSpace.name,
+        description: selectedSpace.description
       });
     } else {
       this.spaceForm.reset();
@@ -48,7 +49,7 @@ export class SpaceDialogComponent {
 
   close(): void {
     this.isLoading = false;
-    this.visibleChange.emit(false);
+    this.spaceService.toggleFormDialog(false);
     this.spaceForm.reset();
   }
 
@@ -57,8 +58,7 @@ export class SpaceDialogComponent {
 
     this.isLoading = true;
     const { name, description } = this.spaceForm.value;
-    const { data, error } =
-      this.isEditMode && this.spaceToEdit ? await this.spaceService.updateSpace(this.spaceToEdit.id, name, description) : await this.spaceService.createSpace(name, description);
+    const { error } = await this.spaceService.handleFormSubmit(name, description);
 
     if (error) {
       this.messageService.showMessage('error', 'Erro', error);
@@ -66,11 +66,6 @@ export class SpaceDialogComponent {
       return;
     }
 
-    this.spaceSaved.emit(data);
     this.close();
-  }
-
-  get isEditMode(): boolean {
-    return !!this.spaceToEdit;
   }
 }

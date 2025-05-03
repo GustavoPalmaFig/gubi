@@ -7,17 +7,11 @@
 </div>
 
 <div class="flex items-center justify-center">
-  <p-dataView [value]="spaces" layout="grid" [paginator]="false" class="w-full transparent-dataview">
+  <p-dataView [value]="spaces()" layout="grid" [paginator]="false" class="w-full transparent-dataview">
     <ng-template #grid let-items>
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
         @for (space of items; track space ? space.id : ($index + 1)) {
-          <app-space-card
-            [space]="space"
-            (spaceSelected)="setSelectedSpace($event)"
-            (updateDialogVisibleChange)="handleUpdateDialogVisibility($event)"
-            (membersDialogVisibleChange)="handleMembersDialogVisibility($event)"
-            (spaceDeleted)="handleSpaceDeleted($event)"
-          />
+        <app-space-card [space]="space" />
         }
       </div>
     </ng-template>
@@ -31,10 +25,9 @@
   </p-dataView>
 </div>
 
-<app-space-dialog [visible]="isOpenDialog" [spaceToEdit]="selectedSpace" (visibleChange)="handleUpdateDialogVisibility($event)" (spaceSaved)="handleSpaceSaved($event)" />
-
-<app-manage-members [visible]="isMembersDialogOpen" [spaceToManage]="selectedSpace!" (visibleChange)="handleMembersDialogVisibility($event)" />
+<app-space-form-dialog />
+<app-manage-space-members />
 
 <ng-template #newButton>
-  <p-button label="Novo" icon="pi pi-plus-circle" severity="contrast" (click)="handleUpdateDialogVisibility(true, false)"></p-button>
+  <p-button label="Novo" icon="pi pi-plus-circle" severity="contrast" (click)="spaceService.toggleFormDialog(true)"></p-button>
 </ng-template>

@@ -8,12 +8,11 @@ export class LayoutService {
   private readonly _isSidebarExpanded = signal<boolean>(false);
   private readonly _isSidebarOpen = signal<boolean>(true);
 
-  public readonly isMobile = computed(() => this._isMobile());
-  public readonly isSidebarOpen = computed(() => this._isSidebarOpen());
-  public readonly isSidebarExpanded = computed(() => this._isSidebarExpanded());
+  public readonly isMobile = this._isMobile.asReadonly();
+  public readonly isSidebarOpen = this._isSidebarOpen.asReadonly();
+  public readonly isSidebarExpanded = this._isSidebarExpanded.asReadonly();
 
   public readonly mainContentClass = computed(() => (this.isMobile() ? 'ml-4' : this.isSidebarExpanded() ? 'ml-48' : 'ml-20'));
-
   public readonly sidebarClass = computed(() => (this.isMobile() ? '!w-64' : this.isSidebarExpanded() ? '!w-44' : '!w-16'));
 
   constructor() {

@@ -1,66 +1,85 @@
-import { AuthService } from '@features/auth/services/auth.service';
-import { inject, Injectable } from '@angular/core';
-import { iUser } from '@features/auth/interfaces/user.interface';
-import { SupabaseService } from '@shared/services/supabase/supabase.service';
-import Utils from '@shared/utils/utils';
+import { effect, inject, Injectable, signal } from '@angular/core';
 import { iSpace } from '../interfaces/space.interface';
+import { SpaceApiService } from './space-api.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class SpaceService {
-  protected authService = inject(AuthService);
-  private supabaseService = inject(SupabaseService);
-  protected userId = this.authService.currentUser()?.id;
+  private spaceApiService = inject(SpaceApiService);
 
-  async getUserSpaces(): Promise<iSpace[]> {
-    const { data } = await this.supabaseService.client.from('space').select('*');
-    return data as iSpace[];
+  private readonly _spaces = signal<iSpace[]>(Array(6).fill({}));
+  private readonly _isFormDialogOpen = signal(false);
+  private readonly _isMembersDialogOpen = signal(false);
+  private readonly _selectedSpace = signal<iSpace | null>(null);
+
+  public readonly spaces = this._spaces.asReadonly();
+  public readonly isFormDialogOpen = this._isFormDialogOpen.asReadonly();
+  public readonly isMembersDialogOpen = this._isMembersDialogOpen.asReadonly();
+  public readonly selectedSpace = this._selectedSpace.asReadonly();
+
+  constructor() {
+    effect(() => this._selectedSpace.set(this._isFormDialogOpen() || this._isMembersDialogOpen() ? this._selectedSpace() : null));
   }
 
-  async getSpaceById(spaceId: number): Promise<iSpace | null> {
-    const { data } = await this.supabaseService.client.from('space').select('*').eq('id', spaceId).single();
-    return data as iSpace | null;
+  async getAvailableSpaces() {
+    const spaces = await this.spaceApiService.getUserSpaces();
+    this._spaces.update(() => spaces);
   }
 
-  async createSpace(name: string, description: string): Promise<{ data: iSpace; error?: string }> {
-    const { data, error } = await this.supabaseService.client.from('space').insert([{ name, description }]).select().single();
-
-    return { data: data as iSpace, error: Utils.handleErrorMessage(error) };
+  toggleFormDialog(isOpen: boolean): void {
+    this._isFormDialogOpen.set(isOpen);
   }
 
-  async updateSpace(spaceId: number, name: string, description: string): Promise<{ data: iSpace; error?: string }> {
-    const { data, error } = await this.supabaseService.client.from('space').update({ name, description }).eq('id', spaceId).select().single();
-    return { data: data as iSpace, error: Utils.handleErrorMessage(error) };
+  toggleMembersDialog(isOpen: boolean): void {
+    this._isMembersDialogOpen.set(isOpen);
   }
 
-  async deleteSpace(spaceId: number): Promise<{ error?: string }> {
-    const { error } = await this.supabaseService.client.from('space').delete().eq('id', spaceId);
-    return { error: Utils.handleErrorMessage(error) };
+  selectSpace(space: iSpace | null): void {
+    this._selectedSpace.set(space);
   }
 
-  async addMembersToSpace(spaceId: number, users: iUser[]): Promise<{ error?: string }> {
-    const space_members = users.map(({ id }) => ({ space_id: spaceId, user_id: id }));
-    const { error } = await this.supabaseService.client.from('space_members').insert(space_members);
-    return { error: Utils.handleErrorMessage(error) };
+  unselectSpace(): void {
+    this._selectedSpace.set(null);
   }
 
-  async removeMemberFromSpace(space_id: number, user_id: string): Promise<{ error?: string }> {
-    const { error } = await this.supabaseService.client.from('space_members').delete().match({ space_id, user_id });
-    return { error: Utils.handleErrorMessage(error) };
+  async handleFormSubmit(name: string, description: string): Promise<{ error?: string }> {
+    const selected = this.selectedSpace();
+    const apiCall = selected ? this.spaceApiService.updateSpace(selected.id, name, description) : this.spaceApiService.createSpace(name, description);
+
+    const { data, error } = await apiCall;
+    if (error) return { error };
+
+    this.updateSpaces(data);
+    return {};
   }
 
-  async getSpaceMembers(target_space_id: number): Promise<iUser[]> {
-    const { data } = await this.supabaseService.client.rpc('get_space_members', { target_space_id });
-    return data as iUser[];
+  updateSpaces(space: iSpace) {
+    const index = this.spaces().findIndex(s => s.id === space.id);
+    if (index !== -1) {
+      this._spaces()[index] = space;
+    } else {
+      this._spaces().push(space);
+    }
   }
 
-  async getMembersToInvite(target_space_id: number, query: string): Promise<iUser[]> {
-    const { data } = await this.supabaseService.client.rpc('search_eligible_users_for_space', { target_space_id, query });
-    return data as iUser[];
+  handleSpaceDeleted(spaceId: number) {
+    this._spaces.update(spaces => spaces.filter(space => space.id !== spaceId));
+  }
+
+  async deleteSelectedSpace(): Promise<{ error?: string }> {
+    const selected = this.selectedSpace();
+    if (!selected) return { error: 'Espaço não selecionado' };
+    const { error } = await this.spaceApiService.deleteSpace(selected.id);
+    if (!error) this.removeSpaceFromList(selected.id);
+    return { error };
+  }
+
+  removeSpaceFromList(spaceId: number) {
+    this._spaces.update(spaces => spaces.filter(sp => sp.id !== spaceId));
   }
 
   checkIfCurrentUserIsCreator(space: iSpace): boolean {
-    return space.creator_id === this.userId;
+    return space.creator_id === this.spaceApiService.userId;
   }
 }

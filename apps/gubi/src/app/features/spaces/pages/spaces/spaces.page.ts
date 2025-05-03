@@ -4,12 +4,11 @@ import { CommonModule } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { DataViewModule } from 'primeng/dataview';
 import { InputTextModule } from 'primeng/inputtext';
-import { iSpace } from '@features/spaces/interfaces/space.interface';
-import { ManageMembersComponent } from '@features/spaces/components/manage-members/manage-members.component';
+import { ManageSpaceMembersComponent } from '@features/spaces/components/manage-space-members/manage-space-members.component';
 import { MenuModule } from 'primeng/menu';
 import { RouterModule } from '@angular/router';
 import { SpaceCardComponent } from '@features/spaces/components/space-card/space-card.component';
-import { SpaceDialogComponent } from '@features/spaces/components/space-dialog/space-dialog.component';
+import { SpaceFormDialogComponent } from '@features/spaces/components/space-form-dialog/space-form-dialog.component';
 import { SpaceService } from '@features/spaces/services/space.service';
 import { TextareaModule } from 'primeng/textarea';
 
@@ -22,9 +21,9 @@ import { TextareaModule } from 'primeng/textarea';
     TextareaModule,
     RouterModule,
     MenuModule,
-    SpaceDialogComponent,
+    SpaceFormDialogComponent,
     SpaceCardComponent,
-    ManageMembersComponent,
+    ManageSpaceMembersComponent,
     DataViewModule
   ],
   templateUrl: './spaces.page.html',
@@ -32,47 +31,11 @@ import { TextareaModule } from 'primeng/textarea';
 })
 export class SpacesPage {
   protected authService = inject(AuthService);
-  private spaceService = inject(SpaceService);
+  protected spaceService = inject(SpaceService);
 
-  protected isOpenDialog = false;
-  protected isMembersDialogOpen = false;
-  protected spaces: iSpace[] = Array(6).fill({});
-  protected selectedSpace: iSpace | null = null;
+  protected spaces = this.spaceService.spaces;
 
   ngOnInit() {
-    this.getAvailableSpaces();
-  }
-
-  async getAvailableSpaces() {
-    this.spaces = await this.spaceService.getUserSpaces();
-  }
-
-  handleUpdateDialogVisibility(visible: boolean, isEdit = true) {
-    if (!isEdit) {
-      this.selectedSpace = null;
-    }
-
-    this.isOpenDialog = visible;
-  }
-
-  setSelectedSpace(space: iSpace) {
-    this.selectedSpace = space;
-  }
-
-  handleSpaceSaved(space: iSpace) {
-    if (this.selectedSpace) {
-      const index = this.spaces.findIndex(s => s.id === space.id);
-      if (index !== -1) {
-        this.spaces[index] = space;
-      }
-    } else this.spaces.push(space);
-  }
-
-  handleSpaceDeleted(spaceId: number) {
-    this.spaces = this.spaces.filter(space => space.id !== spaceId);
-  }
-
-  handleMembersDialogVisibility(visible: boolean) {
-    this.isMembersDialogOpen = visible;
+    this.spaceService.getAvailableSpaces();
   }
 }

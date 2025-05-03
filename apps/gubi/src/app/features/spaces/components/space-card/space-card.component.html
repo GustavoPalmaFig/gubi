@@ -10,7 +10,7 @@
             [rounded]="true"
             [text]="true"
             severity="contrast"
-            (click)="menu.toggle($event); spaceSelected.emit(space)"
+            (click)="menu.toggle($event); spaceService.selectSpace(space)"
             (keydown.enter)="menu.toggle($event)"
             (keydown.space)="menu.toggle($event)"
           ></p-button>
