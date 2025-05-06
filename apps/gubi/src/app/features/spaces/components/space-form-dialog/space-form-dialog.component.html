@@ -1,5 +1,5 @@
 <p-dialog
-  [header]="isEditMode() ? 'Editar Space' : 'Criar Space'"
+  [header]="isEditMode() ? 'Editar Espaço' : 'Criar Espaço'"
   [modal]="true"
   [visible]="isDialogOpen()"
   [closeOnEscape]="true"
@@ -7,14 +7,14 @@
   (visibleChange)="spaceService.toggleFormDialog($event)"
   styleClass="w-full md:w-1/2 lg:w-1/3 mx-4 dialog-with-subtitle"
 >
-  <p class="text-sm text-muted-foreground">{{ isEditMode() ? 'Edite os detalhes do seu space.' : 'Crie um novo space para gerenciar contas e despesas compartilhadas.'}}</p>
+  <p class="text-sm text-muted-foreground">{{ isEditMode() ? 'Edite os detalhes do seu espaço.' : 'Crie um novo espaço para gerenciar contas e despesas compartilhadas.'}}</p>
   <form [formGroup]="spaceForm" (ngSubmit)="handleSubmit()" class="mt-6 space-y-4">
     <div class="my-6">
-      <label for="name" class="text-sm font-medium">Nome do Space</label>
+      <label for="name" class="text-sm font-medium">Nome do Espaço</label>
       <input id="name" class="w-full mt-2" type="text" pInputText formControlName="name" placeholder="Ex: Apartamento, Viagem, Família" />
     </div>
     <div class="my-6">
-      <label for="description" class="text-sm font-medium">Descrição</label>
+      <label for="description" class="text-sm font-medium">Descrição (Opcional)</label>
       <textarea
         rows="3"
         cols="30"
@@ -32,6 +32,7 @@
         label="{{ isLoading ? (isEditMode() ? 'Editando Space...' : 'Criando...') : (isEditMode() ? 'Editar Space' : 'Criar Space') }}"
         [disabled]="isLoading || spaceForm.get('name')?.invalid"
         [loading]="isLoading"
+        severity="contrast"
       ></p-button>
     </div>
   </form>

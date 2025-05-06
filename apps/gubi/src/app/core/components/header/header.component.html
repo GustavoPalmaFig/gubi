@@ -1,27 +1,25 @@
-@if(isMobile()) {
-  <div class="flex items-center justify-between p-3 pl-0">
-    <a class="cursor-pointer w-8" [routerLink]="'/spaces'" aria-label="Ir para Espaços">
-      <img src="gb_logo.svg" alt="Gubi" class="logo w-full" />
-    </a>
-    <p-button icon="pi pi-bars" [text]="true" aria-label="Abrir menu" severity="secondary" (click)="openMobileSidebar()" tooltipPosition="bottom"></p-button>
-  </div>
+<div class="flex items-center justify-between mx-4 py-2 border-b border-[#64748b]">
+  @if(isMobile()) {
+  <a class="cursor-pointer w-8" [routerLink]="'/spaces'" aria-label="Ir para Espaços">
+    <img src="gb_logo.svg" alt="Gubi" class="logo w-full" />
+  </a>
+  <p-button icon="pi pi-bars" [text]="true" aria-label="Abrir menu" severity="secondary" (click)="openMobileSidebar()" tooltipPosition="bottom"></p-button>
   } @else {
-  <div class="flex items-center justify-between p-3 pl-0">
-    <p-breadcrumb class="max-w-full" [model]="crumbItems" [home]="home" class="transparent-breadcrumb" aria-label="Navegação" />
-    <div
-      class="size-8 rounded-full flex items-center justify-center bg-blue-500 text-white font-400 cursor-pointer hover:bg-blue-600 transition-colors duration-200"
-      tabindex="0"
-      role="button"
-      aria-label="Menu do usuário"
-      aria-haspopup="true"
-      (click)="menu.toggle($event)"
-      (keydown.enter)="menu.toggle($event)"
-      (keydown.space)="menu.toggle($event)"
-      tooltipPosition="bottom"
-    >
-      <span>{{ authService.userFirstName.charAt(0) }}</span>
-    </div>
+  <p-breadcrumb class="max-w-full transparent-breadcrumb" [model]="crumbItems" [home]="home" aria-label="Navegação" />
+  <div
+    class="size-8 rounded-full flex items-center justify-center bg-blue-500 text-white font-400 cursor-pointer hover:bg-blue-600 transition-colors duration-200"
+    tabindex="0"
+    role="button"
+    aria-label="Menu do usuário"
+    aria-haspopup="true"
+    (click)="menu.toggle($event)"
+    (keydown.enter)="menu.toggle($event)"
+    (keydown.space)="menu.toggle($event)"
+    tooltipPosition="bottom"
+  >
+    <span>{{ authService.userFirstName.charAt(0) }}</span>
   </div>
-}
+  }
+</div>
 
 <p-menu #menu [model]="userItems" [popup]="true" styleClass="!min-w-fit" appendTo="body" />

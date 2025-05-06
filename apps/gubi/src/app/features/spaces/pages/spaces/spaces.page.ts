@@ -1,4 +1,3 @@
-import { AuthService } from '@features/auth/services/auth.service';
 import { ButtonModule } from 'primeng/button';
 import { CommonModule } from '@angular/common';
 import { Component, inject } from '@angular/core';
@@ -30,9 +29,7 @@ import { TextareaModule } from 'primeng/textarea';
   styleUrl: './spaces.page.scss'
 })
 export class SpacesPage {
-  protected authService = inject(AuthService);
   protected spaceService = inject(SpaceService);
-
   protected spaces = this.spaceService.spaces;
 
   ngOnInit() {

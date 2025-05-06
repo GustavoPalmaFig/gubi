@@ -1,41 +1,36 @@
-<p-card styleClass="h-65">
-  @if(space.id) {
-    <ng-template #title>
-      <div class="flex items-center">
-        <h3 class="text-2xl text-center font-semibold flex-1">{{ space.name }}</h3>
-        <div class="flex flex-col items-end justify-end">
-          <p-button
-            icon="pi pi-ellipsis-v cursor-pointer"
-            tabindex="0"
-            [rounded]="true"
-            [text]="true"
-            severity="contrast"
-            (click)="menu.toggle($event); spaceService.selectSpace(space)"
-            (keydown.enter)="menu.toggle($event)"
-            (keydown.space)="menu.toggle($event)"
-          ></p-button>
-        </div>
-      </div>
-    </ng-template>
-
-    <ng-template #content>
-      <div class="flex items-center text-center my-4 h-24">
-        <p class="line-clamp-3 md:line-clamp-3 lg:line-clamp-4 w-full">{{ space.description || 'Gerencie contas e despesas compartilhadas neste space.' }}</p>
-      </div>
-    </ng-template>
-
-    <ng-template #footer>
-      <a [routerLink]="['/spaces', space.id]">
-        <p-button label="Acessar" styleClass="w-full" severity="contrast"></p-button>
-      </a>
-    </ng-template>
-  } @else {
-    <div class="flex flex-col items-center">
-      <p-skeleton styleClass="px-32 lg:px-52 py-6" />
-      <p-skeleton styleClass="px-32 lg:px-52 py-10 my-4 " />
-      <p-skeleton styleClass="px-32 lg:px-52 py-6" />
+@if(space.id) {
+  <div class="bg-card bg-white flex h-56 flex-col rounded-xl border shadow-sm px-4 pt-2 pb-4 hover:border-gray-200 hover:shadow-md transition-all cursor-pointer">
+    <div class="flex items-center justify-between gap-2">
+      <h1 class="text-lg font-semibold line-clamp-2">{{ space.name }}</h1>
+      <p-button
+        icon="pi pi-ellipsis-v cursor-pointer"
+        tabindex="0"
+        [rounded]="true"
+        [text]="true"
+        severity="contrast"
+        (click)="menu.toggle($event); spaceService.selectSpace(space)"
+        (keydown.enter)="menu.toggle($event)"
+        (keydown.space)="menu.toggle($event)"
+      ></p-button>
     </div>
-  }
-</p-card>
 
-<p-menu #menu [model]="items" [popup]="true" />
+    <div class="flex flex-col flex-grow justify-center">
+      <p class="text-md text-gray-600 line-clamp-3">{{ space.description || 'Gerencie contas e despesas compartilhadas neste space.' }}</p>
+    </div>
+
+    <div class="mt-auto pt-3 border-t flex items-end justify-between">
+      <div class="flex mt-2 items-center justify-start gap-2 text-sm text-gray-500">
+        <i class="pi pi-calendar"></i>
+        <span>Criado em {{ space.created_at | date: 'dd/MM/yyyy' }}</span>
+      </div>
+
+      @if(isCreator) {
+        <div class="inline-flex items-center rounded-full border px-2.5 py-1 text-xs font-semibold transition-colors border-transparent bg-black text-white">Administrador</div>
+      }
+    </div>
+  </div>
+} @else {
+  <p-skeleton styleClass="py-28" />
+}
+
+<p-menu #menu [model]="items" appendTo="body" [popup]="true" />

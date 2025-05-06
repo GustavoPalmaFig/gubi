@@ -1,5 +1,5 @@
 import { Button } from 'primeng/button';
-import { Card } from 'primeng/card';
+import { CommonModule } from '@angular/common';
 import { Component, inject, Input } from '@angular/core';
 import { ConfirmationService, MenuItem } from 'primeng/api';
 import { iSpace } from '@features/spaces/interfaces/space.interface';
@@ -11,7 +11,7 @@ import { SpaceService } from '@features/spaces/services/space.service';
 
 @Component({
   selector: 'app-space-card',
-  imports: [MenuModule, RouterLink, Button, SkeletonModule, Card],
+  imports: [MenuModule, RouterLink, Button, SkeletonModule, CommonModule],
   templateUrl: './space-card.component.html',
   styleUrl: './space-card.component.scss'
 })
@@ -22,47 +22,61 @@ export class SpaceCardComponent {
 
   @Input() space!: iSpace;
 
-  protected items: MenuItem[];
+  protected items!: MenuItem[];
   protected isAddMembersOpen = false;
-
-  constructor() {
-    this.items = [
-      {
-        label: 'Gerenciar Membros',
-        icon: 'pi pi-plus',
-        command: () => {
-          this.spaceService.toggleMembersDialog(true);
-        }
-      },
-      {
-        label: 'Editar',
-        icon: 'pi pi-pencil',
-        command: () => {
-          this.spaceService.toggleFormDialog(true);
-        }
-      }
-    ];
-  }
+  protected isCreator = false;
 
   ngOnInit() {
-    if (this.space) this.setItemsForCreator();
+    if (this.space) this.buildMenuItems();
   }
 
-  setItemsForCreator() {
-    const isCreator = this.spaceService.checkIfCurrentUserIsCreator(this.space);
-
-    if (isCreator) {
-      this.items.push({
-        label: 'Excluir',
-        icon: 'pi pi-trash',
-        styleClass: 'danger',
-        command: event => {
-          if (event.originalEvent) {
-            this.openDeleteConfirmDialog(event.originalEvent);
+  buildMenuItems() {
+    this.isCreator = this.spaceService.checkIfCurrentUserIsCreator(this.space);
+    this.items = [
+      {
+        label: 'Ações do Espaço',
+        styleClass: 'font-bold ',
+        items: [
+          {
+            separator: true
+          },
+          {
+            label: 'Membros',
+            icon: 'pi pi-user-plus',
+            iconClass: 'mr-2',
+            styleClass: 'mt-1',
+            command: () => {
+              this.spaceService.toggleMembersDialog(true);
+            }
+          },
+          {
+            label: 'Editar',
+            icon: 'pi pi-pen-to-square',
+            iconClass: 'mr-2',
+            styleClass: 'mb-1',
+            command: () => {
+              this.spaceService.toggleFormDialog(true);
+            }
+          },
+          {
+            visible: this.isCreator,
+            separator: this.isCreator
+          },
+          {
+            label: 'Excluir',
+            icon: 'pi pi-trash',
+            iconClass: 'mr-2',
+            styleClass: 'my-1',
+            visible: this.isCreator,
+            command: event => {
+              if (event.originalEvent) {
+                this.openDeleteConfirmDialog(event.originalEvent);
+              }
+            }
           }
-        }
-      });
-    }
+        ]
+      }
+    ];
   }
 
   openDeleteConfirmDialog(event: Event) {

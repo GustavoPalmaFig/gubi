@@ -1,4 +1,4 @@
-import { effect, inject, Injectable, signal } from '@angular/core';
+import { inject, Injectable, signal } from '@angular/core';
 import { iSpace } from '../interfaces/space.interface';
 import { SpaceApiService } from './space-api.service';
 
@@ -18,16 +18,13 @@ export class SpaceService {
   public readonly isMembersDialogOpen = this._isMembersDialogOpen.asReadonly();
   public readonly selectedSpace = this._selectedSpace.asReadonly();
 
-  constructor() {
-    effect(() => this._selectedSpace.set(this._isFormDialogOpen() || this._isMembersDialogOpen() ? this._selectedSpace() : null));
-  }
-
   async getAvailableSpaces() {
     const spaces = await this.spaceApiService.getUserSpaces();
     this._spaces.update(() => spaces);
   }
 
-  toggleFormDialog(isOpen: boolean): void {
+  toggleFormDialog(isOpen: boolean, isCreate = false): void {
+    if (isCreate && this.selectedSpace()) this.unselectSpace();
     this._isFormDialogOpen.set(isOpen);
   }
 
