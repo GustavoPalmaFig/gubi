@@ -1,0 +1,38 @@
+<p-dialog
+  [header]="selectedMethod() ? 'Editar Método de Pagamento' : 'Criar Método de Pagamento'"
+  [modal]="true"
+  [(visible)]="isDialogOpen"
+  [closeOnEscape]="true"
+  [dismissableMask]="true"
+  (visibleChange)="close()"
+  styleClass="w-full md:w-1/2 lg:w-1/3 mx-4 dialog-with-subtitle"
+>
+  <p class="text-sm text-muted-foreground">
+    {{ isEditMode() ? 'Atualize as informações do método de pagamento.' : 'Adicione um movo método de pagamento para utilizar em suas despesas'}}
+  </p>
+  <form [formGroup]="paymentMethodForm" (ngSubmit)="handleSubmit()" class="mt-6 space-y-4">
+    <div class="my-6">
+      <label for="name" class="text-sm font-medium">Nome do Espaço</label>
+      <input id="name" class="w-full mt-2" type="text" pInputText formControlName="name" placeholder="Ex: Cartão de Crédito, Pix, Cartão Conjunto" />
+    </div>
+    <div class="my-6 flex items-center">
+      <p-checkbox id="split_by_default" formControlName="split_by_default" [binary]="true" />
+      <label for="split_by_default" class="mx-2 text-sm font-medium">Dividir despesas por padrão</label>
+      <i
+        class="pi pi-question-circle"
+        tooltipEvent="hover"
+        [autoHide]="false"
+        pTooltip="Todas as despesas pagas com este método serão dividas igualmente para todos os membros do Espaço."
+      ></i>
+    </div>
+    <div class="flex justify-end">
+      <p-button
+        type="submit"
+        label="{{ isLoading ? (isEditMode() ? 'Salvando...' : 'Criando...') : (isEditMode() ? 'Salvar' : 'Criar') }}"
+        [disabled]="isLoading || paymentMethodForm.get('name')?.invalid"
+        [loading]="isLoading"
+        severity="contrast"
+      ></p-button>
+    </div>
+  </form>
+</p-dialog>

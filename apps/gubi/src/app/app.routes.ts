@@ -27,6 +27,10 @@ export const appRoutes: Route[] = [
       {
         path: 'spaces',
         loadComponent: () => import('./features/spaces/pages/spaces/spaces.page').then(m => m.SpacesPage)
+      },
+      {
+        path: 'payment-methods',
+        loadComponent: () => import('./features/payment-methods/pages/payment-methods-list/payment-methods-list.page').then(m => m.PaymentMethodsListPage)
       }
     ]
   }

@@ -6,7 +6,7 @@ import { LayoutService } from '@core/services/layout.service';
 import { Menu } from 'primeng/menu';
 import { MenubarModule } from 'primeng/menubar';
 import { MenuItem } from 'primeng/api';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-header',
@@ -17,6 +17,7 @@ import { RouterLink } from '@angular/router';
 export class HeaderComponent {
   protected authService = inject(AuthService);
   protected layoutService = inject(LayoutService);
+  protected router = inject(Router);
 
   protected userItems: MenuItem[] = [
     {
@@ -27,8 +28,25 @@ export class HeaderComponent {
   ];
 
   protected home: MenuItem = { icon: 'pi pi-home', label: 'Página Inicial', routerLink: '/spaces' };
-  protected crumbItems: MenuItem[] = [{ label: 'Espaços', styleClass: 'text-md font-medium' }];
+  protected crumbItems: MenuItem[] = [];
 
   protected isMobile = this.layoutService.isMobile;
   protected openMobileSidebar = this.layoutService.toggleSidebarVisibility.bind(this.layoutService);
+
+  constructor() {
+    this.router.events.subscribe(() => {
+      this.crumbItems = [
+        { label: 'Espaços', styleClass: 'text-md font-medium', visible: this.isActive('/spaces') },
+        { label: 'Métodos de Pagamento', styleClass: 'text-md font-medium', visible: this.isActive('/payment-methods') }
+      ];
+    });
+  }
+
+  isActive(route: string): boolean {
+    return this.router.url === route;
+  }
+
+  get visibleCrumbItems(): MenuItem[] {
+    return this.crumbItems.filter(item => item.visible);
+  }
 }

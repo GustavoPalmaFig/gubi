@@ -32,7 +32,7 @@ export class SidebarComponent {
 
   protected menuItems: MenuItem[] = [
     { label: 'Espaços', icon: 'pi pi-home', route: '/spaces' },
-    { label: 'Pagamentos', icon: 'pi pi-credit-card', route: '/pagamentos' }
+    { label: 'Pagamentos', icon: 'pi pi-credit-card', route: '/payment-methods' }
   ];
 
   isActive(route: string): boolean {
