@@ -10,8 +10,8 @@
   <p-dataView [value]="spaces()" layout="grid" class="w-full transparent-dataview">
     <ng-template #grid let-items>
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        @for (space of items; track space ? space.id : ($index + 1)) {
-        <app-space-card [space]="space" />
+        @for (space of items; track $index + 1) {
+          <app-space-card [space]="space" />
         }
       </div>
     </ng-template>

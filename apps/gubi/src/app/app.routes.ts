@@ -26,7 +26,16 @@ export const appRoutes: Route[] = [
       },
       {
         path: 'spaces',
-        loadComponent: () => import('./features/spaces/pages/spaces/spaces.page').then(m => m.SpacesPage)
+        children: [
+          {
+            path: '',
+            loadComponent: () => import('./features/spaces/pages/spaces/spaces.page').then(m => m.SpacesPage)
+          },
+          {
+            path: ':id',
+            loadComponent: () => import('./features/spaces/pages/space-details/space-details.page').then(m => m.SpaceDetailsPage)
+          }
+        ]
       },
       {
         path: 'payment-methods',

@@ -1,6 +1,6 @@
 import { Button } from 'primeng/button';
 import { CommonModule } from '@angular/common';
-import { Component, inject, Input } from '@angular/core';
+import { Component, inject, Input, OnInit } from '@angular/core';
 import { ConfirmationService, MenuItem } from 'primeng/api';
 import { iSpace } from '@features/spaces/interfaces/space.interface';
 import { MenuModule } from 'primeng/menu';
@@ -15,7 +15,7 @@ import { SpaceService } from '@features/spaces/services/space.service';
   templateUrl: './space-card.component.html',
   styleUrl: './space-card.component.scss'
 })
-export class SpaceCardComponent {
+export class SpaceCardComponent implements OnInit {
   private messageService = inject(MessageService);
   private confirmationService = inject(ConfirmationService);
   protected spaceService = inject(SpaceService);
