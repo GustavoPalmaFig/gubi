@@ -1,6 +1,6 @@
 import { ButtonModule } from 'primeng/button';
 import { CommonModule } from '@angular/common';
-import { Component, computed, effect, inject } from '@angular/core';
+import { Component, computed, effect, inject, signal } from '@angular/core';
 import { DialogModule } from 'primeng/dialog';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { InputTextModule } from 'primeng/inputtext';
@@ -22,7 +22,7 @@ export class SpaceFormDialogComponent {
   protected isDialogOpen = this.spaceService.isFormDialogOpen;
   protected selectedSpace = this.spaceService.selectedSpace;
   protected isEditMode = computed(() => !!this.spaceService.selectedSpace());
-  protected isLoading = false;
+  protected isLoading = signal(false);
   protected spaceForm: FormGroup;
 
   constructor() {
@@ -48,7 +48,7 @@ export class SpaceFormDialogComponent {
   }
 
   close(): void {
-    this.isLoading = false;
+    this.isLoading.set(false);
     this.spaceService.toggleFormDialog(false);
     this.spaceForm.reset();
   }
@@ -56,13 +56,13 @@ export class SpaceFormDialogComponent {
   async handleSubmit(): Promise<void> {
     if (this.spaceForm.invalid) return;
 
-    this.isLoading = true;
+    this.isLoading.set(true);
     const { name, description } = this.spaceForm.value;
     const { error } = await this.spaceService.handleFormSubmit(name, description);
 
     if (error) {
       this.messageService.showMessage('error', 'Erro', error);
-      this.isLoading = false;
+      this.isLoading.set(false);
       return;
     }
 

@@ -29,9 +29,9 @@
     <div class="flex justify-end">
       <p-button
         type="submit"
-        label="{{ isLoading ? (isEditMode() ? 'Editando Space...' : 'Criando...') : (isEditMode() ? 'Editar Space' : 'Criar Space') }}"
-        [disabled]="isLoading || spaceForm.get('name')?.invalid"
-        [loading]="isLoading"
+        label="{{ isLoading() ? (isEditMode() ? 'Editando Space...' : 'Criando...') : (isEditMode() ? 'Editar Space' : 'Criar Space') }}"
+        [disabled]="isLoading() || spaceForm.get('name')?.invalid"
+        [loading]="isLoading()"
         severity="contrast"
       ></p-button>
     </div>

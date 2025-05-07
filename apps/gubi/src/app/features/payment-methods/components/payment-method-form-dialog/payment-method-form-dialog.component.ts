@@ -25,7 +25,7 @@ export class PaymentMethodFormDialogComponent {
   @Output() touchPaymentMethod = new EventEmitter<iPaymentMethod>();
 
   protected isEditMode = computed(() => !!this.selectedMethod);
-  protected isLoading = false;
+  protected isLoading = signal(false);
   protected paymentMethodForm: FormGroup;
 
   constructor() {
@@ -51,16 +51,15 @@ export class PaymentMethodFormDialogComponent {
   }
 
   close(): void {
-    this.isLoading = false;
+    this.isLoading.set(false);
     this.isDialogOpen.set(false);
     this.selectedMethod.set(null);
     this.paymentMethodForm.reset();
   }
 
   async handleSubmit(): Promise<void> {
-    if (this.paymentMethodForm.invalid) return;
+    this.isLoading.set(true);
 
-    this.isLoading = true;
     const { name, split_by_default } = this.paymentMethodForm.value;
     const paymentMethodId = this.selectedMethod()?.id || null;
 
@@ -70,7 +69,7 @@ export class PaymentMethodFormDialogComponent {
 
     if (error) {
       this.messageService.showMessage('error', 'Erro', error);
-      this.isLoading = false;
+      this.isLoading.set(false);
       return;
     }
 

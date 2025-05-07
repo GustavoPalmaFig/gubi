@@ -8,40 +8,42 @@
   </div>
 
   <div class="flex flex-col gap-4">
-    @for (paymentMethod of paymentMethods; track $index + 1) { @if(isLoading) {
-    <p-skeleton styleClass="py-10" />
-    } @else {
-    <div class="bg-card flex items-center justify-between rounded-md border p-4 w-full gap-4">
-      <div class="flex items-center gap-2">
-        <i class="pi pi-credit-card"></i>
-        <p class="text-md text-gray-600 font-medium w-full lg:w-fit">{{paymentMethod.name}}</p>
-        @if(paymentMethod.split_by_default) {
-        <div class="text-xs bg-gray-200 text-black-400 px-4 py-1 rounded-full font-medium text-center">{{paymentMethod.split_by_default ? 'Divisão automática' : ''}}</div>
-        }
-      </div>
+    @for (paymentMethod of paymentMethods; track $index + 1) { 
+      @if(isLoading()) {
+        <p-skeleton styleClass="py-10" />
+      } @else {
+        <div class="bg-card flex items-center justify-between rounded-md border p-4 w-full gap-4">
+          <div class="flex items-center gap-2">
+            <i class="pi pi-credit-card"></i>
+            <p class="text-md text-gray-600 font-medium w-full lg:w-fit">{{paymentMethod.name}}</p>
+            @if(paymentMethod.split_by_default) {
+              <div class="text-xs bg-gray-200 text-black-400 px-4 py-1 rounded-full font-medium text-center">{{paymentMethod.split_by_default ? 'Divisão automática' : ''}}</div>
+            }
+          </div>
 
-      <p-button
-        icon="pi pi-ellipsis-v cursor-pointer"
-        class="lg:hidden"
-        tabindex="0"
-        [rounded]="true"
-        [text]="true"
-        severity="contrast"
-        (click)="menu.toggle($event); selectedMethod.set(paymentMethod)"
-        (keydown.enter)="menu.toggle($event)"
-        (keydown.space)="menu.toggle($event)"
-      ></p-button>
+          <p-button
+            icon="pi pi-ellipsis-v cursor-pointer"
+            class="lg:hidden"
+            tabindex="0"
+            [rounded]="true"
+            [text]="true"
+            severity="contrast"
+            (click)="menu.toggle($event); selectedMethod.set(paymentMethod)"
+            (keydown.enter)="menu.toggle($event)"
+            (keydown.space)="menu.toggle($event)"
+          ></p-button>
 
-      <div class="flex items-center hidden lg:flex">
-        <p-button icon="pi pi-pen-to-square" [text]="true" severity="contrast" (click)="openFormDialog(paymentMethod)"></p-button>
-        <p-button icon="pi pi-trash" [text]="true" severity="contrast" (click)="openDeleteConfirmDialog($event, paymentMethod)"></p-button>
+          <div class="flex items-center hidden lg:flex">
+            <p-button icon="pi pi-pen-to-square" [text]="true" severity="contrast" (click)="openFormDialog(paymentMethod)"></p-button>
+            <p-button icon="pi pi-trash" [text]="true" severity="contrast" (click)="openDeleteConfirmDialog($event, paymentMethod)"></p-button>
+          </div>
+        </div>
+      } 
+    } @empty {
+      <div class="flex flex-col items-center justify-center text-center min-h-96 gap-4">
+        <h3 class="text-md font-normal">Você não possui nenhum método de pagamento cadastrado</h3>
+        <ng-container *ngTemplateOutlet="newButton"></ng-container>
       </div>
-    </div>
-    } } @empty {
-    <div class="flex flex-col items-center justify-center text-center min-h-96 gap-4">
-      <h3 class="text-md font-normal">Você não possui nenhum método de pagamento cadastrado</h3>
-      <ng-container *ngTemplateOutlet="newButton"></ng-container>
-    </div>
     }
   </div>
 

@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input } from '@angular/core';
+import { Component, Input, signal } from '@angular/core';
 
 @Component({
   selector: 'app-loading',
@@ -8,7 +8,7 @@ import { Component, Input } from '@angular/core';
   styleUrl: './loading.component.scss'
 })
 export class LoadingComponent {
-  @Input() isLoading = true;
+  @Input() isLoading = signal(true);
   @Input() size = '2rem';
   @Input() color = '';
 }

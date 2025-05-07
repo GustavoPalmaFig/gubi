@@ -28,9 +28,9 @@
     <div class="flex justify-end">
       <p-button
         type="submit"
-        label="{{ isLoading ? (isEditMode() ? 'Salvando...' : 'Criando...') : (isEditMode() ? 'Salvar' : 'Criar') }}"
-        [disabled]="isLoading || paymentMethodForm.get('name')?.invalid"
-        [loading]="isLoading"
+        label="{{ isLoading() ? (isEditMode() ? 'Salvando...' : 'Criando...') : (isEditMode() ? 'Salvar' : 'Criar') }}"
+        [disabled]="isLoading() || paymentMethodForm.get('name')?.invalid"
+        [loading]="isLoading()"
         severity="contrast"
       ></p-button>
     </div>

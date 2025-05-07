@@ -43,9 +43,9 @@
 
       <div class="text-center mt-8">
         <p-button
-          [label]="loading ? 'Criando conta...' : 'Criar Conta'"
+          [label]="isLoading() ? 'Criando conta...' : 'Criar Conta'"
           type="submit"
-          [loading]="loading"
+          [loading]="isLoading()"
           [disabled]="registerForm.invalid"
           severity="contrast"
           styleClass="w-full"

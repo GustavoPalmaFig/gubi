@@ -36,7 +36,7 @@
       <h1 class="text-md font-bold mb-4">Usuários com acesso</h1>
       <app-loading [isLoading]="isLoadingMembers"></app-loading>
 
-      @if(!isLoadingMembers) { 
+      @if(!isLoadingMembers()) { 
         @for (member of members; track member.email) {
           <div class="flex items-center justify-between mb-6">
             <ng-container *ngTemplateOutlet="userTemplate; context: { user: member, isEditable: true }"></ng-container>
@@ -54,7 +54,7 @@
     </div>
   </div>
   <ng-template #footer>
-    <p-button type="submit" label="Confirmar" [disabled]="isLoading || newSelectedUsers.length === 0" [loading]="isLoading" (click)="handleSubmit()"></p-button>
+    <p-button type="submit" label="Confirmar" [disabled]="isLoading() || newSelectedUsers.length === 0" [loading]="isLoading()" (click)="handleSubmit()"></p-button>
   </ng-template>
 </p-dialog>
 

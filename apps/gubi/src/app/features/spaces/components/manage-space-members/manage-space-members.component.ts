@@ -1,7 +1,7 @@
 import { AutoCompleteCompleteEvent, AutoCompleteModule, AutoCompleteSelectEvent } from 'primeng/autocomplete';
 import { Button } from 'primeng/button';
 import { CommonModule } from '@angular/common';
-import { Component, computed, effect, inject } from '@angular/core';
+import { Component, computed, effect, inject, signal } from '@angular/core';
 import { ConfirmationService } from 'primeng/api';
 import { DialogModule } from 'primeng/dialog';
 import { FormsModule } from '@angular/forms';
@@ -28,13 +28,13 @@ export class ManageSpaceMembersComponent {
   protected selectedSpace = this.spaceService.selectedSpace;
   protected spaceId = computed(() => this.spaceService.selectedSpace()?.id);
 
-  searchValue: iUser | null = null;
-  members: iUser[] = [];
-  filteredUsers: iUser[] = [];
-  newSelectedUsers: iUser[] = [];
-  isLoading = false;
-  isLoadingMembers = true;
-  isCreator = false;
+  protected searchValue: iUser | null = null;
+  protected members: iUser[] = [];
+  protected filteredUsers: iUser[] = [];
+  protected newSelectedUsers: iUser[] = [];
+  protected isLoading = signal(false);
+  protected isLoadingMembers = signal(true);
+  protected isCreator = false;
 
   constructor() {
     effect(() => this.setUpMembers());
@@ -53,7 +53,7 @@ export class ManageSpaceMembersComponent {
     const spaceId = this.spaceId();
     if (!spaceId) return;
     this.members = await this.spaceApiService.getSpaceMembers(spaceId);
-    this.isLoadingMembers = false;
+    this.isLoadingMembers.set(false);
   }
 
   async searchUsers(event: AutoCompleteCompleteEvent) {
@@ -78,8 +78,8 @@ export class ManageSpaceMembersComponent {
     this.newSelectedUsers = [];
     this.members = [];
     this.filteredUsers = [];
-    this.isLoading = false;
-    this.isLoadingMembers = true;
+    this.isLoading.set(false);
+    this.isLoadingMembers.set(true);
   }
 
   close(): void {
@@ -92,14 +92,14 @@ export class ManageSpaceMembersComponent {
       return;
     }
 
-    this.isLoading = true;
+    this.isLoading.set(true);
     const spaceId = this.spaceId();
     if (!spaceId) return;
     const { error } = await this.spaceApiService.addMembersToSpace(spaceId, this.newSelectedUsers);
 
     if (error) {
       this.messageService.showMessage('error', 'Erro', error);
-      this.isLoading = false;
+      this.isLoading.set(false);
       return;
     }
 
@@ -140,19 +140,19 @@ export class ManageSpaceMembersComponent {
   }
 
   async removeMember(user: iUser): Promise<void> {
-    this.isLoading = true;
+    this.isLoading.set(true);
     const spaceId = this.spaceId();
     if (!spaceId) return;
     const { error } = await this.spaceApiService.removeMemberFromSpace(spaceId, user.id);
 
     if (error) {
       this.messageService.showMessage('error', 'Erro', error);
-      this.isLoading = false;
+      this.isLoading.set(false);
       return;
     }
 
     this.messageService.showMessage('success', 'Sucesso', 'Usuário removido do Espaço');
     this.members = this.members.filter(member => member.id !== user.id);
-    this.isLoading = false;
+    this.isLoading.set(false);
   }
 }

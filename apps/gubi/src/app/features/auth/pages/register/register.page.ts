@@ -2,7 +2,7 @@ import { AuthService } from '@features/auth/services/auth.service';
 import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
 import { CommonModule } from '@angular/common';
-import { Component, inject } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { DividerModule } from 'primeng/divider';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { InputTextModule } from 'primeng/inputtext';
@@ -19,7 +19,7 @@ import { Router } from '@angular/router';
 })
 export class RegisterPage {
   protected registerForm: FormGroup;
-  protected loading = false;
+  protected isLoading = signal(false);
   private strongPasswordRegx = /^(?=[^A-Z]*[A-Z])(?=[^a-z]*[a-z])(?=\D*\d).{8,}$/;
   public passwordRules = [
     { message: 'Mínimo 1 letra maiúscula', regex: /(?=.*[A-Z])/ },
@@ -51,13 +51,13 @@ export class RegisterPage {
       return;
     }
 
-    this.loading = true;
+    this.isLoading.set(true);
     const { name, email, password } = this.registerForm.value;
     const { error } = await this.authService.register(name, email, password);
 
     if (error) {
       this.messageService.showMessage('error', 'Erro', error);
-      this.loading = false;
+      this.isLoading.set(false);
       return;
     }
 

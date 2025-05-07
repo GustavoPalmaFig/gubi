@@ -20,9 +20,9 @@ import { TextareaModule } from 'primeng/textarea';
 export class PaymentMethodsListPage implements OnInit {
   private messageService = inject(MessageService);
   private confirmationService = inject(ConfirmationService);
-  protected paymentMethodApiService = inject(PaymentMethodApiService);
+  private paymentMethodApiService = inject(PaymentMethodApiService);
 
-  isLoading = true;
+  isLoading = signal(true);
   isFormDialogOpen = signal(false);
   selectedMethod = signal<iPaymentMethod | null>(null);
   menuItems: MenuItem[] = [];
@@ -68,7 +68,7 @@ export class PaymentMethodsListPage implements OnInit {
 
   async getData() {
     this.paymentMethods = await this.paymentMethodApiService.getUserPaymentMethods();
-    this.isLoading = false;
+    this.isLoading.set(false);
   }
 
   openFormDialog(method: iPaymentMethod | null = null) {

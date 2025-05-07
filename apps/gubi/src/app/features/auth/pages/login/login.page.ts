@@ -1,7 +1,7 @@
 import { AuthService } from '@features/auth/services/auth.service';
 import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
-import { Component, inject } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { InputTextModule } from 'primeng/inputtext';
 import { MessageService } from '@shared/services/message.service';
@@ -17,7 +17,7 @@ import { Router } from '@angular/router';
 })
 export class LoginPage {
   protected loginForm: FormGroup;
-  protected loading = false;
+  protected isLoading = signal(false);
 
   private messageService = inject(MessageService);
   private authService = inject(AuthService);
@@ -36,13 +36,13 @@ export class LoginPage {
       return;
     }
 
-    this.loading = true;
+    this.isLoading.set(true);
     const { email, password } = this.loginForm.value;
     const { error } = await this.authService.login(email, password);
 
     if (error) {
       this.messageService.showMessage('error', 'Erro', error);
-      this.loading = false;
+      this.isLoading.set(false);
       return;
     }
 
