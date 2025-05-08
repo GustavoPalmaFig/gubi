@@ -4,9 +4,9 @@ export interface iBill {
   name: string;
   value?: number;
   deadline?: Date;
-  reference_period: Date;
+  reference_period: string;
   payer_id?: string;
-  paid_at?: Date;
+  paid_at?: string;
   creator_id: string;
   created_at: Date;
   updated_at?: Date;

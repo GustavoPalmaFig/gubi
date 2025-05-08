@@ -11,12 +11,11 @@ export class BillApiService {
   private supabaseService = inject(SupabaseService);
 
   async getAllBillsFromSpaceAndDate(spaceId: number, referenceDate: Date): Promise<iBillView[]> {
-    const formattedDate = referenceDate.toISOString().slice(0, 10);
     const { data } = await this.supabaseService.client
       .from('bill_with_details')
       .select('*')
       .eq('space_id', spaceId)
-      .eq('reference_period', formattedDate)
+      .eq('reference_period', Utils.formatToDateOnly(referenceDate))
       .order('deadline', { ascending: true });
     return data as iBillView[];
   }
@@ -27,8 +26,24 @@ export class BillApiService {
   }
 
   async createBill(bill: iBill): Promise<{ data: iBill; error?: string }> {
+    bill.reference_period = Utils.formatToDateOnly(bill.reference_period);
     const { data, error } = await this.supabaseService.client.from('bill').insert([bill]).select().single();
     return { data: data as iBill, error: Utils.handleErrorMessage(error) };
+  }
+
+  async bulkCreateBills(bills: iBill[]): Promise<{ data: iBill[]; error?: string }> {
+    const formatedBills = bills.map(bill => {
+      return {
+        space_id: bill.space_id,
+        name: bill.name,
+        value: bill.value,
+        deadline: bill.deadline ? Utils.adjustDateByMonths(bill.deadline, 1) : null,
+        reference_period: Utils.formatToDateOnly(Utils.adjustDateByMonths(bill.reference_period, 1))
+      };
+    });
+
+    const { data, error } = await this.supabaseService.client.from('bill').insert(formatedBills).select();
+    return { data: data as iBill[], error: Utils.handleErrorMessage(error) };
   }
 
   async updateBill(billId: number, bill: iBill): Promise<{ data: iBill; error?: string }> {

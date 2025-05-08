@@ -1,12 +1,14 @@
 import { Button } from 'primeng/button';
 import { CommonModule } from '@angular/common';
 import { Component, inject, signal, effect, input } from '@angular/core';
+import { ConfirmationService } from 'primeng/api';
 import { FormsModule } from '@angular/forms';
 import { InplaceModule } from 'primeng/inplace';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { MessageService } from '@shared/services/message.service';
 import { Skeleton } from 'primeng/skeleton';
 import { Tooltip } from 'primeng/tooltip';
+import Utils from '@shared/utils/utils';
 import { BillApiService } from '../services/bill-api.service';
 import { iBillView } from '../interfaces/billView.interface';
 
@@ -19,6 +21,7 @@ import { iBillView } from '../interfaces/billView.interface';
 export class BillListComponent {
   protected billApiService = inject(BillApiService);
   protected messageService = inject(MessageService);
+  private confirmationService = inject(ConfirmationService);
 
   spaceId = input.required<number>();
   referenceDate = input.required<Date>();
@@ -41,12 +44,60 @@ export class BillListComponent {
   private async fetchBills() {
     this.isLoading.set(true);
     this.bills = Array(3).fill({});
-    this.billApiService.getAllBillsFromSpaceAndDate(this.spaceId(), this.referenceDate()).then(bills => {
+    this.billApiService.getAllBillsFromSpaceAndDate(this.spaceId(), this.referenceDate()).then(async bills => {
       this.bills = bills;
+      if (bills.length === 0) {
+        this.bills = [];
+        await this.showCopyTemplateDialog();
+      }
       this.getTotalValue();
       this.getTotalPaid();
       this.isLoading.set(false);
     });
+  }
+
+  async showCopyTemplateDialog() {
+    this.confirmationService.confirm({
+      message: 'Você não possui contas cadastradas para este mês. Deseja copiar as contas do mês anterior?',
+      header: 'Copiar contas',
+      icon: 'pi pi-exclamation-triangle',
+      acceptLabel: 'Sim',
+      rejectLabel: 'Não',
+      rejectButtonProps: {
+        severity: 'danger',
+        outlined: true
+      },
+      acceptButtonProps: {
+        severity: 'success',
+        outlined: true
+      },
+      accept: async () => {
+        await this.onBulkCreationFromPreviousMonth();
+      },
+      reject: () => {
+        this.isLoading.set(false);
+      }
+    });
+  }
+
+  private async onBulkCreationFromPreviousMonth() {
+    const previousMonth = Utils.adjustDateByMonths(this.referenceDate(), -1);
+    const bills = await this.billApiService.getAllBillsFromSpaceAndDate(this.spaceId(), previousMonth);
+
+    if (bills.length > 0) {
+      const { error } = await this.billApiService.bulkCreateBills(bills);
+
+      if (error) {
+        this.messageService.showMessage('error', error, 'Erro ao copiar contas');
+        return;
+      }
+    } else {
+      this.messageService.showMessage('error', 'Nenhuma conta encontrada para o mês anterior', 'Contas não encontradas');
+      return;
+    }
+
+    this.messageService.showMessage('success', 'Contas copiadas com sucesso', 'Sucesso');
+    this.fetchBills();
   }
 
   protected getTotalValue() {
@@ -80,7 +131,7 @@ export class BillListComponent {
     }
 
     if (deadline) {
-      const oneWeekFromNow = new Date(today.getTime() + 7 * 24 * 60 * 60 * 1000);
+      const oneWeekFromNow = Utils.addOneWeekToDate(today);
 
       if (deadline < today) {
         return 'bg-red-50 border-red-200';

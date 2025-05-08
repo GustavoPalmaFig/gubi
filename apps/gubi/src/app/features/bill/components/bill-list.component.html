@@ -103,7 +103,8 @@
       <p-skeleton styleClass="py-16" />
     }
     <div class="bg-card bg-white text-center border rounded-xl shadow-sm p-8 col-span-full">
-      <h1 class="text-lg text-gray-500">Nenhuma conta registrada para este período.</h1>
+      <h1 class="text-lg text-gray-500 mb-4">Nenhuma conta registrada para este período.</h1>
+      <p-button label="Copiar mês anterior" icon="pi pi-plus-circle" severity="contrast" (click)="showCopyTemplateDialog()"></p-button>
     </div>
   }
 </div>

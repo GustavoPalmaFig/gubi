@@ -27,9 +27,9 @@ export class AuthService {
   }
 
   async loadUser() {
-    const { data } = await this.supabaseService.client.auth.getSession();
-    if (data.session) {
-      this.currentUser.set(data.session.user);
+    const { data } = await this.supabaseService.client.auth.getUser();
+    if (data) {
+      this.currentUser.set(data.user);
     }
   }
 
