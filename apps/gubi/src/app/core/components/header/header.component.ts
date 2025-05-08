@@ -37,13 +37,18 @@ export class HeaderComponent {
     this.router.events.subscribe(() => {
       this.crumbItems = [
         { label: 'Espaços', styleClass: 'text-md font-medium', visible: this.isActive('/spaces') },
-        { label: 'Métodos de Pagamento', styleClass: 'text-md font-medium', visible: this.isActive('/payment-methods') }
+        { label: 'Métodos de Pagamento', styleClass: 'text-md font-medium', visible: this.isActive('/payment-methods') },
+        { label: 'Detalhes do Espaço', styleClass: 'text-md font-medium', visible: this.isSpaceDetail() }
       ];
     });
   }
 
   isActive(route: string): boolean {
     return this.router.url === route;
+  }
+
+  private isSpaceDetail(): boolean {
+    return /^\/spaces\/\d+/.test(this.router.url);
   }
 
   get visibleCrumbItems(): MenuItem[] {

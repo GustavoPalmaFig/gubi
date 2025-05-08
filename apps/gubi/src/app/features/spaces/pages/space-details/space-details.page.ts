@@ -1,12 +1,17 @@
 import { ActivatedRoute, Router } from '@angular/router';
+import { BillListComponent } from '@features/bill/components/bill-list.component';
+import { Button } from 'primeng/button';
 import { Component, inject, signal } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { iSpace } from '@features/spaces/interfaces/space.interface';
 import { MessageService } from '@shared/services/message.service';
+import { Select } from 'primeng/select';
+import { Skeleton } from 'primeng/skeleton';
 import { SpaceApiService } from '@features/spaces/services/space-api.service';
 
 @Component({
   selector: 'app-space-details',
-  imports: [],
+  imports: [BillListComponent, Button, Select, FormsModule, Skeleton],
   templateUrl: './space-details.page.html',
   styleUrl: './space-details.page.scss'
 })
@@ -18,6 +23,8 @@ export class SpaceDetailsPage {
 
   protected space!: iSpace;
   protected isLoading = signal(true);
+  protected referenceDates: { label: string; value: Date }[] = [];
+  protected selectedReferenceDate = signal<Date>(new Date());
 
   constructor() {
     this.activatedRoute.paramMap.subscribe(params => {
@@ -29,6 +36,7 @@ export class SpaceDetailsPage {
         return;
       }
       this.loadSpace(spaceId);
+      this.getReferenceDates();
     });
   }
 
@@ -49,5 +57,22 @@ export class SpaceDetailsPage {
   private handleSpaceNotFound() {
     this.messageService.showMessage('error', 'Espaço não encontrado', 'Erro ao carregar espaço');
     this.navigateToSpaces();
+  }
+
+  private async getReferenceDates() {
+    //get dates that exists in bills and expenses
+    this.referenceDates = [
+      { label: 'Abril 2025', value: new Date('2025-04-01') },
+      { label: 'Maio 2025', value: new Date('2025-05-01') },
+      { label: 'Junho 2025', value: new Date('2025-06-01') },
+      { label: 'Julho 2025', value: new Date('2025-07-01') },
+      { label: 'Agosto 2025', value: new Date('2025-08-01') },
+      { label: 'Setembro 2025', value: new Date('2025-09-01') }
+    ];
+    this.selectedReferenceDate.set(this.referenceDates[0].value);
+  }
+
+  setReferenceDate(date: Date) {
+    this.selectedReferenceDate.set(date);
   }
 }

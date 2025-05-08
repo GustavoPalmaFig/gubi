@@ -1,0 +1,109 @@
+<div class="my-4 flex items-center justify-between">
+  <h1 class="text-xl font-bold">Contas</h1>
+  <p-button label="Nova" icon="pi pi-plus-circle" severity="contrast"></p-button>
+</div>
+
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
+  @if(isLoading()) {
+    <p-skeleton styleClass="py-16" />
+    <p-skeleton styleClass="py-16" />
+    <p-skeleton styleClass="py-16" />
+  } @else {
+    <div class="bg-card bg-white flex flex-col rounded-xl border shadow-sm">
+      <div class="p-4">
+        <div class="text-md text-gray-400 font-normal">Total a Pagar</div>
+        <div class="text-2xl text-gray-700 font-bold">{{totalValue | currency: 'BRL'}}</div>
+      </div>
+    </div>
+
+    <div class="bg-card bg-white flex flex-col rounded-xl border shadow-sm">
+      <div class="p-4">
+        <div class="text-md text-gray-400 font-normal">Total Pago</div>
+        <div class="text-2xl text-green-600 font-bold">{{paidValue | currency: 'BRL'}}</div>
+        <div class="text-sm text-gray-400 font-normal mt-1">{{getPercentage()}}</div>
+      </div>
+    </div>
+
+    <div class="bg-card bg-white flex flex-col rounded-xl border shadow-sm">
+      <div class="p-4">
+        <div class="flex items-end gap-2">
+          <div class="text-md text-gray-400 font-normal">Divisão entre Membros</div>
+          <i class="pi pi-question-circle mb-1" pTooltip="Valor referente a quanto cada membro deve pagar no período selecionado."></i>
+        </div>
+        <div class="text-2xl text-gray-700 font-bold">{{(totalValue/2) | currency: 'BRL'}}</div>
+      </div>
+    </div>
+  }
+</div>
+
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 border-t pt-6">
+  @for (bill of bills; track $index + 1) { 
+    @if(isLoading()) {
+      <p-skeleton styleClass="py-16" />
+    }
+    @else {
+      <div class="bg-card flex h-40 flex-col rounded-xl border shadow-sm px-4 pt-2 pb-4" [ngClass]="getCardStyle(bill)">
+        <h1 class="text-lg font-semibold line-clamp-2">{{ bill.name }}</h1>
+    
+        <div class="flex flex-col flex-grow">
+          <div class="flex items-center justify-between mt-2">
+            @if(billIdToEditValue() === bill.id) {
+              <p-inputnumber
+                mode="currency"
+                inputId="locale-brazil"
+                currency="BRL"
+                min="0"
+                locale="pt-BR"
+                [showButtons]="false"
+                [(ngModel)]="editValue"
+                (keydown.enter)="onUpdateBillValue()"
+                (keydown.escape)="closeValueEdit()"
+                (blur)="closeValueEdit()"
+              />
+            } @else {
+              <div
+                class="text-lg text-gray-500 font-bold pr-1 cursor-pointer"
+                pTooltip="Alterar valor"
+                tabindex="0"
+                (click)="openValueEdit(bill)"
+                (keydown.enter)="openValueEdit(bill)"
+              >
+                {{ bill.value | currency: 'BRL' }}
+              </div>
+            }
+    
+            <div class="flex items-center">
+              @if(!bill.paid_at) {
+                <p-button icon="pi pi-check" [text]="true" severity="success" pTooltip="Marcar como Paga" (click)="markAsPaid(bill)"></p-button>
+              }
+                <p-button icon="pi pi-pen-to-square" [text]="true" severity="contrast"></p-button>
+                <p-button icon="pi pi-trash" [text]="true" severity="contrast"></p-button>
+            </div>
+          </div>
+        </div>
+    
+        <div class="mt-auto pt-3 border-t flex items-end justify-between">
+          <div class="flex mt-2 items-center justify-start gap-2 text-sm" [ngClass]="bill.paid_at ? ' text-green-600' : 'text-gray-500'">
+            <i [ngClass]="bill.paid_at ? 'pi pi-check' : 'pi pi-calendar'"></i>
+            <span>{{ bill.paid_at ? 'Pago:' : 'Vence em: ' }}</span>
+            <span class="font-semibold">{{ (bill.paid_at ? bill.paid_at : bill.deadline) | date: 'dd/MM/yyyy' }}</span>
+          </div>
+          @if(bill.payer_name) {
+            <div class="flex mt-2 items-center justify-start gap-2 text-sm text-gray-500">
+              <i class="pi pi-user"></i>
+              <span>Responsável: </span>
+              <span class="font-semibold">{{ getPayerFirstName(bill.payer_name) }}</span>
+            </div>
+          }
+        </div>
+      </div>
+    }
+  } @empty {
+    @if(isLoading()) {
+      <p-skeleton styleClass="py-16" />
+    }
+    <div class="bg-card bg-white text-center border rounded-xl shadow-sm p-8 col-span-full">
+      <h1 class="text-lg text-gray-500">Nenhuma conta registrada para este período.</h1>
+    </div>
+  }
+</div>
