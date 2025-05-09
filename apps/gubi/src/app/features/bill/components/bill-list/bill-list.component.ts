@@ -9,10 +9,10 @@ import { MessageService } from '@shared/services/message.service';
 import { Skeleton } from 'primeng/skeleton';
 import { Tooltip } from 'primeng/tooltip';
 import Utils from '@shared/utils/utils';
-import { BillApiService } from '../services/bill-api.service';
+import { BillApiService } from '../../services/bill-api.service';
 import { BillFormDialogComponent } from '../bill-form-dialog/bill-form-dialog.component';
-import { iBill } from '../interfaces/bill.interface';
-import { iBillView } from '../interfaces/billView.interface';
+import { iBill } from '../../interfaces/bill.interface';
+import { iBillView } from '../../interfaces/billView.interface';
 
 @Component({
   selector: 'app-bill-list',

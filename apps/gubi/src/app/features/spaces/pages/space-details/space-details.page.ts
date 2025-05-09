@@ -1,5 +1,5 @@
 import { ActivatedRoute, Router } from '@angular/router';
-import { BillListComponent } from '@features/bill/components/bill-list.component';
+import { BillListComponent } from '@features/bill/components/bill-list/bill-list.component';
 import { Component, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { iSpace } from '@features/spaces/interfaces/space.interface';

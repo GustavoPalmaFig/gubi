@@ -1,9 +1,11 @@
+import { BillApiService } from '@features/bill/services/bill-api.service';
 import { ButtonModule } from 'primeng/button';
 import { CommonModule } from '@angular/common';
 import { Component, computed, effect, EventEmitter, inject, Input, input, Output, signal } from '@angular/core';
 import { DatePickerModule } from 'primeng/datepicker';
 import { DialogModule } from 'primeng/dialog';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { iBill } from '@features/bill/interfaces/bill.interface';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { InputTextModule } from 'primeng/inputtext';
 import { iUser } from '@features/auth/interfaces/user.interface';
@@ -11,8 +13,6 @@ import { MessageService } from '@shared/services/message.service';
 import { Select } from 'primeng/select';
 import { SpaceApiService } from '@features/spaces/services/space-api.service';
 import Utils from '@shared/utils/utils';
-import { BillApiService } from '../services/bill-api.service';
-import { iBill } from '../interfaces/bill.interface';
 
 @Component({
   selector: 'app-bill-form-dialog',
