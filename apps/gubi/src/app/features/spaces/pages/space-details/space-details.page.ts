@@ -1,6 +1,7 @@
 import { ActivatedRoute, Router } from '@angular/router';
 import { BillListComponent } from '@features/bill/components/bill-list/bill-list.component';
 import { Component, inject, signal } from '@angular/core';
+import { ExpenseListComponent } from '@features/expense/components/expense-list/expense-list.component';
 import { FormsModule } from '@angular/forms';
 import { iSpace } from '@features/spaces/interfaces/space.interface';
 import { MessageService } from '@shared/services/message.service';
@@ -12,7 +13,7 @@ import Utils from '@shared/utils/utils';
 
 @Component({
   selector: 'app-space-details',
-  imports: [BillListComponent, Select, FormsModule, Skeleton, TabsModule],
+  imports: [BillListComponent, ExpenseListComponent, Select, FormsModule, Skeleton, TabsModule],
   templateUrl: './space-details.page.html',
   styleUrl: './space-details.page.scss'
 })

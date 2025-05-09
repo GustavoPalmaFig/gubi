@@ -3,7 +3,6 @@ import { CommonModule } from '@angular/common';
 import { Component, inject, signal, effect, input } from '@angular/core';
 import { ConfirmationService } from 'primeng/api';
 import { FormsModule } from '@angular/forms';
-import { InplaceModule } from 'primeng/inplace';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { MessageService } from '@shared/services/message.service';
 import { Skeleton } from 'primeng/skeleton';
@@ -16,7 +15,7 @@ import { iBillView } from '../../interfaces/billView.interface';
 
 @Component({
   selector: 'app-bill-list',
-  imports: [CommonModule, Button, Skeleton, Tooltip, InplaceModule, FormsModule, InputNumberModule, BillFormDialogComponent],
+  imports: [CommonModule, Button, Skeleton, Tooltip, FormsModule, InputNumberModule, BillFormDialogComponent],
   templateUrl: './bill-list.component.html',
   styleUrl: './bill-list.component.scss'
 })

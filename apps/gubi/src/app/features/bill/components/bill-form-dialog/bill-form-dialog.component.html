@@ -11,7 +11,7 @@
   <p class="text-sm text-muted-foreground">{{ isEditMode() ? 'Atualize as informações da conta.' : 'Adicione uma nova conta para o período selecionado.'}}</p>
   <form [formGroup]="billForm" (ngSubmit)="handleSubmit()" class="mt-6 space-y-4">
     <div>
-      <label for="name" class="text-sm font-medium">Nome</label>
+      <label for="name" class="text-sm font-medium">Nome *</label>
       <input id="name" class="w-full mt-2" type="text" pInputText formControlName="name" placeholder="Ex: Aluguel, Internet, Gás" />
     </div>
     <div>
