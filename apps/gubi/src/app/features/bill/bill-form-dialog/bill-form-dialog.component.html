@@ -1,0 +1,72 @@
+<p-dialog
+  [header]="isEditMode() ? 'Editar Conta' : 'Adicionar Conta'"
+  [modal]="true"
+  [visible]="isOpen()"
+  [closeOnEscape]="true"
+  [dismissableMask]="true"
+  (onHide)="close()"
+  (visibleChange)="close()"
+  styleClass="w-full md:w-1/2 lg:w-1/3 xl:w-1/4 mx-4 dialog-with-subtitle"
+>
+  <p class="text-sm text-muted-foreground">{{ isEditMode() ? 'Atualize as informações da conta.' : 'Adicione uma nova conta para o período selecionado.'}}</p>
+  <form [formGroup]="billForm" (ngSubmit)="handleSubmit()" class="mt-6 space-y-4">
+    <div>
+      <label for="name" class="text-sm font-medium">Nome</label>
+      <input id="name" class="w-full mt-2" type="text" pInputText formControlName="name" placeholder="Ex: Aluguel, Internet, Gás" />
+    </div>
+    <div>
+      <label for="value" class="text-sm font-medium">Valor</label>
+      <p-inputnumber
+        id="value"
+        class="w-full mt-2"
+        mode="currency"
+        inputId="locale-brazil"
+        currency="BRL"
+        min="0"
+        locale="pt-BR"
+        formControlName="value"
+        placeholder="R$ 100,00"
+        [showButtons]="false"
+      />
+    </div>
+    <div>
+      <label for="deadline" class="text-sm font-medium">Vencimento do Pagamento</label>
+      <p-datepicker
+        id="deadline"
+        styleClass="w-full mt-2"
+        appendTo="body"
+        formControlName="deadline"
+        [showIcon]="true"
+        [showButtonBar]="true"
+        dateFormat="dd/mm/yy"
+        placeholder="dd/mm/aaaa"
+      ></p-datepicker>
+    </div>
+    <div>
+      <label for="payer_id" class="text-sm font-medium">Responsável pelo Pagamento</label>
+      <p-select id="payer_id" class="w-full mt-2" [options]="spaceMembers" formControlName="payer_id" optionLabel="fullname" optionValue="id" placeholder="Usuário" />
+    </div>
+    <div>
+      <label for="paid_at" class="text-sm font-medium">Data do Pagamento</label>
+      <p-datepicker
+        id="paid_at"
+        styleClass="w-full mt-2"
+        appendTo="body"
+        formControlName="paid_at"
+        [showIcon]="true"
+        [showButtonBar]="true"
+        dateFormat="dd/mm/yy"
+        placeholder="dd/mm/aaaa"
+      ></p-datepicker>
+    </div>
+    <div class="flex justify-end pt-6">
+      <p-button
+        type="submit"
+        label="{{ isLoading() ? (isEditMode() ? 'Editando Conta...' : 'Criando...') : (isEditMode() ? 'Editar Conta' : 'Criar Conta') }}"
+        [disabled]="isLoading() || billForm.get('name')?.invalid"
+        [loading]="isLoading()"
+        severity="contrast"
+      ></p-button>
+    </div>
+  </form>
+</p-dialog>

@@ -10,11 +10,13 @@ import { Skeleton } from 'primeng/skeleton';
 import { Tooltip } from 'primeng/tooltip';
 import Utils from '@shared/utils/utils';
 import { BillApiService } from '../services/bill-api.service';
+import { BillFormDialogComponent } from '../bill-form-dialog/bill-form-dialog.component';
+import { iBill } from '../interfaces/bill.interface';
 import { iBillView } from '../interfaces/billView.interface';
 
 @Component({
   selector: 'app-bill-list',
-  imports: [CommonModule, Button, Skeleton, Tooltip, InplaceModule, FormsModule, InputNumberModule],
+  imports: [CommonModule, Button, Skeleton, Tooltip, InplaceModule, FormsModule, InputNumberModule, BillFormDialogComponent],
   templateUrl: './bill-list.component.html',
   styleUrl: './bill-list.component.scss'
 })
@@ -32,6 +34,8 @@ export class BillListComponent {
   protected editValue: number | null = null;
   protected totalValue = 0;
   protected paidValue = 0;
+  protected isFormDialogOpen = signal(false);
+  protected selectedBill = signal<iBill | null>(null);
 
   constructor() {
     effect(() => {
@@ -186,5 +190,19 @@ export class BillListComponent {
 
     this.messageService.showMessage('success', 'Conta marcada como paga com sucesso', 'Sucesso');
     await this.fetchBills();
+  }
+
+  protected openFormDialog(bill: iBill | null = null) {
+    this.selectedBill.set(bill);
+    this.isFormDialogOpen.set(true);
+  }
+
+  protected updateBillList(bill: iBill) {
+    const index = this.bills.findIndex(b => b.id === bill.id);
+    if (index !== -1) {
+      this.bills[index] = bill;
+    } else {
+      this.bills.push(bill);
+    }
   }
 }

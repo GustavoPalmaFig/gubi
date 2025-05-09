@@ -21,9 +21,34 @@ export default class Utils {
   }
 
   static formatToDateOnly(date: Date | string): string {
-    if (typeof date === 'string') {
-      date = new Date(date);
+    const utcDate = new Date(date);
+    return utcDate.toISOString().slice(0, 10);
+  }
+
+  /*
+   * Formats a date string from 'YYYY-MM-DD' to 'DD-MM-YYYY' or 'YYYY-MM-DD' to Date object
+   * @param obj - The object containing the date strings to be formatted
+   * @returns The object with formatted date strings
+   */
+  static formatAllStrToDatePattern(obj: any): any {
+    if (obj !== null) {
+      for (const key in obj) {
+        if (typeof obj[key] === 'string') {
+          const dateParts = obj[key].split('-');
+          if (dateParts.length === 3) {
+            const dateStr = `${dateParts[2]}-${dateParts[1]}-${dateParts[0]}`;
+            const formatedDate = dateParts[0].length === 4 ? new Date(obj[key]) : new Date(dateStr);
+            obj[key] = this.dateToUTC(formatedDate);
+          }
+        }
+      }
     }
-    return date.toISOString().slice(0, 10);
+    return obj;
+  }
+
+  static dateToUTC(date: Date | string): Date {
+    const utcDate = new Date(date);
+    utcDate.setMinutes(utcDate.getMinutes() + utcDate.getTimezoneOffset());
+    return utcDate;
   }
 }

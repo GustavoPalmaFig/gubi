@@ -3,7 +3,7 @@ export interface iBill {
   space_id: number;
   name: string;
   value?: number;
-  deadline?: Date;
+  deadline?: string;
   reference_period: string;
   payer_id?: string;
   paid_at?: string;

@@ -1,6 +1,6 @@
 <div class="my-4 flex items-center justify-between">
   <h1 class="text-xl font-bold">Contas</h1>
-  <p-button label="Nova" icon="pi pi-plus-circle" severity="contrast"></p-button>
+  <p-button label="Nova" icon="pi pi-plus-circle" severity="contrast" (click)="openFormDialog()"></p-button>
 </div>
 
 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
@@ -76,7 +76,7 @@
               @if(!bill.paid_at) {
                 <p-button icon="pi pi-check" [text]="true" severity="success" pTooltip="Marcar como Paga" (click)="markAsPaid(bill)"></p-button>
               }
-                <p-button icon="pi pi-pen-to-square" [text]="true" severity="contrast"></p-button>
+                <p-button icon="pi pi-pen-to-square" [text]="true" severity="contrast" (click)="openFormDialog(bill)"></p-button>
                 <p-button icon="pi pi-trash" [text]="true" severity="contrast"></p-button>
             </div>
           </div>
@@ -98,7 +98,8 @@
         </div>
       </div>
     }
-  } @empty {
+  }
+  @empty {
     @if(isLoading()) {
       <p-skeleton styleClass="py-16" />
     }
@@ -108,3 +109,5 @@
     </div>
   }
 </div>
+
+<app-bill-form-dialog [isOpen]="isFormDialogOpen" [selectedBill]="selectedBill()" [spaceId]="spaceId()" [referencePeriod]="referenceDate()" (touchBill)="updateBillList($event)"></app-bill-form-dialog>

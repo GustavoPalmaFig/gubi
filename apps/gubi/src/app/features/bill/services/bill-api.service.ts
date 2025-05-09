@@ -26,7 +26,6 @@ export class BillApiService {
   }
 
   async createBill(bill: iBill): Promise<{ data: iBill; error?: string }> {
-    bill.reference_period = Utils.formatToDateOnly(bill.reference_period);
     const { data, error } = await this.supabaseService.client.from('bill').insert([bill]).select().single();
     return { data: data as iBill, error: Utils.handleErrorMessage(error) };
   }
@@ -38,7 +37,7 @@ export class BillApiService {
         name: bill.name,
         value: bill.value,
         deadline: bill.deadline ? Utils.adjustDateByMonths(bill.deadline, 1) : null,
-        reference_period: Utils.formatToDateOnly(Utils.adjustDateByMonths(bill.reference_period, 1))
+        reference_period: Utils.adjustDateByMonths(bill.reference_period, 1)
       };
     });
 
@@ -46,8 +45,8 @@ export class BillApiService {
     return { data: data as iBill[], error: Utils.handleErrorMessage(error) };
   }
 
-  async updateBill(billId: number, bill: iBill): Promise<{ data: iBill; error?: string }> {
-    const { data, error } = await this.supabaseService.client.from('bill').update(bill).eq('id', billId).select().single();
+  async updateBill(bill: iBill): Promise<{ data: iBill; error?: string }> {
+    const { data, error } = await this.supabaseService.client.from('bill').update(bill).eq('id', bill.id).select().single();
     return { data: data as iBill, error: Utils.handleErrorMessage(error) };
   }
 
