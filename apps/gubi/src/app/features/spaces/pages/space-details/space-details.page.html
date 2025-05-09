@@ -9,10 +9,21 @@
   <h1 class="text-2xl font-bold">{{space.name}}</h1>
   <p class="text-md text-gray-500 mt-4">{{space.description}}</p>
 
-  <div class="my-8 flex justify-between items-center">
-    <h2 class="text-xl font-bold">Gerenciar Gastos</h2>
-    <p-select [options]="referenceDates" [(ngModel)]="selectedReferenceDate" (onChange)="setReferenceDate($event.value)" optionLabel="label" optionValue="value" />
+  <div class="mt-8 mb-4 flex justify-start">
+    <p-tabs value="0" class="w-full transparent-tabs">
+      <p-tablist>
+        <p-tab value="0">Contas</p-tab>
+        <p-tab value="1">Despesas</p-tab>
+      </p-tablist>
+      <p-tabpanels>
+        <p-select [options]="referenceDates" [(ngModel)]="selectedReferenceDate" (onChange)="setReferenceDate($event.value)" optionLabel="label" optionValue="value" appendTo="body"/>
+        <p-tabpanel value="0">
+          <app-bill-list [spaceId]="space.id" [referenceDate]="selectedReferenceDate()"></app-bill-list>
+        </p-tabpanel>
+        <p-tabpanel value="1">
+          
+        </p-tabpanel>
+      </p-tabpanels>
+    </p-tabs>
   </div>
-
-  <app-bill-list [spaceId]="space.id" [referenceDate]="selectedReferenceDate()"></app-bill-list>
 }

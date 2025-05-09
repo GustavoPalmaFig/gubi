@@ -7,11 +7,12 @@ import { MessageService } from '@shared/services/message.service';
 import { Select } from 'primeng/select';
 import { Skeleton } from 'primeng/skeleton';
 import { SpaceApiService } from '@features/spaces/services/space-api.service';
+import { TabsModule } from 'primeng/tabs';
 import Utils from '@shared/utils/utils';
 
 @Component({
   selector: 'app-space-details',
-  imports: [BillListComponent, Select, FormsModule, Skeleton],
+  imports: [BillListComponent, Select, FormsModule, Skeleton, TabsModule],
   templateUrl: './space-details.page.html',
   styleUrl: './space-details.page.scss'
 })
