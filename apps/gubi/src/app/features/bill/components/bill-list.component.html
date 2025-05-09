@@ -77,7 +77,7 @@
                 <p-button icon="pi pi-check" [text]="true" severity="success" pTooltip="Marcar como Paga" (click)="markAsPaid(bill)"></p-button>
               }
                 <p-button icon="pi pi-pen-to-square" [text]="true" severity="contrast" (click)="openFormDialog(bill)"></p-button>
-                <p-button icon="pi pi-trash" [text]="true" severity="contrast"></p-button>
+                <p-button icon="pi pi-trash" [text]="true" severity="contrast" (click)="openDeleteConfirmDialog($event, bill)"></p-button>
             </div>
           </div>
         </div>

@@ -205,4 +205,38 @@ export class BillListComponent {
       this.bills.push(bill);
     }
   }
+
+  protected openDeleteConfirmDialog(event: Event, bill: iBill) {
+    this.confirmationService.confirm({
+      target: event?.target || undefined,
+      message: 'Você tem certeza que deseja excluir esta Conta?\n\nEssa ação não pode ser desfeita.',
+      header: 'Aviso',
+      icon: 'pi pi-info-circle',
+      rejectLabel: 'Cancelar',
+      rejectButtonProps: {
+        label: 'Cancelar',
+        severity: 'secondary',
+        outlined: true
+      },
+      acceptButtonProps: {
+        label: 'Excluir',
+        severity: 'danger'
+      },
+
+      accept: async () => this.handleDelete(bill),
+      reject: () => this.messageService.showMessage('warn', 'Cancelado', 'Operação cancelada')
+    });
+  }
+
+  private async handleDelete(bill: iBill) {
+    const { error } = await this.billApiService.deleteBill(bill.id);
+
+    if (error) {
+      this.messageService.showMessage('error', 'Erro', error);
+      return;
+    }
+
+    this.messageService.showMessage('success', 'Excluído', 'Método de Pagamento excluído com sucesso');
+    this.bills = this.bills.filter(b => b.id !== bill.id);
+  }
 }

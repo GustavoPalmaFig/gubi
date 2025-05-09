@@ -1,5 +1,4 @@
 import { ButtonModule } from 'primeng/button';
-import { Checkbox } from 'primeng/checkbox';
 import { CommonModule } from '@angular/common';
 import { Component, computed, effect, EventEmitter, inject, Input, input, Output, signal } from '@angular/core';
 import { DatePickerModule } from 'primeng/datepicker';
@@ -17,7 +16,7 @@ import { iBill } from '../interfaces/bill.interface';
 
 @Component({
   selector: 'app-bill-form-dialog',
-  imports: [CommonModule, DialogModule, ButtonModule, InputTextModule, InputNumberModule, DatePickerModule, Select, Checkbox, ReactiveFormsModule],
+  imports: [CommonModule, DialogModule, ButtonModule, InputTextModule, InputNumberModule, DatePickerModule, Select, ReactiveFormsModule],
   templateUrl: './bill-form-dialog.component.html',
   styleUrl: './bill-form-dialog.component.scss'
 })
