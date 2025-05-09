@@ -9,6 +9,7 @@ import { registerLocaleData } from '@angular/common';
 import Aura from '@primeng/themes/aura';
 import pt from '@angular/common/locales/pt';
 import { appRoutes } from './app.routes';
+import { ptBrTranslation } from '../ptBrTranslations';
 
 registerLocaleData(pt);
 
@@ -21,6 +22,7 @@ export const appConfig: ApplicationConfig = {
     provideAppInitializer(() => inject(AuthService).loadUser()),
     provideAnimationsAsync(),
     providePrimeNG({
+      translation: ptBrTranslation,
       theme: {
         preset: Aura
       }
