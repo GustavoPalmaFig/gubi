@@ -5,6 +5,7 @@ import { ConfirmationService } from 'primeng/api';
 import { ExpenseApiService } from '@features/expense/services/expense-api.service';
 import { iExpense } from '@features/expense/interfaces/expense.interface';
 import { iExpenseView } from '@features/expense/interfaces/expenseView.interface';
+import { iSpace } from '@features/spaces/interfaces/space.interface';
 import { MessageService } from '@shared/services/message.service';
 import { Skeleton } from 'primeng/skeleton';
 import { Tooltip } from 'primeng/tooltip';
@@ -21,7 +22,7 @@ export class ExpenseListComponent {
   protected messageService = inject(MessageService);
   private confirmationService = inject(ConfirmationService);
 
-  spaceId = input.required<number>();
+  space = input.required<iSpace>();
   referenceDate = input.required<Date>();
 
   protected isLoading = signal(true);
@@ -32,7 +33,7 @@ export class ExpenseListComponent {
 
   constructor() {
     effect(() => {
-      if (this.spaceId() && this.referenceDate()) {
+      if (this.space() && this.referenceDate()) {
         this.fetchExpenses();
       }
     });
@@ -41,7 +42,7 @@ export class ExpenseListComponent {
   protected async fetchExpenses() {
     this.isLoading.set(true);
     this.expenses = Array(3).fill({});
-    this.expenseApiService.getAllExpensesFromSpaceAndDate(this.spaceId(), this.referenceDate()).then(async expenses => {
+    this.expenseApiService.getAllExpensesFromSpaceAndDate(this.space().id, this.referenceDate()).then(async expenses => {
       this.expenses = expenses;
       this.getTotalValue();
       this.isLoading.set(false);

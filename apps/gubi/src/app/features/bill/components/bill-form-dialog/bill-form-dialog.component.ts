@@ -8,6 +8,7 @@ import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { iBill } from '@features/bill/interfaces/bill.interface';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { InputTextModule } from 'primeng/inputtext';
+import { iSpace } from '@features/spaces/interfaces/space.interface';
 import { iUser } from '@features/auth/interfaces/user.interface';
 import { MessageService } from '@shared/services/message.service';
 import { Select } from 'primeng/select';
@@ -30,13 +31,12 @@ export class BillFormDialogComponent {
 
   selectedBill = input<iBill | null>();
   referencePeriod = input.required<Date>();
-  spaceId = input.required<number>();
+  space = input.required<iSpace>();
 
   protected isEditMode = computed(() => !!this.selectedBill());
   protected isLoading = signal(false);
 
   protected billForm!: FormGroup;
-  protected spaceMembers: iUser[] = [];
 
   constructor() {
     this.billForm = new FormGroup({
@@ -50,21 +50,13 @@ export class BillFormDialogComponent {
     });
 
     effect(() => {
-      this.loadMembers();
-    });
-
-    effect(() => {
       this.initializeForm();
     });
   }
 
-  private async loadMembers() {
-    this.spaceMembers = await this.spaceApiService.getSpaceMembers(this.spaceId());
-  }
-
   private initializeForm() {
     this.billForm.patchValue({
-      space_id: this.spaceId(),
+      space_id: this.space().id,
       reference_period: this.referencePeriod()
     });
 

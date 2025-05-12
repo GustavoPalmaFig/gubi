@@ -25,10 +25,10 @@
           appendTo="body"
         />
         <p-tabpanel value="0">
-          <app-bill-list [spaceId]="space.id" [referenceDate]="selectedReferenceDate()"></app-bill-list>
+          <app-bill-list [space]="space" [referenceDate]="selectedReferenceDate()"></app-bill-list>
         </p-tabpanel>
         <p-tabpanel value="1">
-          <app-expense-list [spaceId]="space.id" [referenceDate]="selectedReferenceDate()"></app-expense-list>
+          <app-expense-list [space]="space" [referenceDate]="selectedReferenceDate()"></app-expense-list>
         </p-tabpanel>
       </p-tabpanels>
     </p-tabs>

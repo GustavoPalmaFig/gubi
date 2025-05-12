@@ -44,7 +44,7 @@
     </div>
     <div>
       <label for="payer_id" class="text-sm font-medium">Responsável pelo Pagamento</label>
-      <p-select id="payer_id" class="w-full mt-2" [options]="spaceMembers" formControlName="payer_id" optionLabel="fullname" optionValue="id" placeholder="Usuário" />
+      <p-select id="payer_id" class="w-full mt-2" [options]="space().members" formControlName="payer_id" optionLabel="fullname" optionValue="id" placeholder="Usuário" />
     </div>
     <div>
       <label for="paid_at" class="text-sm font-medium">Data do Pagamento</label>

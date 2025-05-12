@@ -50,10 +50,16 @@ export class SpaceDetailsPage {
     const space = await this.spaceApiService.getSpaceById(spaceId);
     if (space) {
       this.space = space;
+      await this.loadMembers();
       this.isLoading.set(false);
+      console.log('Space loaded:', this.space);
     } else {
       this.handleSpaceNotFound();
     }
+  }
+
+  private async loadMembers() {
+    this.space.members = await this.spaceApiService.getSpaceMembers(this.space.id);
   }
 
   private handleSpaceNotFound() {

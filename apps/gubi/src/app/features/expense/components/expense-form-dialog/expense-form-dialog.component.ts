@@ -11,7 +11,7 @@ import { iExpense } from '@features/expense/interfaces/expense.interface';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { InputTextModule } from 'primeng/inputtext';
 import { iPaymentMethod } from '@features/payment-methods/interfaces/payment-method';
-import { iUser } from '@features/auth/interfaces/user.interface';
+import { iSpace } from '@features/spaces/interfaces/space.interface';
 import { MessageService } from '@shared/services/message.service';
 import { PaymentMethodApiService } from '@features/payment-methods/services/payment-method-api.service';
 import { Select } from 'primeng/select';
@@ -37,13 +37,12 @@ export class ExpenseFormDialogComponent {
 
   selectedExpense = input<iExpense | null>();
   referencePeriod = input.required<Date>();
-  spaceId = input.required<number>();
+  space = input.required<iSpace>();
 
   protected isEditMode = computed(() => !!this.selectedExpense());
   protected isLoading = signal(false);
 
   protected expenseForm!: FormGroup;
-  protected spaceMembers: iUser[] = [];
   protected paymentMethods: iPaymentMethod[] = [];
   protected expenseCategories: { label: string; value: number }[] = [];
 
@@ -61,7 +60,6 @@ export class ExpenseFormDialogComponent {
     });
 
     effect(() => {
-      this.loadMembers();
       this.loadPaymentMethods();
       this.expenseCategories = Utils.enumToArray(ExpenseCategory);
     });
@@ -71,17 +69,13 @@ export class ExpenseFormDialogComponent {
     });
   }
 
-  private async loadMembers() {
-    this.spaceMembers = await this.spaceApiService.getSpaceMembers(this.spaceId());
-  }
-
   private async loadPaymentMethods() {
     this.paymentMethods = await this.paymentMethodApiService.getAvailablePaymentMethods();
   }
 
   private initializeForm() {
     this.expenseForm.patchValue({
-      space_id: this.spaceId(),
+      space_id: this.space().id,
       reference_period: this.referencePeriod()
     });
 

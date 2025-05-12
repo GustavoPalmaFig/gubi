@@ -4,6 +4,7 @@ import { Component, inject, signal, effect, input } from '@angular/core';
 import { ConfirmationService } from 'primeng/api';
 import { FormsModule } from '@angular/forms';
 import { InputNumberModule } from 'primeng/inputnumber';
+import { iSpace } from '@features/spaces/interfaces/space.interface';
 import { MessageService } from '@shared/services/message.service';
 import { Skeleton } from 'primeng/skeleton';
 import { Tooltip } from 'primeng/tooltip';
@@ -24,7 +25,7 @@ export class BillListComponent {
   protected messageService = inject(MessageService);
   private confirmationService = inject(ConfirmationService);
 
-  spaceId = input.required<number>();
+  space = input.required<iSpace>();
   referenceDate = input.required<Date>();
 
   protected isLoading = signal(true);
@@ -38,7 +39,7 @@ export class BillListComponent {
 
   constructor() {
     effect(() => {
-      if (this.spaceId() && this.referenceDate()) {
+      if (this.space() && this.referenceDate()) {
         this.fetchBills();
       }
     });
@@ -47,7 +48,7 @@ export class BillListComponent {
   private async fetchBills() {
     this.isLoading.set(true);
     this.bills = Array(3).fill({});
-    this.billApiService.getAllBillsFromSpaceAndDate(this.spaceId(), this.referenceDate()).then(async bills => {
+    this.billApiService.getAllBillsFromSpaceAndDate(this.space().id, this.referenceDate()).then(async bills => {
       this.bills = bills;
       if (bills.length === 0) {
         this.bills = [];
@@ -85,7 +86,7 @@ export class BillListComponent {
 
   private async onBulkCreationFromPreviousMonth() {
     const previousMonth = Utils.adjustDateByMonths(this.referenceDate(), -1);
-    const bills = await this.billApiService.getAllBillsFromSpaceAndDate(this.spaceId(), previousMonth);
+    const bills = await this.billApiService.getAllBillsFromSpaceAndDate(this.space().id, previousMonth);
 
     if (bills.length > 0) {
       const { error } = await this.billApiService.bulkCreateBills(bills);
