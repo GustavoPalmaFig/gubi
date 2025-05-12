@@ -2,7 +2,7 @@
   <p-button label="Nova" icon="pi pi-plus-circle" severity="contrast" (click)="openFormDialog()"></p-button>
 </div>
 
-<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4 mb-6">
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
   @if(isLoading()) {
     <p-skeleton styleClass="py-16" />
     <p-skeleton styleClass="py-16" />
@@ -21,7 +21,21 @@
           <div class="text-md text-gray-400 font-normal">Divisão entre Membros</div>
           <i class="pi pi-question-circle mb-1" pTooltip="Valor referente a quanto cada membro deve pagar no período selecionado."></i>
         </div>
-        <div class="text-2xl text-gray-700 font-bold">{{(totalValue/((space().members ?? []).length)) | currency: 'BRL'}}</div>
+        <div class="text-2xl text-gray-700 font-bold">{{splitedValue | currency: 'BRL'}}</div>
+      </div>
+    </div>
+
+    <div class="bg-card bg-white flex flex-col rounded-xl border shadow-sm">
+      <div class="p-4">
+        <div class="flex items-end gap-2">
+          <div class="text-md text-gray-400 font-normal">Liquidação</div>
+          <i class="pi pi-question-circle mb-1" pTooltip="Este valor efere-se a quanto cada membro deve pagar aos demais no período selecionado."></i>
+        </div>
+        @for(netDebt of netDebts; track $index + 1) {
+          <div class="flex items-center gap-2 whitespace-nowrap overflow-hidden text-ellipsis max-w-full">
+            <span class="text-md text-gray-500 font-semibold text-ellipsis overflow-hidden">{{netDebt.from}} deve <span class="text-2xl text-gray-700 font-bold">{{netDebt.amount | currency: 'BRL'}}</span> para {{netDebt.to}}</span>
+        </div>
+        }
       </div>
     </div>
   }
@@ -50,16 +64,14 @@
           </div>
         </div>
     
-        <div class="mt-auto pt-3 border-t flex items-end justify-between">
+        <div class="mt-auto pt-3 border-t flex items-end justify-between gap-4">
           <div class="flex mt-2 items-center justify-start gap-2 text-sm text-gray-500">
             <i class="pi pi-calendar"></i>
-            <span>Data: </span>
             <span class="font-semibold">{{ expense.date | date: 'dd/MM/yyyy' }}</span>
           </div>
           @if(expense.payment_method_id) {
-            <div class="flex mt-2 items-center justify-start gap-2 text-sm text-gray-500">
+            <div class="flex items-center gap-2 text-sm text-gray-500">
               <i class="pi pi-credit-card"></i>
-              <span>Método: </span>
               <span class="font-semibold">{{ expense.payment_method_name }}</span>
             </div>
           }

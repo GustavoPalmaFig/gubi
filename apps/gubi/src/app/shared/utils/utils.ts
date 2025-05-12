@@ -60,4 +60,24 @@ export default class Utils {
         value: value as number
       }));
   }
+
+  static groupBy<T>(list: T[], keyGetter: (item: T) => string | number | undefined): { [key: string]: T[] } {
+    const map = new Map<string, T[]>();
+
+    list.forEach(item => {
+      const key = keyGetter(item);
+
+      if (!key || key === '') {
+        return;
+      }
+
+      const collection = map.get(key.toString());
+      if (collection) {
+        collection.push(item);
+      } else {
+        map.set(key.toString(), [item]);
+      }
+    });
+    return Object.fromEntries(map);
+  }
 }

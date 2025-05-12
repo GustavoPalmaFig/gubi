@@ -154,8 +154,24 @@ export class BillListComponent {
     this.editValue = bill.value || 0;
   }
 
-  protected getPayerFirstName(payer_name: string): string {
-    return payer_name.split(' ')[0];
+  protected getPayerFirstName(fullName: string | undefined): string {
+    if (!fullName) {
+      return 'Desconhecido';
+    }
+    const [firstName, lastNameInitial] = fullName.split(' ');
+
+    const hasDuplicateFirstName = this.space()
+      .members?.filter(member => member.fullname !== fullName)
+      .some(member => member.fullname.startsWith(firstName));
+
+    return hasDuplicateFirstName && lastNameInitial ? `${firstName} ${lastNameInitial[0]}.` : firstName;
+  }
+
+  getPayerInitials(payerName: string): string {
+    return this.getPayerFirstName(payerName)
+      .split(' ')
+      .map(p => p.charAt(0))
+      .join('');
   }
 
   protected closeValueEdit() {

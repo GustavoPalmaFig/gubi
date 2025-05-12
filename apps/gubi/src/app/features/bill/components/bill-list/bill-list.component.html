@@ -81,18 +81,20 @@
           </div>
         </div>
     
-        <div class="mt-auto pt-3 border-t flex items-end justify-between">
-          <div class="flex mt-2 items-center justify-start gap-2 text-sm" [ngClass]="bill.paid_at ? ' text-green-600' : 'text-gray-500'">
+        <div class="mt-auto pt-3 border-t flex items-center justify-between">
+          <div class="flex mt-2 items-center justify-start gap-2 text-sm" [ngClass]="bill.paid_at ? ' text-green-600' : 'text-red-500'">
             <i [ngClass]="bill.paid_at ? 'pi pi-check' : 'pi pi-calendar'"></i>
-            <span>{{ bill.paid_at ? 'Pago:' : 'Vence em: ' }}</span>
             <span class="font-semibold">{{ (bill.paid_at ? bill.paid_at : bill.deadline) | date: 'dd/MM/yyyy' }}</span>
           </div>
           @if(bill.payer_name) {
-            <div class="flex mt-2 items-center justify-start gap-2 text-sm text-gray-500">
+            <div class="size-8 rounded-full flex items-center justify-center bg-blue-500 text-white font-400" pTooltip="Responsável pelo pagamento: {{ getPayerFirstName(bill.payer_name) }}">
+              <span>{{ getPayerInitials(bill.payer_name) }}</span>
+            </div>
+            <!-- <div class="flex mt-2 items-center justify-start gap-2 text-sm text-gray-500">
               <i class="pi pi-user"></i>
               <span>Responsável: </span>
               <span class="font-semibold">{{ getPayerFirstName(bill.payer_name) }}</span>
-            </div>
+            </div> -->
           }
         </div>
       </div>
