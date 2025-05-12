@@ -73,7 +73,7 @@ export class BillFormDialogComponent {
     if (this.isOpen() && bill && this.billForm.untouched) {
       this.patchFormWithBill(bill);
     } else if (!this.isOpen()) {
-      this.billForm.reset();
+      this.resetForm();
     }
   }
 
@@ -81,6 +81,11 @@ export class BillFormDialogComponent {
     this.billForm.addControl('id', new FormControl());
     bill = Utils.formatAllStrToDatePattern(bill);
     this.billForm.patchValue(bill);
+  }
+
+  private resetForm() {
+    this.billForm.removeControl('id');
+    this.billForm.reset();
   }
 
   protected close(): void {

@@ -6,7 +6,7 @@
   [dismissableMask]="true"
   (onHide)="close()"
   (visibleChange)="close()"
-  styleClass="w-full md:w-1/2 lg:w-1/3 xl:w-1/4 mx-4 dialog-with-subtitle"
+  styleClass="w-full md:w-1/2 lg:w-1/3 mx-4 dialog-with-subtitle"
 >
   <p class="text-sm text-muted-foreground">{{ isEditMode() ? 'Atualize as informações da conta.' : 'Adicione uma nova conta para o período selecionado.'}}</p>
   <form [formGroup]="billForm" (ngSubmit)="handleSubmit()" class="mt-6 space-y-4">

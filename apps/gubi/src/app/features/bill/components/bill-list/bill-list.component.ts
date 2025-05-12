@@ -235,7 +235,7 @@ export class BillListComponent {
       return;
     }
 
-    this.messageService.showMessage('success', 'Excluído', 'Método de Pagamento excluído com sucesso');
+    this.messageService.showMessage('success', 'Excluído', 'Conta Excluída com sucesso');
     this.bills = this.bills.filter(b => b.id !== bill.id);
   }
 }

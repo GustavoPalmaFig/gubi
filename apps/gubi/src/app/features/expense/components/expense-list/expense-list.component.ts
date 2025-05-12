@@ -8,10 +8,11 @@ import { iExpenseView } from '@features/expense/interfaces/expenseView.interface
 import { MessageService } from '@shared/services/message.service';
 import { Skeleton } from 'primeng/skeleton';
 import { Tooltip } from 'primeng/tooltip';
+import { ExpenseFormDialogComponent } from '../expense-form-dialog/expense-form-dialog.component';
 
 @Component({
   selector: 'app-expense-list',
-  imports: [CommonModule, Button, Skeleton, Tooltip],
+  imports: [CommonModule, Button, Skeleton, Tooltip, ExpenseFormDialogComponent],
   templateUrl: './expense-list.component.html',
   styleUrl: './expense-list.component.scss'
 })
@@ -37,7 +38,7 @@ export class ExpenseListComponent {
     });
   }
 
-  private async fetchExpenses() {
+  protected async fetchExpenses() {
     this.isLoading.set(true);
     this.expenses = Array(3).fill({});
     this.expenseApiService.getAllExpensesFromSpaceAndDate(this.spaceId(), this.referenceDate()).then(async expenses => {
@@ -54,5 +55,44 @@ export class ExpenseListComponent {
       }
       return total;
     }, 0);
+  }
+
+  protected openFormDialog(expense: iExpense | null = null) {
+    this.selectedExpense.set(expense);
+    this.isFormDialogOpen.set(true);
+  }
+
+  protected openDeleteConfirmDialog(event: Event, expense: iExpense) {
+    this.confirmationService.confirm({
+      target: event?.target || undefined,
+      message: 'Você tem certeza que deseja excluir esta Despesa?\n\nEssa ação não pode ser desfeita.',
+      header: 'Aviso',
+      icon: 'pi pi-info-circle',
+      rejectLabel: 'Cancelar',
+      rejectButtonProps: {
+        label: 'Cancelar',
+        severity: 'secondary',
+        outlined: true
+      },
+      acceptButtonProps: {
+        label: 'Excluir',
+        severity: 'danger'
+      },
+
+      accept: async () => this.handleDelete(expense),
+      reject: () => this.messageService.showMessage('warn', 'Cancelado', 'Operação cancelada')
+    });
+  }
+
+  private async handleDelete(expense: iExpense) {
+    const { error } = await this.expenseApiService.deleteExpense(expense.id);
+
+    if (error) {
+      this.messageService.showMessage('error', 'Erro', error);
+      return;
+    }
+
+    this.messageService.showMessage('success', 'Excluído', 'Despesa excluída com sucesso');
+    this.expenses = this.expenses.filter(b => b.id !== expense.id);
   }
 }

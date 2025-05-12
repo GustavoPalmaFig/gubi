@@ -51,4 +51,13 @@ export default class Utils {
     utcDate.setMinutes(utcDate.getMinutes() + utcDate.getTimezoneOffset());
     return utcDate;
   }
+
+  static enumToArray(enumObj: any): { label: string; value: number }[] {
+    return Object.entries(enumObj)
+      .filter(([key, value]) => typeof value === 'number')
+      .map(([key, value]) => ({
+        label: key,
+        value: value as number
+      }));
+  }
 }

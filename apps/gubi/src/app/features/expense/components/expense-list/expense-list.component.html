@@ -1,5 +1,5 @@
 <div class="mb-4 flex justify-end">
-  <p-button label="Nova" icon="pi pi-plus-circle" severity="contrast"></p-button>
+  <p-button label="Nova" icon="pi pi-plus-circle" severity="contrast" (click)="openFormDialog()"></p-button>
 </div>
 
 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4 mb-6">
@@ -39,13 +39,13 @@
         <div class="flex flex-col flex-grow">
           <div class="flex items-center justify-between mt-2">
               <div
-                class="text-lg text-gray-500 font-bold pr-1 cursor-pointer">
+                class="text-lg text-gray-500 font-bold pr-1">
                 {{ expense.value | currency: 'BRL' }}
               </div>
     
             <div class="flex items-center">
-                <p-button icon="pi pi-pen-to-square" [text]="true" severity="contrast"></p-button>
-                <p-button icon="pi pi-trash" [text]="true" severity="contrast"></p-button>
+                <p-button icon="pi pi-pen-to-square" [text]="true" severity="contrast" (click)="openFormDialog(expense)"></p-button>
+                <p-button icon="pi pi-trash" [text]="true" severity="contrast" (click)="openDeleteConfirmDialog($event, expense)"></p-button>
             </div>
           </div>
         </div>
@@ -76,3 +76,5 @@
     </div>
   }
 </div>
+
+<app-expense-form-dialog [isOpen]="isFormDialogOpen" [selectedExpense]="selectedExpense()" [spaceId]="spaceId()" [referencePeriod]="referenceDate()" (touchExpense)="fetchExpenses()"></app-expense-form-dialog>
