@@ -87,14 +87,14 @@
             <span class="font-semibold">{{ (bill.paid_at ? bill.paid_at : bill.deadline) | date: 'dd/MM/yyyy' }}</span>
           </div>
           @if(bill.payer_name) {
-            <div class="size-8 rounded-full flex items-center justify-center bg-blue-500 text-white font-400" pTooltip="Responsável pelo pagamento: {{ getPayerFirstName(bill.payer_name) }}">
+            <!-- <div class="size-6 rounded-full flex items-center justify-center bg-blue-500 text-white text-xs" pTooltip="Responsável pelo pagamento: {{ getPayerFirstName(bill.payer_name) }}">
               <span>{{ getPayerInitials(bill.payer_name) }}</span>
-            </div>
-            <!-- <div class="flex mt-2 items-center justify-start gap-2 text-sm text-gray-500">
+            </div> -->
+            <div class="flex mt-2 items-center justify-start gap-2 text-sm text-gray-500">
               <i class="pi pi-user"></i>
               <span>Responsável: </span>
               <span class="font-semibold">{{ getPayerFirstName(bill.payer_name) }}</span>
-            </div> -->
+            </div>
           }
         </div>
       </div>

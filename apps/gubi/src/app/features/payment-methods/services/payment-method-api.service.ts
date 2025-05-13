@@ -22,6 +22,14 @@ export class PaymentMethodApiService {
     return data as iPaymentMethod[];
   }
 
+  async getPaymentMethodsWithExpenses(target_space_id: number, target_reference_month: Date): Promise<iPaymentMethod[]> {
+    const { data } = await this.supabaseService.client.rpc('get_payment_methods_with_expenses', {
+      target_space_id,
+      target_reference_month
+    });
+    return data as iPaymentMethod[];
+  }
+
   async getPaymentMethodById(paymentMethodId: number): Promise<iPaymentMethod | null> {
     const { data } = await this.supabaseService.client.from('payment_method').select('*').eq('id', paymentMethodId).single();
     return data as iPaymentMethod | null;

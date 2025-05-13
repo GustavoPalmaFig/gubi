@@ -11,6 +11,7 @@ import { Skeleton } from 'primeng/skeleton';
 import { Tooltip } from 'primeng/tooltip';
 import Utils from '@shared/utils/utils';
 import { ExpenseFormDialogComponent } from '../expense-form-dialog/expense-form-dialog.component';
+import { ExpensesSummaryDialogComponent } from '../expenses-summary-dialog/expenses-summary-dialog.component';
 
 interface Debt {
   from: string;
@@ -20,7 +21,7 @@ interface Debt {
 
 @Component({
   selector: 'app-expense-list',
-  imports: [CommonModule, Button, Skeleton, Tooltip, ExpenseFormDialogComponent],
+  imports: [CommonModule, Button, Skeleton, Tooltip, ExpenseFormDialogComponent, ExpensesSummaryDialogComponent],
   templateUrl: './expense-list.component.html',
   styleUrl: './expense-list.component.scss'
 })
@@ -39,6 +40,7 @@ export class ExpenseListComponent {
   protected isFormDialogOpen = signal(false);
   protected selectedExpense = signal<iExpense | null>(null);
   protected netDebts: Debt[] = [];
+  protected isSummaryDialogOpen = signal(false);
 
   constructor() {
     effect(() => {

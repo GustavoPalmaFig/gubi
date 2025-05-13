@@ -1,0 +1,60 @@
+<p-dialog
+  header="Resumo das despesas"
+  [modal]="true"
+  [visible]="isOpen()"
+  [closeOnEscape]="true"
+  [dismissableMask]="true"
+  (onHide)="close()"
+  (visibleChange)="close()"
+  styleClass="w-[95%] md:w-1/2 mx-4 w-lg dialog-with-subtitle"
+>
+  <p class="text-sm text-muted-foreground">Abaixo segue um resumo das despesas para o período selecionado</p>
+  <app-loading [isLoading]="isLoading"></app-loading>
+
+  @if(!isLoading()) {
+    <p-table [value]="paymentMethods" sortField="name" sortMode="single" dataKey="id" rowGroupMode="subheader" groupRowsBy="name" class="mt-6 block">
+      <ng-template #header>
+        <tr>
+          <th style="width: 25%">Compra</th>
+          <th style="width: 25%">Valor</th>
+          <th style="width: 25%">Data</th>
+          <th style="width: 25%">Observação</th>
+        </tr>
+      </ng-template>
+      <ng-template #groupheader let-paymentMethod let-rowIndex="rowIndex" let-expanded="expanded">
+        <tr>
+          <td colspan="3">
+            <div class="flex items-center gap-2 text-sm text-gray-500">
+              <p-button type="button" pButton pRipple [pRowToggler]="paymentMethod" text rounded plain [icon]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'"></p-button>
+              <i class="pi pi-credit-card"></i>
+              <span class="font-semibold">{{ paymentMethod.name }}</span>
+            </div>
+          </td>
+          <td colspan="2">
+            <div class="flex items-center justify-end">
+              <div class="size-6 rounded-full flex items-center justify-center bg-blue-500 text-white font-normal">
+                <span>{{paymentMethod.owner.fullname.at(0)}}</span>
+              </div>
+            </div>
+          </td>
+        </tr>
+      </ng-template>
+      <ng-template #groupfooter let-paymentMethod>
+        <tr class="font-semibold !bg-gray-100">
+          <td>Total</td>
+          <td colspan="3">{{calculateTotalValue(paymentMethod.expenses) | currency: 'BRL'}}</td>
+        </tr>
+      </ng-template>
+      <ng-template #expandedrow let-paymentMethod>
+        @for(expense of paymentMethod.expenses; track expense.id) {
+          <tr>
+            <td>{{expense.title}}</td>
+            <td>{{expense.value | currency: 'BRL'}}</td>
+            <td>{{expense.date | date: 'dd/MM/yyyy'}}</td>
+            <td>{{expense.note ?? '-'}}</td>
+          </tr>
+        }
+      </ng-template>
+    </p-table>
+  }
+</p-dialog>

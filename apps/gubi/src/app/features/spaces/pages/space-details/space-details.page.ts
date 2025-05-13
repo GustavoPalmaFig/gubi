@@ -52,7 +52,6 @@ export class SpaceDetailsPage {
       this.space = space;
       await this.loadMembers();
       this.isLoading.set(false);
-      console.log('Space loaded:', this.space);
     } else {
       this.handleSpaceNotFound();
     }
