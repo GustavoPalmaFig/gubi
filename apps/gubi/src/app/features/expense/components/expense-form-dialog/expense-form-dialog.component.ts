@@ -14,6 +14,7 @@ import { iPaymentMethod } from '@features/payment-methods/interfaces/payment-met
 import { iSpace } from '@features/spaces/interfaces/space.interface';
 import { MessageService } from '@shared/services/message.service';
 import { PaymentMethodApiService } from '@features/payment-methods/services/payment-method-api.service';
+import { PaymentMethodFormDialogComponent } from '@features/payment-methods/components/payment-method-form-dialog/payment-method-form-dialog.component';
 import { Select } from 'primeng/select';
 import { SpaceApiService } from '@features/spaces/services/space-api.service';
 import { TextareaModule } from 'primeng/textarea';
@@ -22,7 +23,20 @@ import Utils from '@shared/utils/utils';
 
 @Component({
   selector: 'app-expense-form-dialog',
-  imports: [CommonModule, DialogModule, ButtonModule, InputTextModule, InputNumberModule, TextareaModule, Checkbox, DatePickerModule, Select, Tooltip, ReactiveFormsModule],
+  imports: [
+    CommonModule,
+    DialogModule,
+    ButtonModule,
+    InputTextModule,
+    InputNumberModule,
+    TextareaModule,
+    Checkbox,
+    DatePickerModule,
+    Select,
+    Tooltip,
+    ReactiveFormsModule,
+    PaymentMethodFormDialogComponent
+  ],
   templateUrl: './expense-form-dialog.component.html',
   styleUrl: './expense-form-dialog.component.scss'
 })
@@ -41,6 +55,7 @@ export class ExpenseFormDialogComponent {
 
   protected isEditMode = computed(() => !!this.selectedExpense());
   protected isLoading = signal(false);
+  protected isPaymentMethodDialogOpen = signal(false);
 
   protected expenseForm!: FormGroup;
   protected paymentMethods: iPaymentMethod[] = [];
@@ -70,7 +85,7 @@ export class ExpenseFormDialogComponent {
   }
 
   private async loadPaymentMethods() {
-    this.paymentMethods = await this.paymentMethodApiService.getAvailablePaymentMethods();
+    this.paymentMethods = await this.paymentMethodApiService.getAvailablePaymentMethods(this.space().id);
   }
 
   private initializeForm() {
@@ -122,5 +137,15 @@ export class ExpenseFormDialogComponent {
 
     this.touchExpense.emit(data);
     this.close();
+  }
+
+  openPaymentMethodDialog() {
+    this.isPaymentMethodDialogOpen.set(true);
+  }
+
+  handlePaymentMethodCreated(method: iPaymentMethod) {
+    this.paymentMethods.push(method);
+    this.expenseForm.patchValue({ payment_method_id: method.id });
+    this.isPaymentMethodDialogOpen.set(false);
   }
 }
