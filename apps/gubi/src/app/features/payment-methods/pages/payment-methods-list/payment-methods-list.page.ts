@@ -9,11 +9,12 @@ import { MessageService } from '@shared/services/message.service';
 import { PaymentMethodApiService } from '@features/payment-methods/services/payment-method-api.service';
 import { PaymentMethodFormDialogComponent } from '@features/payment-methods/components/payment-method-form-dialog/payment-method-form-dialog.component';
 import { Skeleton } from 'primeng/skeleton';
+import { Tag } from 'primeng/tag';
 import { TextareaModule } from 'primeng/textarea';
 
 @Component({
   selector: 'app-payment-methods-list',
-  imports: [CommonModule, ButtonModule, InputTextModule, Menu, TextareaModule, Skeleton, PaymentMethodFormDialogComponent],
+  imports: [CommonModule, ButtonModule, InputTextModule, Menu, TextareaModule, Skeleton, PaymentMethodFormDialogComponent, Tag],
   templateUrl: './payment-methods-list.page.html',
   styleUrl: './payment-methods-list.page.scss'
 })

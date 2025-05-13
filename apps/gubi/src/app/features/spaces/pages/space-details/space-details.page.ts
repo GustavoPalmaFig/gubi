@@ -1,4 +1,6 @@
 import { ActivatedRoute, Router } from '@angular/router';
+import { Avatar } from 'primeng/avatar';
+import { AvatarGroupModule } from 'primeng/avatargroup';
 import { BillListComponent } from '@features/bill/components/bill-list/bill-list.component';
 import { Component, inject, signal } from '@angular/core';
 import { ExpenseListComponent } from '@features/expense/components/expense-list/expense-list.component';
@@ -13,7 +15,7 @@ import Utils from '@shared/utils/utils';
 
 @Component({
   selector: 'app-space-details',
-  imports: [BillListComponent, ExpenseListComponent, Select, FormsModule, Skeleton, TabsModule],
+  imports: [BillListComponent, ExpenseListComponent, Select, FormsModule, Skeleton, TabsModule, AvatarGroupModule, Avatar],
   templateUrl: './space-details.page.html',
   styleUrl: './space-details.page.scss'
 })
@@ -89,7 +91,11 @@ export class SpaceDetailsPage {
     this.selectedReferenceDate.set(currentMonth.value);
   }
 
-  setReferenceDate(date: Date) {
+  protected setReferenceDate(date: Date) {
     this.selectedReferenceDate.set(date);
+  }
+
+  protected getAvatarColor(name: string): string {
+    return Utils.stringToColor(name);
   }
 }

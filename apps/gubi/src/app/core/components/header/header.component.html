@@ -16,7 +16,7 @@
     (keydown.enter)="menu.toggle($event)"
     (keydown.space)="menu.toggle($event)"
   >
-    <app-user-avatar [name]="authService.userFirstName" [size]="'large'"></app-user-avatar>
+    <app-user-avatar [name]="authService.currentUserName" [size]="'large'"></app-user-avatar>
   </div>
   }
 </div>
