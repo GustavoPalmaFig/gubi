@@ -1,0 +1,10 @@
+::ng-deep {
+  .p-accordionpanel:not(.p-disabled).p-accordionpanel-active > .p-accordionheader {
+    background: oklch(70.7% 0.022 261.325) !important;
+    color: white !important;
+  }
+
+  .p-datatable-tfoot > tr > td {
+    background: oklch(92.8% 0.006 264.531) !important;
+  }
+}
