@@ -52,18 +52,14 @@
         <p-select id="payment_method_id" class="w-full" [options]="paymentMethods" formControlName="payment_method_id" optionLabel="name" optionValue="id" placeholder="Selecione">
           <ng-template #selectedItem let-selectedOption>
             <div class="flex items-center gap-2">
-              <div class="size-5 rounded-full flex items-center justify-center bg-blue-500 text-white font-normal">
-                <span class="text-sm">{{ selectedOption.owner.fullname.at(0) }}</span>
-              </div>
-              <div>{{ selectedOption.name }}</div>
+              <app-user-avatar [name]="selectedOption.owner.fullname"></app-user-avatar>
+              <span>{{ selectedOption.name }}</span>
             </div>
           </ng-template>
           <ng-template #item let-item>
             <div class="flex items-center gap-2">
-              <div class="size-5 rounded-full flex items-center justify-center bg-blue-500 text-white font-normal">
-                <span class="text-sm">{{ item.owner.fullname.at(0) }}</span>
-              </div>
-              <div>{{ item.name }}</div>
+              <app-user-avatar [name]="item.owner.fullname"></app-user-avatar>
+              <span>{{ item.name }}</span>
             </div>
           </ng-template>
           <ng-template #footer>

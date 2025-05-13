@@ -41,9 +41,7 @@
           <div class="flex items-center justify-between mb-6">
             <ng-container *ngTemplateOutlet="userTemplate; context: { user: member, isEditable: true }"></ng-container>
             <div class="flex flex-col items-center justify-end">
-              <p class="text-sm" [ngClass]="{'font-medium' : selectedSpace()?.creator_id === member.id }">
-                {{ selectedSpace()?.creator_id === member.id ? 'Criador' : 'Membro'}}
-              </p>
+              <p class="text-sm" [ngClass]="{'font-medium' : selectedSpace()?.creator_id === member.id }">{{ selectedSpace()?.creator_id === member.id ? 'Criador' : 'Membro'}}</p>
               @if(isNewMember(member)) {
                 <p class="text-sm">(Novo)</p>
               }
@@ -61,11 +59,10 @@
 <ng-template #userTemplate let-user="user" let-isEditable="isEditable">
   <div class="flex items-center justify-start">
     @if(isEditable && memberCanBeRemoved(user)) {
-      <div
-        class="size-8 rounded-full flex items-center justify-center bg-blue-500 text-white font-400 relative group cursor-pointer hover:bg-red-100 text-red-500"
-        pTooltip="Remover Membro"
-      >
-        <span class="absolute opacity-100 transition-opacity duration-300 ease-in-out group-hover:opacity-0"> {{ user.fullname.charAt(0) }} </span>
+      <div class="size-8 rounded-full flex items-center justify-center font-400 relative group cursor-pointer hover:bg-red-100 text-red-500" pTooltip="Remover Membro">
+        <span class="absolute opacity-100 transition-opacity duration-300 ease-in-out group-hover:opacity-0">
+          <app-user-avatar [name]="user.fullname" size="large"></app-user-avatar>
+        </span>
         <p-button
           class="hidden group-hover:inline transition-opacity duration-300 ease-in-out"
           icon="pi pi-times"
@@ -76,9 +73,7 @@
         ></p-button>
       </div>
     } @else {
-      <div class="size-8 rounded-full flex items-center justify-center bg-blue-500 text-white font-400">
-        <span> {{ user.fullname.charAt(0) }} </span>
-      </div>
+      <app-user-avatar [name]="user.fullname" size="large"></app-user-avatar>
     }
 
     <div class="ml-2">

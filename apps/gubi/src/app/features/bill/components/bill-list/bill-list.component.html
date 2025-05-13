@@ -87,9 +87,6 @@
             <span class="font-semibold">{{ (bill.paid_at ? bill.paid_at : bill.deadline) | date: 'dd/MM/yyyy' }}</span>
           </div>
           @if(bill.payer_name) {
-            <!-- <div class="size-6 rounded-full flex items-center justify-center bg-blue-500 text-white text-xs" pTooltip="Responsável pelo pagamento: {{ getPayerFirstName(bill.payer_name) }}">
-              <span>{{ getPayerInitials(bill.payer_name) }}</span>
-            </div> -->
             <div class="flex mt-2 items-center justify-start gap-2 text-sm text-gray-500">
               <i class="pi pi-user"></i>
               <span>Responsável: </span>
@@ -111,4 +108,10 @@
   }
 </div>
 
-<app-bill-form-dialog [isOpen]="isFormDialogOpen" [selectedBill]="selectedBill()" [space]="space()" [referencePeriod]="referenceDate()" (touchBill)="updateBillList($event)"></app-bill-form-dialog>
+<app-bill-form-dialog
+  [isOpen]="isFormDialogOpen"
+  [selectedBill]="selectedBill()"
+  [space]="space()"
+  [referencePeriod]="referenceDate()"
+  (touchBill)="updateBillList($event)"
+></app-bill-form-dialog>

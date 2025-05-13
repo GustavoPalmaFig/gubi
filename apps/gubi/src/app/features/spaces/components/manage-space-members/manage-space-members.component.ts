@@ -11,10 +11,11 @@ import { MessageService } from '@shared/services/message.service';
 import { SpaceApiService } from '@features/spaces/services/space-api.service';
 import { SpaceService } from '@features/spaces/services/space.service';
 import { TooltipModule } from 'primeng/tooltip';
+import { UserAvatarComponent } from '@shared/components/user-avatar/user-avatar.component';
 
 @Component({
   selector: 'app-manage-space-members',
-  imports: [DialogModule, Button, FormsModule, AutoCompleteModule, CommonModule, TooltipModule, LoadingComponent],
+  imports: [DialogModule, Button, FormsModule, AutoCompleteModule, CommonModule, TooltipModule, LoadingComponent, UserAvatarComponent],
   templateUrl: './manage-space-members.component.html',
   styleUrl: './manage-space-members.component.scss'
 })

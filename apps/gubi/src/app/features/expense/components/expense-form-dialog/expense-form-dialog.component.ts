@@ -19,6 +19,7 @@ import { Select } from 'primeng/select';
 import { SpaceApiService } from '@features/spaces/services/space-api.service';
 import { TextareaModule } from 'primeng/textarea';
 import { Tooltip } from 'primeng/tooltip';
+import { UserAvatarComponent } from '@shared/components/user-avatar/user-avatar.component';
 import Utils from '@shared/utils/utils';
 
 @Component({
@@ -35,7 +36,8 @@ import Utils from '@shared/utils/utils';
     Select,
     Tooltip,
     ReactiveFormsModule,
-    PaymentMethodFormDialogComponent
+    PaymentMethodFormDialogComponent,
+    UserAvatarComponent
   ],
   templateUrl: './expense-form-dialog.component.html',
   styleUrl: './expense-form-dialog.component.scss'

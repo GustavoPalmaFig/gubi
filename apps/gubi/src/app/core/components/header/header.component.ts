@@ -7,10 +7,11 @@ import { Menu } from 'primeng/menu';
 import { MenubarModule } from 'primeng/menubar';
 import { MenuItem } from 'primeng/api';
 import { Router, RouterLink } from '@angular/router';
+import { UserAvatarComponent } from '@shared/components/user-avatar/user-avatar.component';
 
 @Component({
   selector: 'app-header',
-  imports: [MenubarModule, ButtonModule, Menu, BreadcrumbModule, RouterLink],
+  imports: [MenubarModule, ButtonModule, Menu, BreadcrumbModule, RouterLink, UserAvatarComponent],
   templateUrl: './header.component.html',
   styleUrl: './header.component.scss'
 })

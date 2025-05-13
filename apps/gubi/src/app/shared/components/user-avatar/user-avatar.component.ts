@@ -11,7 +11,7 @@ import Utils from '@shared/utils/utils';
 })
 export class UserAvatarComponent {
   name = input.required<string>();
-  size = input<string>();
+  size = input<'small' | 'normal' | 'large'>();
 
   protected backgroundColor = '';
 
@@ -27,11 +27,13 @@ export class UserAvatarComponent {
   }
 
   protected get sizeClass(): string {
-    if (this.size() === 'large') {
-      return '!size-8';
-    } else if (this.size() === 'small') {
-      return '!size-4';
+    switch (this.size()) {
+      case 'large':
+        return '!size-8';
+      case 'small':
+        return '!size-4';
+      default:
+        return '!size-6';
     }
-    return '!size-6';
   }
 }
