@@ -24,7 +24,7 @@ export class HeaderComponent {
     {
       label: 'Sair',
       icon: 'pi pi-power-off',
-      command: () => this.authService.logout
+      command: () => this.authService.logout()
     }
   ];
 
