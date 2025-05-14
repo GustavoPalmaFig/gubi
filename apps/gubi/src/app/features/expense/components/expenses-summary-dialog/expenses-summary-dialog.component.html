@@ -34,7 +34,7 @@
 
   <ng-template #accordionTemplate let-items="items" let-type="type">
     <p-accordion>
-      @for (item of items; track $index) {
+      @for (item of items; track item.id ?? item.name) {
         <p-accordion-panel [value]="type === 'method' ? item.id : item.name">
           <p-accordion-header>
             <div class="flex justify-between items-center text-sm w-full">

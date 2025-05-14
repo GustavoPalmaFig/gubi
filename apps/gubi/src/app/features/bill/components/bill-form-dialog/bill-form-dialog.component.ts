@@ -9,7 +9,6 @@ import { iBill } from '@features/bill/interfaces/bill.interface';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { InputTextModule } from 'primeng/inputtext';
 import { iSpace } from '@features/spaces/interfaces/space.interface';
-import { iUser } from '@features/auth/interfaces/user.interface';
 import { MessageService } from '@shared/services/message.service';
 import { Select } from 'primeng/select';
 import { SpaceApiService } from '@features/spaces/services/space-api.service';

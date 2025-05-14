@@ -1,5 +1,4 @@
 import { ButtonModule } from 'primeng/button';
-import { Checkbox } from 'primeng/checkbox';
 import { CommonModule } from '@angular/common';
 import { Component, computed, effect, EventEmitter, inject, Input, input, Output, signal } from '@angular/core';
 import { DatePickerModule } from 'primeng/datepicker';
@@ -18,7 +17,6 @@ import { PaymentMethodFormDialogComponent } from '@features/payment-methods/comp
 import { Select } from 'primeng/select';
 import { SpaceApiService } from '@features/spaces/services/space-api.service';
 import { TextareaModule } from 'primeng/textarea';
-import { Tooltip } from 'primeng/tooltip';
 import { UserAvatarComponent } from '@shared/components/user-avatar/user-avatar.component';
 import Utils from '@shared/utils/utils';
 
@@ -31,10 +29,8 @@ import Utils from '@shared/utils/utils';
     InputTextModule,
     InputNumberModule,
     TextareaModule,
-    Checkbox,
     DatePickerModule,
     Select,
-    Tooltip,
     ReactiveFormsModule,
     PaymentMethodFormDialogComponent,
     UserAvatarComponent
@@ -72,7 +68,6 @@ export class ExpenseFormDialogComponent {
       note: new FormControl<string | null>(null),
       payment_method_id: new FormControl<number | null>(null),
       category_id: new FormControl<number | null>(null),
-      force_split: new FormControl<boolean | null>(null),
       reference_period: new FormControl<Date | null>(null)
     });
 

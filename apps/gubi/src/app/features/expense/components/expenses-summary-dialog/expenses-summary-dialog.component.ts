@@ -61,8 +61,8 @@ export class ExpensesSummaryDialogComponent {
       const existingGroup = acc.find(group => group.name === name);
 
       if (existingGroup) {
-        existingGroup.paymentMethods.push(...paymentMethods);
-        existingGroup.expenses.push(...expenses);
+        existingGroup.paymentMethods = [...existingGroup.paymentMethods, paymentMethod];
+        existingGroup.expenses = [...existingGroup.expenses, ...paymentMethod.expenses];
       } else {
         acc.push({ name, paymentMethods, expenses });
       }

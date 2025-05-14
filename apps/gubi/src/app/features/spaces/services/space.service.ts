@@ -1,4 +1,5 @@
 import { inject, Injectable, signal } from '@angular/core';
+import { Router } from '@angular/router';
 import { iSpace } from '../interfaces/space.interface';
 import { SpaceApiService } from './space-api.service';
 
@@ -7,6 +8,7 @@ import { SpaceApiService } from './space-api.service';
 })
 export class SpaceService {
   private spaceApiService = inject(SpaceApiService);
+  private router = inject(Router);
 
   private readonly _spaces = signal<iSpace[]>(Array(6).fill({}));
   private readonly _isFormDialogOpen = signal(false);
@@ -56,7 +58,7 @@ export class SpaceService {
     if (index !== -1) {
       this._spaces()[index] = space;
     } else {
-      this._spaces().push(space);
+      this.router.navigate(['/spaces', space.id]);
     }
   }
 

@@ -32,7 +32,7 @@ export class SpacesPage {
   protected spaceService = inject(SpaceService);
   protected spaces = this.spaceService.spaces;
 
-  ngOnInit() {
+  constructor() {
     this.spaceService.getAvailableSpaces();
   }
 }

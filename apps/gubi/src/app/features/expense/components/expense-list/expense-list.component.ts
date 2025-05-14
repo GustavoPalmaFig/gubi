@@ -90,40 +90,43 @@ export class ExpenseListComponent {
   }
 
   protected calculateIndividualDebts(): void {
-    const expensesGrouped = Utils.groupBy(this.expenses, e => e.payment_method_id);
+    const members = this.space().members || [];
 
-    const summaries = Object.values(expensesGrouped)
-      .filter(g => g.length > 0)
-      .map(group => {
-        const sample = group[0];
-        const total = group.reduce((sum, e) => sum + (e.value || 0), 0);
+    // Gera o total gasto por membro
+    const balances = members.map(member => {
+      const memberExpenses = this.expenses.filter(e => e.payment_method_owner_id === member.id);
+      const totalValue = memberExpenses.reduce((sum, e) => sum + (e.value || 0), 0);
+      const balance = Number((totalValue - this.splitedValue).toFixed(2));
 
-        return {
-          ownerId: sample.payment_method_owner_id || '',
-          ownerName: this.getFirstName(sample.payment_method_owner_fullname),
-          total
-        };
-      });
+      return {
+        ownerId: member.id,
+        ownerName: this.getFirstName(member.fullname),
+        balance
+      };
+    });
+
+    // Separa devedores e credores
+    const debtors = balances.filter(b => b.balance < 0);
+    const creditors = balances.filter(b => b.balance > 0);
 
     const individualDebts: Debt[] = [];
 
-    for (const debtor of summaries) {
-      const balance = debtor.total - this.splitedValue;
+    for (const debtor of debtors) {
+      for (const creditor of creditors) {
+        if (debtor.balance === 0 || creditor.balance === 0 || debtor.ownerId === creditor.ownerId) continue;
 
-      if (balance < 0) {
-        const amountOwed = Math.abs(balance);
-        const creditors = summaries.filter(c => c.ownerId !== debtor.ownerId && c.total > this.splitedValue);
-        const totalCredit = creditors.reduce((sum, c) => sum + (c.total - this.splitedValue), 0);
-
-        for (const creditor of creditors) {
-          const creditorSurplus = creditor.total - this.splitedValue;
-          const portion = (creditorSurplus / totalCredit) * amountOwed;
-
+        const amount = Math.min(Math.abs(debtor.balance), creditor.balance);
+        if (amount >= 0.01) {
           individualDebts.push({
             from: debtor.ownerName,
             to: creditor.ownerName,
-            amount: Number(portion.toFixed(2))
+            amount: Number(amount.toFixed(2))
           });
+
+          debtor.balance += amount;
+          creditor.balance -= amount;
+          debtor.balance = Number(debtor.balance.toFixed(2));
+          creditor.balance = Number(creditor.balance.toFixed(2));
         }
       }
     }

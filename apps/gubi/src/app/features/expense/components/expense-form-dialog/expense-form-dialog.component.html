@@ -49,16 +49,25 @@
     <div>
       <label for="payment_method_id" class="text-sm font-medium">Forma de Pagamento</label>
       <div class="flex items-center w-full mt-2">
-        <p-select id="payment_method_id" class="w-full" [options]="paymentMethods" formControlName="payment_method_id" optionLabel="name" optionValue="id" placeholder="Selecione">
+        <p-select
+          id="payment_method_id"
+          class="w-full"
+          [options]="paymentMethods"
+          formControlName="payment_method_id"
+          optionLabel="name"
+          optionValue="id"
+          placeholder="Selecione"
+          appendTo="body"
+        >
           <ng-template #selectedItem let-selectedOption>
             <div class="flex items-center gap-2">
-              <app-user-avatar [name]="selectedOption.owner.fullname"></app-user-avatar>
+              <app-user-avatar [name]="selectedOption.owner.email"></app-user-avatar>
               <span>{{ selectedOption.name }}</span>
             </div>
           </ng-template>
           <ng-template #item let-item>
             <div class="flex items-center gap-2">
-              <app-user-avatar [name]="item.owner.fullname"></app-user-avatar>
+              <app-user-avatar [name]="item.owner.email"></app-user-avatar>
               <span>{{ item.name }}</span>
             </div>
           </ng-template>
@@ -73,16 +82,6 @@
     <div>
       <label for="category_id" class="text-sm font-medium">Categoria</label>
       <p-select id="category_id" class="w-full mt-2" [options]="expenseCategories" formControlName="category_id" optionLabel="label" optionValue="value" placeholder="Selecione" />
-    </div>
-    <div class="my-6 flex items-end">
-      <p-checkbox id="force_split" formControlName="force_split" [binary]="true" />
-      <label for="force_split" class="mx-2 text-sm font-medium">Forçar Divisão</label>
-      <i
-        class="pi pi-question-circle"
-        tooltipEvent="hover"
-        [autoHide]="false"
-        pTooltip="Despesas pagas com o método selecionado são dividas igualmente para todos os membros do Espaço."
-      ></i>
     </div>
     <div class="flex justify-end pt-6">
       <p-button

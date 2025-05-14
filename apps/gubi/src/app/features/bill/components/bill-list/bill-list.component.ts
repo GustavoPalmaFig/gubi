@@ -45,7 +45,7 @@ export class BillListComponent {
     });
   }
 
-  private async fetchBills() {
+  protected async fetchBills() {
     this.isLoading.set(true);
     this.bills = Array(3).fill({});
     this.billApiService.getAllBillsFromSpaceAndDate(this.space().id, this.referenceDate()).then(async bills => {
@@ -211,15 +211,6 @@ export class BillListComponent {
   protected openFormDialog(bill: iBill | null = null) {
     this.selectedBill.set(bill);
     this.isFormDialogOpen.set(true);
-  }
-
-  protected updateBillList(bill: iBill) {
-    const index = this.bills.findIndex(b => b.id === bill.id);
-    if (index !== -1) {
-      this.bills[index] = bill;
-    } else {
-      this.bills.push(bill);
-    }
   }
 
   protected openDeleteConfirmDialog(event: Event, bill: iBill) {
