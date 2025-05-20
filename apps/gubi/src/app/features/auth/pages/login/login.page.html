@@ -1,7 +1,19 @@
 <p-card styleClass="w-[90vw] md:w-[50vw] lg:w-[40vw] xl:w-[25vw]">
   <ng-template #title>Boas Vindas</ng-template>
-  <ng-template #subtitle>Acesse utilizando seu e-mail e senha cadastrados</ng-template>
+  <ng-template #subtitle>Acesse sua conta</ng-template>
   <ng-template #content>
+    <button
+      class="my-6 w-full border border-gray-300 rounded-md flex items-center justify-center gap-6 py-3 px-4 text-sm font-medium bg-white hover:bg-gray-100 transition"
+      (click)="signInWithGoogle()"
+    >
+      <img src="google-color.svg" alt="Google Logo" class="w-5 h-5" />
+      <span>Continuar com o Google</span>
+    </button>
+
+    <p-divider align="center" type="solid">
+      <h1 class="text-sm font-medium">ou</h1>
+    </p-divider>
+
     <form class="mt-6" [formGroup]="loginForm" (ngSubmit)="login()">
       <div class="my-6">
         <label for="email" class="text-sm font-medium">Email</label>
@@ -34,7 +46,7 @@
     </form>
     <div class="mt-4 flex items-center text-sm font-medium justify-center">
       <span>Não tem uma conta?</span>
-      <button (click)="router.navigate(['/auth/register'])" class="ml-1 hover:underline cursor-pointer">Cadastre-se</button>
+      <button (click)="router.navigate(['/auth/register'])" class="ml-1 underline cursor-pointer">Cadastre-se</button>
     </div>
   </ng-template>
 </p-card>

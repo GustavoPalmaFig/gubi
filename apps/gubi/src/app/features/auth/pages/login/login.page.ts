@@ -2,6 +2,7 @@ import { AuthService } from '@features/auth/services/auth.service';
 import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
 import { Component, inject, signal } from '@angular/core';
+import { Divider } from 'primeng/divider';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { InputTextModule } from 'primeng/inputtext';
 import { MessageService } from '@shared/services/message.service';
@@ -11,7 +12,7 @@ import { Router } from '@angular/router';
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [CardModule, InputTextModule, PasswordModule, ReactiveFormsModule, ButtonModule],
+  imports: [CardModule, InputTextModule, PasswordModule, ReactiveFormsModule, ButtonModule, Divider],
   templateUrl: './login.page.html',
   styleUrl: './login.page.scss'
 })
@@ -28,6 +29,17 @@ export class LoginPage {
       email: new FormControl('', [Validators.required, Validators.email]),
       password: new FormControl('', [Validators.required])
     });
+  }
+
+  async signInWithGoogle() {
+    this.isLoading.set(true);
+    const { error } = await this.authService.signInWithGoogle();
+
+    if (error) {
+      this.messageService.showMessage('error', 'Erro', error);
+      this.isLoading.set(false);
+      return;
+    }
   }
 
   async login() {

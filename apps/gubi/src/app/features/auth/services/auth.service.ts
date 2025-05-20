@@ -63,6 +63,17 @@ export class AuthService {
     return data;
   }
 
+  async signInWithGoogle(): Promise<{ error?: string }> {
+    const { error } = await this.supabaseService.client.auth.signInWithOAuth({
+      provider: 'google',
+      options: {
+        redirectTo: `${window.location.origin}/spaces`
+      }
+    });
+
+    return { error: Utils.handleErrorMessage(error) };
+  }
+
   async logout() {
     await this.supabaseService.client.auth.signOut();
   }
