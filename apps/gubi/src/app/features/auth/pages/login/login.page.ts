@@ -5,6 +5,7 @@ import { Component, inject, signal } from '@angular/core';
 import { Divider } from 'primeng/divider';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { InputTextModule } from 'primeng/inputtext';
+import { LoadingComponent } from '@shared/components/loading/loading.component';
 import { MessageService } from '@shared/services/message.service';
 import { PasswordModule } from 'primeng/password';
 import { Router } from '@angular/router';
@@ -12,13 +13,14 @@ import { Router } from '@angular/router';
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [CardModule, InputTextModule, PasswordModule, ReactiveFormsModule, ButtonModule, Divider],
+  imports: [CardModule, InputTextModule, PasswordModule, ReactiveFormsModule, ButtonModule, Divider, LoadingComponent],
   templateUrl: './login.page.html',
   styleUrl: './login.page.scss'
 })
 export class LoginPage {
   protected loginForm: FormGroup;
   protected isLoading = signal(false);
+  protected isGoogleLoading = signal(false);
 
   private messageService = inject(MessageService);
   private authService = inject(AuthService);
@@ -32,12 +34,12 @@ export class LoginPage {
   }
 
   async signInWithGoogle() {
-    this.isLoading.set(true);
+    this.isGoogleLoading.set(true);
     const { error } = await this.authService.signInWithGoogle();
 
     if (error) {
       this.messageService.showMessage('error', 'Erro', error);
-      this.isLoading.set(false);
+      this.isGoogleLoading.set(false);
       return;
     }
   }
