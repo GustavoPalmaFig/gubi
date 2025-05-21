@@ -2,7 +2,7 @@
 
 Gubi é uma aplicação web para controle de despesas compartilhadas em grupos, como apartamentos, viagens ou famílias. Com o Gubi, você pode criar espaços, adicionar membros, registrar despesas, dividir contas e visualizar facilmente quem deve quanto para quem.
 
-O sistema pode ser acessado através de [https://gubi.vercel.app](https://gubi.vercel.app)
+O sistema pode ser acessado na URL [https://gubi.vercel.app](https://gubi.vercel.app)
 
 ## Funcionalidades
 
