@@ -1,6 +1,6 @@
 <div class="mb-4 flex justify-end gap-2">
   <p-button label="Resumo" icon="pi pi-book" severity="contrast" (click)="isSummaryDialogOpen.set(true)"></p-button>
-  <p-button label="Nova" icon="pi pi-plus-circle" severity="contrast" (click)="openFormDialog()"></p-button>
+  <p-button label="Nova" icon="pi pi-plus-circle" severity="contrast" (click)="openFormDialog($event)"></p-button>
 </div>
 
 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
@@ -26,7 +26,12 @@
       </div>
     </div>
 
-    <div class="bg-card bg-white flex flex-col rounded-xl border shadow-sm cursor-pointer" tabindex="0" (click)="isSummaryDialogOpen.set(true)" (keydown.enter)="isSummaryDialogOpen.set(true)">
+    <div
+      class="bg-card bg-white flex flex-col rounded-xl border shadow-sm cursor-pointer"
+      tabindex="0"
+      (click)="isSummaryDialogOpen.set(true)"
+      (keydown.enter)="isSummaryDialogOpen.set(true)"
+    >
       <div class="p-4">
         <div class="flex items-end gap-2">
           <div class="text-md text-gray-400 font-normal">Resumo de Dívidas</div>
@@ -50,23 +55,28 @@
       <p-skeleton styleClass="py-16" />
     }
     @else {
-      <div class="bg-card flex h-40 flex-col rounded-xl border shadow-sm bg-white border-gray-200 px-4 pt-2 pb-4">
+      <div
+        class="bg-card flex h-40 flex-col rounded-xl border shadow-sm bg-white border-gray-200 px-4 pt-2 pb-4 cursor-pointer"
+        tabindex="0"
+        (click)="openDetailsDialog(expense);"
+        (keydown.enter)="openDetailsDialog(expense)"
+        (keydown.space)="openDetailsDialog(expense)"
+        role="button"
+      >
         <h1 class="text-lg font-semibold line-clamp-2">{{ expense.title }}</h1>
-    
+
         <div class="flex flex-col flex-grow">
           <div class="flex items-center justify-between mt-2">
-              <div
-                class="text-lg text-gray-500 font-bold pr-1">
-                {{ expense.value | currency: 'BRL' }}
-              </div>
-    
+            <div class="text-lg text-gray-500 font-bold pr-1">{{ expense.value | currency: 'BRL' }}</div>
+
             <div class="flex items-center">
-                <p-button icon="pi pi-pen-to-square" [text]="true" severity="contrast" (click)="openFormDialog(expense)"></p-button>
-                <p-button icon="pi pi-trash" [text]="true" severity="contrast" (click)="openDeleteConfirmDialog($event, expense)"></p-button>
+              <p-button icon="pi pi-info-circle" [text]="true" severity="contrast" (click)="openDetailsDialog(expense)"></p-button>
+              <p-button icon="pi pi-pen-to-square" [text]="true" severity="contrast" (click)="openFormDialog($event,expense)"></p-button>
+              <p-button icon="pi pi-trash" [text]="true" severity="contrast" (click)="openDeleteConfirmDialog($event, expense)"></p-button>
             </div>
           </div>
         </div>
-    
+
         <div class="mt-auto pt-3 border-t flex items-end justify-between gap-4">
           <div class="flex mt-2 items-center justify-start gap-2 text-sm text-gray-500">
             <i class="pi pi-calendar"></i>
@@ -92,6 +102,14 @@
   }
 </div>
 
-<app-expense-form-dialog [isOpen]="isFormDialogOpen" [selectedExpense]="selectedExpense()" [space]="space()" [referencePeriod]="referenceDate()" (touchExpense)="fetchExpenses()"></app-expense-form-dialog>
+<app-expense-form-dialog
+  [isOpen]="isFormDialogOpen"
+  [selectedExpense]="selectedExpense()"
+  [space]="space()"
+  [referencePeriod]="referenceDate()"
+  (touchExpense)="fetchExpenses()"
+></app-expense-form-dialog>
 
 <app-expenses-summary-dialog [isOpen]="isSummaryDialogOpen" [space]="space()" [referencePeriod]="referenceDate()"></app-expenses-summary-dialog>
+
+<app-expense-details-dialog [isOpen]="isDetailsDialogOpen" [expense]="selectedExpense()"> </app-expense-details-dialog>

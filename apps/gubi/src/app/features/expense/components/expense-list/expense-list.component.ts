@@ -9,7 +9,7 @@ import { iSpace } from '@features/spaces/interfaces/space.interface';
 import { MessageService } from '@shared/services/message.service';
 import { Skeleton } from 'primeng/skeleton';
 import { Tooltip } from 'primeng/tooltip';
-import Utils from '@shared/utils/utils';
+import { ExpenseDetailsDialogComponent } from '../expense-details-dialog/expense-details-dialog.component';
 import { ExpenseFormDialogComponent } from '../expense-form-dialog/expense-form-dialog.component';
 import { ExpensesSummaryDialogComponent } from '../expenses-summary-dialog/expenses-summary-dialog.component';
 
@@ -21,7 +21,7 @@ interface Debt {
 
 @Component({
   selector: 'app-expense-list',
-  imports: [CommonModule, Button, Skeleton, Tooltip, ExpenseFormDialogComponent, ExpensesSummaryDialogComponent],
+  imports: [CommonModule, Button, Skeleton, Tooltip, ExpenseFormDialogComponent, ExpensesSummaryDialogComponent, ExpenseDetailsDialogComponent],
   templateUrl: './expense-list.component.html',
   styleUrl: './expense-list.component.scss'
 })
@@ -41,6 +41,7 @@ export class ExpenseListComponent {
   protected selectedExpense = signal<iExpense | null>(null);
   protected netDebts: Debt[] = [];
   protected isSummaryDialogOpen = signal(false);
+  protected isDetailsDialogOpen = signal(false);
 
   constructor() {
     effect(() => {
@@ -134,12 +135,23 @@ export class ExpenseListComponent {
     this.netDebts = individualDebts;
   }
 
-  protected openFormDialog(expense: iExpense | null = null) {
+  protected openDetailsDialog(expense: iExpense) {
+    this.selectedExpense.set(expense);
+    this.isDetailsDialogOpen.set(true);
+  }
+
+  protected openFormDialog(event: Event, expense: iExpense | null = null) {
+    event.stopPropagation();
+    event.preventDefault();
+
     this.selectedExpense.set(expense);
     this.isFormDialogOpen.set(true);
   }
 
   protected openDeleteConfirmDialog(event: Event, expense: iExpense) {
+    event.stopPropagation();
+    event.preventDefault();
+
     this.confirmationService.confirm({
       target: event?.target || undefined,
       message: 'Você tem certeza que deseja excluir esta Despesa?\n\nEssa ação não pode ser desfeita.',
