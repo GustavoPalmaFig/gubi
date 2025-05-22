@@ -78,6 +78,10 @@ export class AuthService {
     await this.supabaseService.client.auth.signOut();
   }
 
+  get currentUserName() {
+    return this.currentUser()?.user_metadata?.['full_name'];
+  }
+
   get currentUserEmail() {
     return this.currentUser()?.user_metadata?.['email'];
   }

@@ -6,6 +6,7 @@ import { Drawer } from 'primeng/drawer';
 import { LayoutService } from '@core/services/layout.service';
 import { Router, RouterLink } from '@angular/router';
 import { TooltipModule } from 'primeng/tooltip';
+import { UserAvatarComponent } from '@shared/components/user-avatar/user-avatar.component';
 
 interface MenuItem {
   label: string;
@@ -15,7 +16,7 @@ interface MenuItem {
 
 @Component({
   selector: 'app-sidebar',
-  imports: [Drawer, Button, RouterLink, CommonModule, TooltipModule],
+  imports: [Drawer, Button, RouterLink, CommonModule, TooltipModule, UserAvatarComponent],
   templateUrl: './sidebar.component.html',
   styleUrl: './sidebar.component.scss',
   standalone: true

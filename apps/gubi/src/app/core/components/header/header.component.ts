@@ -20,14 +20,6 @@ export class HeaderComponent {
   protected layoutService = inject(LayoutService);
   protected router = inject(Router);
 
-  protected userItems: MenuItem[] = [
-    {
-      label: 'Sair',
-      icon: 'pi pi-power-off',
-      command: () => this.authService.logout()
-    }
-  ];
-
   protected home: MenuItem = { icon: 'pi pi-home', label: 'Página Inicial', routerLink: '/spaces' };
   protected crumbItems: MenuItem[] = [];
 
