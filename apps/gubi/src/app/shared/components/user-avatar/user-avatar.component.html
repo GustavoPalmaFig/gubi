@@ -1,1 +1,7 @@
-<p-avatar [label]="initials" [style]="{ 'background-color': backgroundColor, color: 'white' }" [styleClass]="sizeClass" shape="circle" />
+<p-avatar
+  [label]="image() ? undefined : initials"
+  [image]="image() ?? undefined"
+  [style]="{ 'background-color': backgroundColor, color: 'white' }"
+  [styleClass]="sizeClass"
+  shape="circle"
+/>

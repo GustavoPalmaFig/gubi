@@ -12,6 +12,7 @@ import Utils from '@shared/utils/utils';
 export class UserAvatarComponent {
   name = input.required<string>();
   size = input<'small' | 'normal' | 'large'>();
+  image = input<string | null>();
 
   protected backgroundColor = '';
 
@@ -35,5 +36,13 @@ export class UserAvatarComponent {
       default:
         return '!size-6';
     }
+  }
+
+  protected getImage(): string | undefined {
+    if (this.image()) {
+      return this.image() as string;
+    }
+
+    return undefined;
   }
 }

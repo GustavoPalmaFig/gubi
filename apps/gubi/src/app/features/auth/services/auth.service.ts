@@ -81,4 +81,8 @@ export class AuthService {
   get currentUserEmail() {
     return this.currentUser()?.user_metadata?.['email'];
   }
+
+  get currentUserPicture() {
+    return this.currentUser()?.user_metadata?.['picture'];
+  }
 }
