@@ -30,6 +30,7 @@ export class BillListComponent {
 
   protected isLoading = signal(true);
   protected bills: iBillView[] = Array(3).fill({});
+  protected previousMonthBills: iBillView[] = [];
   protected billIdToEditValue = signal<number | null>(null);
   protected editValue: number | null = null;
   protected totalValue = 0;
@@ -50,17 +51,25 @@ export class BillListComponent {
     this.bills = Array(3).fill({});
     this.billApiService.getAllBillsFromSpaceAndDate(this.space().id, this.referenceDate()).then(async bills => {
       this.bills = bills;
+
       if (bills.length === 0) {
-        this.bills = [];
-        await this.showCopyTemplateDialog();
+        await this.handleNoBills();
       }
+
       this.getTotalValue();
       this.getTotalPaid();
       this.isLoading.set(false);
     });
   }
 
-  async showCopyTemplateDialog() {
+  private async handleNoBills() {
+    this.previousMonthBills = await this.getBillsFromPreviousMonth();
+    if (this.previousMonthBills.length > 0) {
+      await this.showCopyTemplateDialog();
+    }
+  }
+
+  protected async showCopyTemplateDialog() {
     this.confirmationService.confirm({
       message: 'Você não possui contas cadastradas para este mês. Deseja copiar as contas do mês anterior?',
       header: 'Copiar contas',
@@ -84,19 +93,16 @@ export class BillListComponent {
     });
   }
 
-  private async onBulkCreationFromPreviousMonth() {
+  private async getBillsFromPreviousMonth() {
     const previousMonth = Utils.adjustDateByMonths(this.referenceDate(), -1);
-    const bills = await this.billApiService.getAllBillsFromSpaceAndDate(this.space().id, previousMonth);
+    return await this.billApiService.getAllBillsFromSpaceAndDate(this.space().id, previousMonth);
+  }
 
-    if (bills.length > 0) {
-      const { error } = await this.billApiService.bulkCreateBills(bills);
+  private async onBulkCreationFromPreviousMonth() {
+    const { error } = await this.billApiService.bulkCreateBills(this.previousMonthBills);
 
-      if (error) {
-        this.messageService.showMessage('error', error, 'Erro ao copiar contas');
-        return;
-      }
-    } else {
-      this.messageService.showMessage('error', 'Nenhuma conta encontrada para o mês anterior', 'Contas não encontradas');
+    if (error) {
+      this.messageService.showMessage('error', error, 'Erro ao copiar contas');
       return;
     }
 
