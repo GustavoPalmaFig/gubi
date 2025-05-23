@@ -52,23 +52,30 @@
         <p-select
           id="payment_method_id"
           class="w-full"
-          [options]="paymentMethods"
+          [options]="groupedPaymentMethods"
           formControlName="payment_method_id"
           optionLabel="name"
           optionValue="id"
           placeholder="Selecione"
           appendTo="body"
+          [group]="true"
         >
-          <ng-template #selectedItem let-selectedOption>
+          <ng-template let-group #group>
             <div class="flex items-center gap-2">
-              <app-user-avatar [user]="selectedOption.owner"></app-user-avatar>
-              <span>{{ selectedOption.name }}</span>
+              <app-user-avatar [user]="group.owner"></app-user-avatar>
+              <span>{{ group.owner.fullname }}</span>
             </div>
           </ng-template>
           <ng-template #item let-item>
             <div class="flex items-center gap-2">
-              <app-user-avatar [user]="item.owner"></app-user-avatar>
+              <i class="pi pi-credit-card"></i>
               <span>{{ item.name }}</span>
+            </div>
+          </ng-template>
+          <ng-template #selectedItem let-selectedOption>
+            <div class="flex items-center gap-2">
+              <app-user-avatar [user]="getPaymentOwner(selectedOption)"></app-user-avatar>
+              <span>{{ selectedOption.name }}</span>
             </div>
           </ng-template>
           <ng-template #footer>

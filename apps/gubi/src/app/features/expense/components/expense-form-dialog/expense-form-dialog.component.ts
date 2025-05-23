@@ -11,6 +11,7 @@ import { InputNumberModule } from 'primeng/inputnumber';
 import { InputTextModule } from 'primeng/inputtext';
 import { iPaymentMethod } from '@features/payment-methods/interfaces/payment-method';
 import { iSpace } from '@features/spaces/interfaces/space.interface';
+import { iUser } from '@features/auth/interfaces/user.interface';
 import { MessageService } from '@shared/services/message.service';
 import { PaymentMethodApiService } from '@features/payment-methods/services/payment-method-api.service';
 import { PaymentMethodFormDialogComponent } from '@features/payment-methods/components/payment-method-form-dialog/payment-method-form-dialog.component';
@@ -140,9 +141,36 @@ export class ExpenseFormDialogComponent {
     this.isPaymentMethodDialogOpen.set(true);
   }
 
-  handlePaymentMethodCreated(method: iPaymentMethod) {
-    this.paymentMethods.push(method);
+  async handlePaymentMethodCreated(method: iPaymentMethod) {
+    await this.loadPaymentMethods();
     this.expenseForm.patchValue({ payment_method_id: method.id });
     this.isPaymentMethodDialogOpen.set(false);
+  }
+
+  get groupedPaymentMethods() {
+    const groupsMap = new Map<string, { owner: iUser; items: iPaymentMethod[] }>();
+
+    for (const method of this.paymentMethods) {
+      const owner = method.owner;
+
+      if (!groupsMap.has(owner.id)) {
+        groupsMap.set(owner.id, {
+          owner,
+          items: []
+        });
+      }
+
+      const group = groupsMap.get(owner.id);
+      if (group) {
+        group.items.push(method);
+      }
+    }
+
+    return Array.from(groupsMap.values());
+  }
+
+  getPaymentOwner(selectedPayment: iPaymentMethod): iUser {
+    const selectedGroup = this.groupedPaymentMethods.find(group => group.items.some(item => item.id === selectedPayment.id));
+    return selectedGroup?.owner || ({} as iUser);
   }
 }
