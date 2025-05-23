@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, Input, input, signal } from '@angular/core';
 import { Dialog } from 'primeng/dialog';
 import { ExpenseCategory } from '@features/expense/enums/expenseCategory.enum';
-import { iExpenseView } from '@features/expense/interfaces/expenseView.interface';
+import { iExpense } from '@features/expense/interfaces/expense.interface';
 import { UserAvatarComponent } from '@shared/components/user-avatar/user-avatar.component';
 
 @Component({
@@ -13,7 +13,7 @@ import { UserAvatarComponent } from '@shared/components/user-avatar/user-avatar.
 })
 export class ExpenseDetailsDialogComponent {
   @Input() isOpen = signal(false);
-  expense = input.required<iExpenseView | null>();
+  expense = input.required<iExpense | null>();
 
   protected close(): void {
     this.isOpen.set(false);

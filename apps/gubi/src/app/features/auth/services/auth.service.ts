@@ -3,12 +3,13 @@ import { Router } from '@angular/router';
 import { SupabaseService } from '@shared/services/supabase/supabase.service';
 import { User } from '@supabase/supabase-js';
 import Utils from '@shared/utils/utils';
+import { iUser } from '../interfaces/user.interface';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-  public currentUser = signal<User | null>(null);
+  public currentUser = signal<iUser | null>(null);
 
   private supabaseService = inject(SupabaseService);
   private router = inject(Router);
@@ -16,7 +17,8 @@ export class AuthService {
   constructor() {
     this.supabaseService.client.auth.onAuthStateChange((event, session) => {
       if (session) {
-        this.currentUser.set(session.user);
+        const user = this.buildUser(session.user);
+        this.currentUser.set(user);
       } else {
         this.currentUser.set(null);
         this.router.navigate(['auth/login']);
@@ -29,8 +31,23 @@ export class AuthService {
   async loadUser() {
     const { data } = await this.supabaseService.client.auth.getUser();
     if (data) {
-      this.currentUser.set(data.user);
+      const user = this.buildUser(data.user);
+      this.currentUser.set(user);
     }
+  }
+
+  buildUser(user: User | null): iUser | null {
+    if (!user) {
+      return null;
+    }
+
+    return {
+      id: user.id,
+      email: user.email as string,
+      fullname: user.user_metadata?.['name'],
+      avatar_url: user.user_metadata?.['picture'],
+      updated_at: user.updated_at ? new Date(user.updated_at) : undefined
+    };
   }
 
   async login(email: string, password: string): Promise<{ error?: string }> {
@@ -76,17 +93,5 @@ export class AuthService {
 
   async logout() {
     await this.supabaseService.client.auth.signOut();
-  }
-
-  get currentUserName() {
-    return this.currentUser()?.user_metadata?.['full_name'];
-  }
-
-  get currentUserEmail() {
-    return this.currentUser()?.user_metadata?.['email'];
-  }
-
-  get currentUserPicture() {
-    return this.currentUser()?.user_metadata?.['picture'];
   }
 }

@@ -1,4 +1,4 @@
-import { iUser } from '@features/auth/interfaces/user.interface';
+import { iSpaceMember } from './space_member.interface';
 
 export interface iSpace {
   id: number;
@@ -7,5 +7,5 @@ export interface iSpace {
   creator_id: string;
   created_at: Date;
   updated_at: Date;
-  members?: iUser[];
+  members?: iSpaceMember[];
 }

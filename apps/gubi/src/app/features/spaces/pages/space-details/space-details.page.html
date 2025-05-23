@@ -9,11 +9,12 @@
   <div class="flex justify-between">
     <h1 class="text-2xl font-bold">{{space.name}}</h1>
     <p-avatar-group>
-      @for(member of space.members; track member.id) {
+      @for(member of space.members; track member.user_id) {
         <p-avatar
-          [label]="member.fullname.at(0)"
+          [label]="member.user.avatar_url ? undefined : member.user.fullname.at(0)"
+          [image]="member.user.avatar_url"
           shape="circle"
-          [style]="{ color: 'white', backgroundColor: getAvatarColor(member.email) }"
+          [style]="{ color: 'white', backgroundColor: getAvatarColor(member.user.email) }"
           ptooltip="member.fullname"
     ></p-avatar>
       }

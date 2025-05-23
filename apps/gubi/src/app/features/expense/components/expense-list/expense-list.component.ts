@@ -84,8 +84,8 @@ export class ExpenseListComponent {
     const [firstName, lastNameInitial] = fullName.split(' ');
 
     const hasDuplicateFirstName = this.space()
-      .members?.filter(member => member.fullname !== fullName)
-      .some(member => member.fullname.startsWith(firstName));
+      .members?.filter(member => member.user.fullname !== fullName)
+      .some(member => member.user.fullname.startsWith(firstName));
 
     return hasDuplicateFirstName && lastNameInitial ? `${firstName} ${lastNameInitial[0]}.` : firstName;
   }
@@ -95,13 +95,13 @@ export class ExpenseListComponent {
 
     // Gera o total gasto por membro
     const balances = members.map(member => {
-      const memberExpenses = this.expenses.filter(e => e.payment_method_owner_id === member.id);
+      const memberExpenses = this.expenses.filter(e => e.payment_method_owner_id === member.user_id);
       const totalValue = memberExpenses.reduce((sum, e) => sum + (e.value || 0), 0);
       const balance = Number((totalValue - this.splitedValue).toFixed(2));
 
       return {
-        ownerId: member.id,
-        ownerName: this.getFirstName(member.fullname),
+        ownerId: member.user_id,
+        ownerName: this.getFirstName(member.user.fullname),
         balance
       };
     });

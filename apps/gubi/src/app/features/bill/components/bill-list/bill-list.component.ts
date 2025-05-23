@@ -161,8 +161,8 @@ export class BillListComponent {
     const [firstName, lastNameInitial] = fullName.split(' ');
 
     const hasDuplicateFirstName = this.space()
-      .members?.filter(member => member.fullname !== fullName)
-      .some(member => member.fullname.startsWith(firstName));
+      .members?.filter(member => member.user.fullname !== fullName)
+      .some(member => member.user.fullname.startsWith(firstName));
 
     return hasDuplicateFirstName && lastNameInitial ? `${firstName} ${lastNameInitial[0]}.` : firstName;
   }

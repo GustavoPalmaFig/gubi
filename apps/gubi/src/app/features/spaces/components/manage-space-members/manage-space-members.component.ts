@@ -5,6 +5,7 @@ import { Component, computed, effect, inject, signal } from '@angular/core';
 import { ConfirmationService } from 'primeng/api';
 import { DialogModule } from 'primeng/dialog';
 import { FormsModule } from '@angular/forms';
+import { iSpaceMember } from '@features/spaces/interfaces/space_member.interface';
 import { iUser } from '@features/auth/interfaces/user.interface';
 import { LoadingComponent } from '@shared/components/loading/loading.component';
 import { MessageService } from '@shared/services/message.service';
@@ -30,7 +31,7 @@ export class ManageSpaceMembersComponent {
   protected spaceId = computed(() => this.spaceService.selectedSpace()?.id);
 
   protected searchValue: iUser | null = null;
-  protected members: iUser[] = [];
+  protected members: iSpaceMember[] = [];
   protected filteredUsers: iUser[] = [];
   protected newSelectedUsers: iUser[] = [];
   protected isLoading = signal(false);
@@ -62,6 +63,7 @@ export class ManageSpaceMembersComponent {
     if (!spaceId) return;
     const availableUsers = await this.spaceApiService.getMembersToInvite(spaceId, event.query);
     this.filteredUsers = availableUsers.filter(user => !this.newSelectedUsers.some(selectedUser => selectedUser.id === user.id));
+    console.log('filteredUsers', this.filteredUsers);
   }
 
   setNewUsers(event: AutoCompleteSelectEvent) {
@@ -70,8 +72,8 @@ export class ManageSpaceMembersComponent {
     this.members.push(event.value);
   }
 
-  isNewMember(user: iUser): boolean {
-    return this.newSelectedUsers.some(selectedUser => selectedUser.id === user.id);
+  isNewMember(member: iSpaceMember): boolean {
+    return this.newSelectedUsers.some(selectedUser => selectedUser.id === member.user_id);
   }
 
   resetState(): void {
@@ -109,14 +111,14 @@ export class ManageSpaceMembersComponent {
     this.close();
   }
 
-  memberCanBeRemoved(member: iUser): boolean {
-    return this.isCreator && this.selectedSpace()?.creator_id !== member.id;
+  memberCanBeRemoved(member: iSpaceMember): boolean {
+    return this.isCreator && !member.is_owner;
   }
 
-  handleRemoveMember(user: iUser) {
-    if (this.isNewMember(user)) {
-      this.newSelectedUsers = this.newSelectedUsers.filter(selectedUser => selectedUser.id !== user.id);
-      this.members = this.members.filter(member => member.id !== user.id);
+  handleRemoveMember(member: iSpaceMember) {
+    if (this.isNewMember(member)) {
+      this.newSelectedUsers = this.newSelectedUsers.filter(selectedUser => selectedUser.id !== member.user_id);
+      this.members = this.members.filter(m => m.user_id !== member.user_id);
       return;
     }
 
@@ -135,16 +137,16 @@ export class ManageSpaceMembersComponent {
         label: 'Remover',
         severity: 'danger'
       },
-      accept: () => this.removeMember(user),
+      accept: () => this.removeMember(member),
       reject: () => this.messageService.showMessage('warn', 'Cancelado', 'Operação cancelada')
     });
   }
 
-  async removeMember(user: iUser): Promise<void> {
+  async removeMember(member: iSpaceMember): Promise<void> {
     this.isLoading.set(true);
     const spaceId = this.spaceId();
     if (!spaceId) return;
-    const { error } = await this.spaceApiService.removeMemberFromSpace(spaceId, user.id);
+    const { error } = await this.spaceApiService.removeMemberFromSpace(spaceId, member.user_id);
 
     if (error) {
       this.messageService.showMessage('error', 'Erro', error);
@@ -153,7 +155,7 @@ export class ManageSpaceMembersComponent {
     }
 
     this.messageService.showMessage('success', 'Sucesso', 'Usuário removido do Espaço');
-    this.members = this.members.filter(member => member.id !== user.id);
+    this.members = this.members.filter(m => m.user_id !== member.user_id);
     this.isLoading.set(false);
   }
 }

@@ -3,5 +3,5 @@ export interface iUser {
   fullname: string;
   email: string;
   avatar_url: string;
-  updatedAt: Date;
+  updated_at?: Date;
 }

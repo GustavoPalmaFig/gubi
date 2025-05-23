@@ -1,3 +1,6 @@
+import { iPaymentMethod } from '@features/payment-methods/interfaces/payment-method';
+import { iUser } from '@features/auth/interfaces/user.interface';
+
 export interface iExpense {
   id: number;
   space_id: number;
@@ -13,4 +16,8 @@ export interface iExpense {
   created_at: Date;
   updated_at?: Date;
   updated_by?: string;
+
+  creator: iUser;
+  updated_by_user: iUser;
+  payment_method: iPaymentMethod;
 }

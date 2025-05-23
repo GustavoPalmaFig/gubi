@@ -16,7 +16,7 @@
     (keydown.enter)="menu.toggle($event)"
     (keydown.space)="menu.toggle($event)"
   >
-    <app-user-avatar [name]="authService.currentUserEmail" [image]="authService.currentUserPicture" [size]="'large'"></app-user-avatar>
+    <app-user-avatar [user]="authService.currentUser()" [size]="'large'"></app-user-avatar>
   </div>
   }
 </div>
@@ -24,8 +24,8 @@
 <p-menu #menu [popup]="true" styleClass="px-2" appendTo="body">
   <ng-template #start>
     <div class="flex flex-col text-left text-gray-500 w-full py-1">
-      <span class="font-semibold">{{authService.currentUserName}}</span>
-      <span class="text-xs">{{authService.currentUserEmail}}</span>
+      <span class="font-semibold">{{authService.currentUser()?.fullname}}</span>
+      <span class="text-xs">{{authService.currentUser()?.email}}</span>
     </div>
   </ng-template>
   <ng-template #end>

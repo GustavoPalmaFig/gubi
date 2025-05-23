@@ -43,8 +43,8 @@
           </div>
           @if(expense()?.payment_method_id) {
           <div class="flex items-center gap-2">
-            <app-user-avatar [name]="expense()?.payment_method_owner_email!"></app-user-avatar>
-            <span>{{ expense()?.payment_method_name }}</span>
+            <app-user-avatar [user]="expense()?.payment_method?.owner!"></app-user-avatar>
+            <span>{{ expense()?.payment_method?.owner!.fullname }}</span>
           </div>
           }
         </div>
@@ -54,7 +54,7 @@
             <i class="pi pi-user"></i>
             <p class="text-sm text-muted-foreground">Criado por</p>
           </div>
-          <p class="font-medium">{{ expense()?.creator_name}}</p>
+          <p class="font-medium">{{ expense()?.creator?.fullname }}</p>
         </div>
 
         <div class="flex flex-col gap-1">

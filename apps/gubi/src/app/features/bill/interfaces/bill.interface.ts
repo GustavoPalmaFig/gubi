@@ -1,3 +1,5 @@
+import { iUser } from '@features/auth/interfaces/user.interface';
+
 export interface iBill {
   id: number;
   space_id: number;
@@ -11,4 +13,8 @@ export interface iBill {
   created_at: Date;
   updated_at?: Date;
   updated_by?: string;
+
+  payer: iUser;
+  creator: iUser;
+  updated_by_user: iUser;
 }

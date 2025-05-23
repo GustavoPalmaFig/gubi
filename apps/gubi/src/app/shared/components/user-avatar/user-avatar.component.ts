@@ -1,6 +1,7 @@
 import { AvatarModule } from 'primeng/avatar';
 import { CommonModule } from '@angular/common';
 import { Component, effect, input } from '@angular/core';
+import { iUser } from '@features/auth/interfaces/user.interface';
 import Utils from '@shared/utils/utils';
 
 @Component({
@@ -10,20 +11,29 @@ import Utils from '@shared/utils/utils';
   styleUrl: './user-avatar.component.scss'
 })
 export class UserAvatarComponent {
-  name = input.required<string>();
-  size = input<'small' | 'normal' | 'large'>();
-  image = input<string | null>();
+  public user = input.required<iUser | null>();
+  public size = input<'small' | 'normal' | 'large'>();
+  protected image: string | undefined;
 
   protected backgroundColor = '';
 
   constructor() {
     effect(() => {
-      this.backgroundColor = Utils.stringToColor(this.name());
+      const user = this.user();
+
+      if (user) {
+        this.backgroundColor = Utils.stringToColor(user.email);
+        this.image = this.getImage();
+      }
     });
   }
 
   protected get initials(): string {
-    const nameParts = this.name().split(' ');
+    const user = this.user();
+    if (!user) {
+      return '';
+    }
+    const nameParts = user?.fullname.split(' ');
     return nameParts[0][0].toUpperCase();
   }
 
@@ -39,8 +49,8 @@ export class UserAvatarComponent {
   }
 
   protected getImage(): string | undefined {
-    if (this.image()) {
-      return this.image() as string;
+    if (this.user()?.avatar_url) {
+      return this.user()?.avatar_url;
     }
 
     return undefined;

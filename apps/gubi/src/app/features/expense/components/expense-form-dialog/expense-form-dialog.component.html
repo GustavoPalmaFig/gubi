@@ -61,13 +61,13 @@
         >
           <ng-template #selectedItem let-selectedOption>
             <div class="flex items-center gap-2">
-              <app-user-avatar [name]="selectedOption.owner.email"></app-user-avatar>
+              <app-user-avatar [user]="selectedOption.owner"></app-user-avatar>
               <span>{{ selectedOption.name }}</span>
             </div>
           </ng-template>
           <ng-template #item let-item>
             <div class="flex items-center gap-2">
-              <app-user-avatar [name]="item.owner.email"></app-user-avatar>
+              <app-user-avatar [user]="item.owner"></app-user-avatar>
               <span>{{ item.name }}</span>
             </div>
           </ng-template>

@@ -4,6 +4,7 @@ import { iUser } from '@features/auth/interfaces/user.interface';
 import { SupabaseService } from '@shared/services/supabase/supabase.service';
 import Utils from '@shared/utils/utils';
 import { iSpace } from '../interfaces/space.interface';
+import { iSpaceMember } from '../interfaces/space_member.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -49,9 +50,9 @@ export class SpaceApiService {
     return { error: Utils.handleErrorMessage(error) };
   }
 
-  async getSpaceMembers(target_space_id: number): Promise<iUser[]> {
+  async getSpaceMembers(target_space_id: number): Promise<iSpaceMember[]> {
     const { data } = await this.supabaseService.client.rpc('get_space_members', { target_space_id });
-    return data as iUser[];
+    return data as iSpaceMember[];
   }
 
   async getMembersToInvite(target_space_id: number, query: string): Promise<iUser[]> {
