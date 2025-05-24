@@ -1,29 +1,25 @@
-@if(space.id) {
-  <a class="bg-card bg-white flex h-56 flex-col rounded-xl border shadow-sm px-4 pt-2 pb-4 hover:border-gray-200 hover:shadow-md transition-all cursor-pointer" [routerLink]="['/spaces', space.id]">
+@if(space().id) {
+  <a class="bg-card bg-white flex h-56 flex-col rounded-xl border shadow-sm px-4 pt-2 pb-4 hover:border-gray-200 hover:shadow-md transition-all cursor-pointer" [routerLink]="['/spaces', space().id]">
     <div class="flex items-center justify-between gap-2">
-      <h1 class="text-lg font-semibold line-clamp-2">{{ space.name }}</h1>
+      <h1 class="text-lg font-semibold line-clamp-2">{{ space().name }}</h1>
       <p-button
         icon="pi pi-ellipsis-v cursor-pointer"
         tabindex="0"
         [rounded]="true"
         [text]="true"
         severity="contrast"
-        (click)="menu.toggle($event); spaceService.selectSpace(space); $event.stopPropagation(); $event.preventDefault()"
-        (keydown.enter)="menu.toggle($event); spaceService.selectSpace(space); $event.stopPropagation(); $event.preventDefault()"
-        (keydown.space)="menu.toggle($event); spaceService.selectSpace(space); $event.stopPropagation(); $event.preventDefault()"
+        (click)="menu.toggle($event); spaceService.selectSpace($event, space());"
+        (keydown.enter)="menu.toggle($event); spaceService.selectSpace($event, space());"
+        (keydown.space)="menu.toggle($event); spaceService.selectSpace($event, space());"
       ></p-button>
     </div>
 
     <div class="flex flex-col flex-grow justify-center">
-      <p class="text-md text-gray-600 line-clamp-3">{{ space.description || 'Gerencie contas e despesas compartilhadas neste space.' }}</p>
+      <p class="text-md text-gray-600 line-clamp-3">{{ space().description || 'Gerencie contas e despesas compartilhadas neste space.' }}</p>
     </div>
 
     <div class="mt-auto pt-3 border-t flex items-end justify-between">
-      <div class="flex mt-2 items-center justify-start gap-2 text-sm text-gray-500">
-        <i class="pi pi-calendar"></i>
-        <span>Criado em {{ space.created_at | date: 'dd/MM/yyyy' }}</span>
-      </div>
-
+      <app-user-avatar [users]="spaceService.setSpaceMembersAsUsers(space())" [size]="'large'"></app-user-avatar>
       @if(isCreator) {
         <div class="inline-flex items-center rounded-full border px-2.5 py-1 text-xs font-semibold transition-colors border-transparent bg-black text-white">Administrador</div>
       }

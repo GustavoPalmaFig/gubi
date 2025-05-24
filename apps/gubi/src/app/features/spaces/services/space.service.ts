@@ -1,4 +1,5 @@
 import { inject, Injectable, signal } from '@angular/core';
+import { iUser } from '@features/auth/interfaces/user.interface';
 import { Router } from '@angular/router';
 import { iSpace } from '../interfaces/space.interface';
 import { SpaceApiService } from './space-api.service';
@@ -34,7 +35,9 @@ export class SpaceService {
     this._isMembersDialogOpen.set(isOpen);
   }
 
-  selectSpace(space: iSpace | null): void {
+  selectSpace(event: Event, space: iSpace | null): void {
+    event.stopPropagation();
+    event.preventDefault();
     this._selectedSpace.set(space);
   }
 
@@ -79,6 +82,16 @@ export class SpaceService {
   }
 
   checkIfCurrentUserIsCreator(space: iSpace): boolean {
-    return space.creator_id === this.spaceApiService.userId;
+    const members = space.members;
+    const owner = members?.find(member => member.is_owner);
+    return owner?.user_id === this.spaceApiService.userId;
+  }
+
+  setSpaceMembersAsUsers(space: iSpace): iUser[] {
+    const members = space?.members;
+    if (!members) {
+      return [];
+    }
+    return members?.map(m => m.user);
   }
 }

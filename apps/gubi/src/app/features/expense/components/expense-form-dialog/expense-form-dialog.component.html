@@ -62,7 +62,7 @@
         >
           <ng-template let-group #group>
             <div class="flex items-center gap-2">
-              <app-user-avatar [user]="group.owner"></app-user-avatar>
+              <app-user-avatar [users]="group.owner"></app-user-avatar>
               <span>{{ group.owner.fullname }}</span>
             </div>
           </ng-template>
@@ -74,7 +74,7 @@
           </ng-template>
           <ng-template #selectedItem let-selectedOption>
             <div class="flex items-center gap-2">
-              <app-user-avatar [user]="getPaymentOwner(selectedOption)"></app-user-avatar>
+              <app-user-avatar [users]="getPaymentOwner(selectedOption)"></app-user-avatar>
               <span>{{ selectedOption.name }}</span>
             </div>
           </ng-template>

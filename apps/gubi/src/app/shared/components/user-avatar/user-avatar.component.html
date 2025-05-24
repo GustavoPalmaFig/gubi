@@ -1,7 +1,11 @@
-<p-avatar
-  [label]="image ? undefined : initials"
-  [image]="image ?? undefined"
-  [style]="{ 'background-color': backgroundColor, color: 'white' }"
-  [styleClass]="sizeClass"
-  shape="circle"
-/>
+<p-avatar-group>
+  @for(user of usersArray; track user.id) {
+  <p-avatar
+    [label]="getInitials(user)"
+    [image]="getImage(user)"
+    [style]="{ 'background-color': getBackgroundColor(user), color: 'white' }"
+    [styleClass]="sizeClass"
+    shape="circle"
+  />
+  }
+</p-avatar-group>

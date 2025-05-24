@@ -43,7 +43,7 @@
           </div>
           @if(expense()?.payment_method_id) {
           <div class="flex items-center gap-2">
-            <app-user-avatar [user]="expense()?.payment_method?.owner!"></app-user-avatar>
+            <app-user-avatar [users]="expense()?.payment_method?.owner!"></app-user-avatar>
             <span>{{ expense()?.payment_method?.owner!.fullname }}</span>
           </div>
           }

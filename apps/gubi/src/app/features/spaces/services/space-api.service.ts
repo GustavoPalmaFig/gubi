@@ -15,7 +15,7 @@ export class SpaceApiService {
   public userId = this.authService.currentUser()?.id;
 
   async getUserSpaces(): Promise<iSpace[]> {
-    const { data } = await this.supabaseService.client.from('space').select('*');
+    const { data } = await this.supabaseService.client.rpc('get_spaces_with_members');
     return data as iSpace[];
   }
 

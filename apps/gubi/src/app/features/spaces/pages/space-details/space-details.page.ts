@@ -10,16 +10,19 @@ import { MessageService } from '@shared/services/message.service';
 import { Select } from 'primeng/select';
 import { Skeleton } from 'primeng/skeleton';
 import { SpaceApiService } from '@features/spaces/services/space-api.service';
+import { SpaceService } from '@features/spaces/services/space.service';
 import { TabsModule } from 'primeng/tabs';
+import { UserAvatarComponent } from '@shared/components/user-avatar/user-avatar.component';
 import Utils from '@shared/utils/utils';
 
 @Component({
   selector: 'app-space-details',
-  imports: [BillListComponent, ExpenseListComponent, Select, FormsModule, Skeleton, TabsModule, AvatarGroupModule, Avatar],
+  imports: [BillListComponent, ExpenseListComponent, Select, FormsModule, Skeleton, TabsModule, UserAvatarComponent],
   templateUrl: './space-details.page.html',
   styleUrl: './space-details.page.scss'
 })
 export class SpaceDetailsPage {
+  protected spaceService = inject(SpaceService);
   protected spaceApiService = inject(SpaceApiService);
   protected activatedRoute = inject(ActivatedRoute);
   protected router = inject(Router);

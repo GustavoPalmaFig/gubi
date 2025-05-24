@@ -26,7 +26,7 @@
     >
       <ng-template let-user pTemplate="item">
         <div class="flex items-center justify-start">
-          <app-user-avatar [user]="user" size="large"></app-user-avatar>
+          <app-user-avatar [users]="user" size="large"></app-user-avatar>
           <div class="ml-2">
           <p class="text-sm font-medium">{{ user.fullname }}</p>
           <p class="text-xs text-gray-500">{{ user.email }}</p>
@@ -68,7 +68,7 @@
     @if(isEditable && memberCanBeRemoved(member)) {
       <div class="size-8 rounded-full flex items-center justify-center font-400 relative group cursor-pointer hover:bg-red-100 text-red-500" pTooltip="Remover Membro">
         <span class="absolute opacity-100 transition-opacity duration-300 ease-in-out group-hover:opacity-0">
-          <app-user-avatar [user]="member.user" size="large"></app-user-avatar>
+          <app-user-avatar [users]="member.user" size="large"></app-user-avatar>
         </span>
         <p-button
           class="hidden group-hover:inline transition-opacity duration-300 ease-in-out"
@@ -80,7 +80,7 @@
         ></p-button>
       </div>
     } @else {
-      <app-user-avatar [user]="member.user" size="large"></app-user-avatar>
+      <app-user-avatar [users]="member.user" size="large"></app-user-avatar>
     }
 
     <div class="ml-2">

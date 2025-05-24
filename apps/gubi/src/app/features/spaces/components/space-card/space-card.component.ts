@@ -1,6 +1,6 @@
 import { Button } from 'primeng/button';
 import { CommonModule } from '@angular/common';
-import { Component, inject, Input, OnInit } from '@angular/core';
+import { Component, effect, inject, input } from '@angular/core';
 import { ConfirmationService, MenuItem } from 'primeng/api';
 import { iSpace } from '@features/spaces/interfaces/space.interface';
 import { MenuModule } from 'primeng/menu';
@@ -8,30 +8,35 @@ import { MessageService } from '@shared/services/message.service';
 import { RouterLink } from '@angular/router';
 import { SkeletonModule } from 'primeng/skeleton';
 import { SpaceService } from '@features/spaces/services/space.service';
+import { UserAvatarComponent } from '@shared/components/user-avatar/user-avatar.component';
 
 @Component({
   selector: 'app-space-card',
-  imports: [MenuModule, RouterLink, Button, SkeletonModule, CommonModule],
+  imports: [MenuModule, RouterLink, Button, SkeletonModule, CommonModule, UserAvatarComponent],
   templateUrl: './space-card.component.html',
   styleUrl: './space-card.component.scss'
 })
-export class SpaceCardComponent implements OnInit {
+export class SpaceCardComponent {
   private messageService = inject(MessageService);
   private confirmationService = inject(ConfirmationService);
   protected spaceService = inject(SpaceService);
 
-  @Input() space!: iSpace;
+  space = input.required<iSpace>();
 
   protected items!: MenuItem[];
   protected isAddMembersOpen = false;
   protected isCreator = false;
 
-  ngOnInit() {
-    if (this.space) this.buildMenuItems();
+  constructor() {
+    effect(() => {
+      if (this.space()) {
+        this.buildMenuItems();
+      }
+    });
   }
 
   buildMenuItems() {
-    this.isCreator = this.spaceService.checkIfCurrentUserIsCreator(this.space);
+    this.isCreator = this.spaceService.checkIfCurrentUserIsCreator(this.space());
     this.items = [
       {
         label: 'Ações do Espaço',
