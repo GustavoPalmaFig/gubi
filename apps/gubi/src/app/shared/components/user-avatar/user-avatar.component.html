@@ -1,11 +1,15 @@
 <p-avatar-group>
-  @for(user of usersArray; track user.id) {
-  <p-avatar
-    [label]="getInitials(user)"
-    [image]="getImage(user)"
-    [style]="{ 'background-color': getBackgroundColor(user), color: 'white' }"
-    [styleClass]="sizeClass"
-    shape="circle"
-  />
+  @for(user of usersArray.slice(0, 4); track user.id) {
+    <p-avatar
+      [label]="getInitials(user)"
+      [image]="getImage(user)"
+      [style]="{ 'background-color': getBackgroundColor(user), color: 'white' }"
+      [styleClass]="sizeClass"
+      shape="circle"
+    />
+  }
+
+  @if(usersArray.length > 4) {
+    <p-avatar [label]="'+' + (usersArray.length - 4)" shape="circle" />
   }
 </p-avatar-group>
