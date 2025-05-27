@@ -31,6 +31,14 @@ export class SidebarComponent {
   protected isSidebarExpanded = this.layoutService.isSidebarExpanded;
   protected sidebarClass = this.layoutService.sidebarClass;
 
+  constructor() {
+    this.router.events.subscribe(() => {
+      if (this.isMobile()) {
+        this.layoutService.setIsSidebarOpen(false);
+      }
+    });
+  }
+
   protected menuItems: MenuItem[] = [
     { label: 'Espaços', icon: 'pi pi-home', route: '/spaces' },
     { label: 'Pagamentos', icon: 'pi pi-credit-card', route: '/payment-methods' }

@@ -1,97 +1,92 @@
 import { inject, Injectable, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { SupabaseService } from '@shared/services/supabase/supabase.service';
-import { User } from '@supabase/supabase-js';
 import Utils from '@shared/utils/utils';
 import { iUser } from '../interfaces/user.interface';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable({ providedIn: 'root' })
 export class AuthService {
   public currentUser = signal<iUser | null>(null);
 
-  private supabaseService = inject(SupabaseService);
+  private supabase = inject(SupabaseService).client;
   private router = inject(Router);
 
   constructor() {
-    this.supabaseService.client.auth.onAuthStateChange((event, session) => {
-      if (session) {
-        const user = this.buildUser(session.user);
-        this.currentUser.set(user);
-      } else {
-        this.currentUser.set(null);
+    this.restoreUserFromStorage();
+    this.initializeAuthListener();
+  }
+
+  private restoreUserFromStorage(): void {
+    const raw = localStorage.getItem('currentUser');
+    if (raw) this.currentUser.set(JSON.parse(raw));
+  }
+
+  private initializeAuthListener(): void {
+    this.supabase.auth.onAuthStateChange(async (_event, session) => {
+      const userId = session?.user?.id;
+      const hasUser = !!this.currentUser();
+
+      if (userId && !hasUser) {
+        await this.fetchAndStoreUser(userId);
+        this.router.navigate(['']);
+      } else if (!userId && hasUser) {
+        this.clearUser();
         this.router.navigate(['auth/login']);
       }
     });
-
-    this.loadUser();
   }
 
-  async loadUser() {
-    const { data } = await this.supabaseService.client.auth.getUser();
-    if (data) {
-      const user = this.buildUser(data.user);
-      this.currentUser.set(user);
-    }
+  private async fetchAndStoreUser(userId: string) {
+    const { data } = await this.supabase.from('user').select('*').eq('id', userId).single();
+    if (data) this.setUser(data);
   }
 
-  buildUser(user: User | null): iUser | null {
-    if (!user) {
-      return null;
-    }
+  private setUser(user: iUser): void {
+    this.currentUser.set(user);
+    localStorage.setItem('currentUser', JSON.stringify(user));
+  }
 
-    return {
-      id: user.id,
-      email: user.email as string,
-      fullname: user.user_metadata?.['name'],
-      avatar_url: user.user_metadata?.['picture'],
-      updated_at: user.updated_at ? new Date(user.updated_at) : undefined
-    };
+  private clearUser(): void {
+    this.currentUser.set(null);
+    localStorage.removeItem('currentUser');
   }
 
   async login(email: string, password: string): Promise<{ error?: string }> {
-    const { error } = await this.supabaseService.client.auth.signInWithPassword({ email, password });
+    const { error } = await this.supabase.auth.signInWithPassword({ email, password });
     return { error: Utils.handleErrorMessage(error) };
   }
 
   async register(name: string, email: string, password: string): Promise<{ error?: string }> {
-    const isEmailRegistered = await this.checkEmail(email);
-
-    if (isEmailRegistered) {
+    if (await this.isEmailTaken(email)) {
       return { error: 'Este e-mail já está cadastrado' };
     }
 
-    const { error } = await this.supabaseService.client.auth.signUp({
+    const { error } = await this.supabase.auth.signUp({
       email,
       password,
-      options: {
-        data: {
-          name
-        }
-      }
+      options: { data: { name } }
     });
 
     return { error: Utils.handleErrorMessage(error) };
   }
 
-  async checkEmail(email: string): Promise<boolean> {
-    const { data } = await this.supabaseService.client.rpc('email_registered', { email_address: email });
+  private async isEmailTaken(email: string): Promise<boolean> {
+    const { data } = await this.supabase.rpc('email_registered', { email_address: email });
     return data;
   }
 
   async signInWithGoogle(): Promise<{ error?: string }> {
-    const { error } = await this.supabaseService.client.auth.signInWithOAuth({
+    const { error } = await this.supabase.auth.signInWithOAuth({
       provider: 'google',
-      options: {
-        redirectTo: `${window.location.origin}/spaces`
-      }
+      options: { redirectTo: `${window.location.origin}/spaces` }
     });
 
     return { error: Utils.handleErrorMessage(error) };
   }
 
   async logout() {
-    await this.supabaseService.client.auth.signOut();
+    await this.supabase.auth.signOut();
+    this.clearUser();
+    this.router.navigate(['auth/login']);
   }
 }

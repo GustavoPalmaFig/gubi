@@ -1,5 +1,4 @@
-import { ApplicationConfig, inject, LOCALE_ID, provideAppInitializer, provideZoneChangeDetection } from '@angular/core';
-import { AuthService } from '@features/auth/services/auth.service';
+import { ApplicationConfig, LOCALE_ID, provideZoneChangeDetection } from '@angular/core';
 import { MessageService } from '@shared/services/message.service';
 import { MessageService as PrimeNGMessageService } from 'primeng/api';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
@@ -19,7 +18,6 @@ export const appConfig: ApplicationConfig = {
     MessageService,
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(appRoutes),
-    provideAppInitializer(() => inject(AuthService).loadUser()),
     provideAnimationsAsync(),
     providePrimeNG({
       translation: ptBrTranslation,

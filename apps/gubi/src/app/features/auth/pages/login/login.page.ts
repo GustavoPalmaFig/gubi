@@ -59,7 +59,5 @@ export class LoginPage {
       this.isLoading.set(false);
       return;
     }
-
-    this.router.navigate(['']);
   }
 }
