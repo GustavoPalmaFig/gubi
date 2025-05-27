@@ -32,6 +32,7 @@ export class BillFormDialogComponent {
   referencePeriod = input.required<Date>();
   space = input.required<iSpace>();
 
+  protected possiblePayers = computed(() => this.space()?.members?.map(m => m.user) || []);
   protected isEditMode = computed(() => !!this.selectedBill());
   protected isLoading = signal(false);
 

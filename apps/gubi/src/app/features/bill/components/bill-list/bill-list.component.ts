@@ -12,7 +12,6 @@ import Utils from '@shared/utils/utils';
 import { BillApiService } from '../../services/bill-api.service';
 import { BillFormDialogComponent } from '../bill-form-dialog/bill-form-dialog.component';
 import { iBill } from '../../interfaces/bill.interface';
-import { iBillView } from '../../interfaces/billView.interface';
 
 @Component({
   selector: 'app-bill-list',
@@ -29,8 +28,8 @@ export class BillListComponent {
   referenceDate = input.required<Date>();
 
   protected isLoading = signal(true);
-  protected bills: iBillView[] = Array(3).fill({});
-  protected previousMonthBills: iBillView[] = [];
+  protected bills: iBill[] = Array(3).fill({});
+  protected previousMonthBills: iBill[] = [];
   protected billIdToEditValue = signal<number | null>(null);
   protected editValue: number | null = null;
   protected totalValue = 0;
@@ -121,7 +120,7 @@ export class BillListComponent {
 
   protected getTotalPaid() {
     this.paidValue = this.bills.reduce((total, bill) => {
-      if (bill.value && bill.paid_at) {
+      if (bill.value && bill.payer) {
         return total + bill.value;
       }
       return total;
@@ -132,11 +131,11 @@ export class BillListComponent {
     return this.totalValue > 0 ? `${Math.round((this.paidValue / this.totalValue) * 100)}% do total` : '0% do total';
   }
 
-  protected getCardStyle(bill: iBillView): string {
+  protected getCardStyle(bill: iBill): string {
     const today = new Date();
     const deadline = bill.deadline ? new Date(bill.deadline) : null;
 
-    if (bill.paid_at) {
+    if (bill.payer) {
       return 'bg-green-50 border-green-200';
     }
 
@@ -152,10 +151,10 @@ export class BillListComponent {
       }
     }
 
-    return 'bg-gray-50 border-gray-200';
+    return 'bg-white border-gray-200';
   }
 
-  protected openValueEdit(bill: iBillView) {
+  protected openValueEdit(bill: iBill) {
     this.billIdToEditValue.set(bill.id);
     this.editValue = bill.value || 0;
   }
@@ -202,7 +201,7 @@ export class BillListComponent {
     }
   }
 
-  protected async markAsPaid(bill: iBillView) {
+  protected async markAsPaid(bill: iBill) {
     const { error } = await this.billApiService.markBillAsPaid(bill.id);
 
     if (error) {

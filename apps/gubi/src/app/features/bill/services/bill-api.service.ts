@@ -2,7 +2,6 @@ import { inject, Injectable } from '@angular/core';
 import { SupabaseService } from '@shared/services/supabase/supabase.service';
 import Utils from '@shared/utils/utils';
 import { iBill } from '../interfaces/bill.interface';
-import { iBillView } from '../interfaces/billView.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -10,14 +9,9 @@ import { iBillView } from '../interfaces/billView.interface';
 export class BillApiService {
   private supabaseService = inject(SupabaseService);
 
-  async getAllBillsFromSpaceAndDate(spaceId: number, referenceDate: Date): Promise<iBillView[]> {
-    const { data } = await this.supabaseService.client
-      .from('bill_with_details')
-      .select('*')
-      .eq('space_id', spaceId)
-      .eq('reference_period', Utils.formatToDateOnly(referenceDate))
-      .order('deadline', { ascending: true });
-    return data as iBillView[];
+  async getAllBillsFromSpaceAndDate(target_space_id: number, target_reference_period: Date): Promise<iBill[]> {
+    const { data } = await this.supabaseService.client.rpc('get_bills', { target_space_id, target_reference_period });
+    return data as iBill[];
   }
 
   async getBillById(billId: number): Promise<iBill | null> {
