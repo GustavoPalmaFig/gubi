@@ -5,5 +5,7 @@ export enum ExpenseCategory {
   Lazer = 4,
   Pet = 5,
   Casa = 6,
-  Outros = 7
+  Outros = 7,
+  Roupas = 8,
+  Saúde = 9
 }
