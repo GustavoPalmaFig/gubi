@@ -11,6 +11,8 @@ import { PaymentMethodApiService } from '@features/payment-methods/services/paym
 import { TableModule } from 'primeng/table';
 import { TabsModule } from 'primeng/tabs';
 import { Tag } from 'primeng/tag';
+import { ExpenseDetailsDialogComponent } from '../expense-details-dialog/expense-details-dialog.component';
+import { ExpenseFormDialogComponent } from '../expense-form-dialog/expense-form-dialog.component';
 
 type GroupedByUserAndSplit = {
   name: string;
@@ -20,7 +22,7 @@ type GroupedByUserAndSplit = {
 
 @Component({
   selector: 'app-expenses-summary-dialog',
-  imports: [CommonModule, DialogModule, ButtonModule, TableModule, Tag, AccordionModule, TabsModule, LoadingComponent],
+  imports: [CommonModule, DialogModule, ButtonModule, TableModule, Tag, AccordionModule, TabsModule, LoadingComponent, ExpenseDetailsDialogComponent, ExpenseFormDialogComponent],
   templateUrl: './expenses-summary-dialog.component.html',
   styleUrl: './expenses-summary-dialog.component.scss'
 })
@@ -35,6 +37,9 @@ export class ExpensesSummaryDialogComponent {
   protected isLoading = signal(false);
   protected paymentMethods!: iPaymentMethod[];
   protected membersExpenses: GroupedByUserAndSplit[] = [];
+  protected selectedExpense = signal<iExpense | null>(null);
+  protected isDetailsDialogOpen = signal(false);
+  protected isFormDialogOpen = signal(false);
 
   constructor() {
     effect(() => {
@@ -77,6 +82,19 @@ export class ExpensesSummaryDialogComponent {
 
   protected calculateTotalValue(expenses: iExpense[]): number {
     return expenses.reduce((acc, expense) => acc + (expense.value || 0), 0);
+  }
+
+  protected openDetailsDialog(expense: iExpense) {
+    this.selectedExpense.set(expense);
+    this.isDetailsDialogOpen.set(true);
+  }
+
+  protected openFormDialog(event: Event, expense: iExpense | null = null) {
+    event.stopPropagation();
+    event.preventDefault();
+
+    this.selectedExpense.set(expense);
+    this.isFormDialogOpen.set(true);
   }
 
   protected close(): void {

@@ -2,7 +2,6 @@ import { inject, Injectable } from '@angular/core';
 import { SupabaseService } from '@shared/services/supabase/supabase.service';
 import Utils from '@shared/utils/utils';
 import { iExpense } from '../interfaces/expense.interface';
-import { iExpenseView } from '../interfaces/expenseView.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -10,14 +9,9 @@ import { iExpenseView } from '../interfaces/expenseView.interface';
 export class ExpenseApiService {
   private supabaseService = inject(SupabaseService);
 
-  async getAllExpensesFromSpaceAndDate(spaceId: number, referenceDate: Date): Promise<iExpenseView[]> {
-    const { data } = await this.supabaseService.client
-      .from('expense_with_details')
-      .select('*')
-      .eq('space_id', spaceId)
-      .eq('reference_period', Utils.formatToDateOnly(referenceDate))
-      .order('date', { ascending: true });
-    return data as iExpenseView[];
+  async getAllExpensesFromSpaceAndDate(target_space_id: number, target_reference_period: Date): Promise<iExpense[]> {
+    const { data } = await this.supabaseService.client.rpc('get_expenses_with_details', { target_space_id, target_reference_period });
+    return data as iExpense[];
   }
 
   async getExpenseById(expenseId: number): Promise<iExpense | null> {

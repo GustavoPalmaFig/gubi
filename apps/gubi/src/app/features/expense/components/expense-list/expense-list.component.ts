@@ -4,7 +4,6 @@ import { Component, effect, inject, input, signal } from '@angular/core';
 import { ConfirmationService } from 'primeng/api';
 import { ExpenseApiService } from '@features/expense/services/expense-api.service';
 import { iExpense } from '@features/expense/interfaces/expense.interface';
-import { iExpenseView } from '@features/expense/interfaces/expenseView.interface';
 import { iSpace } from '@features/spaces/interfaces/space.interface';
 import { MessageService } from '@shared/services/message.service';
 import { Skeleton } from 'primeng/skeleton';
@@ -34,7 +33,7 @@ export class ExpenseListComponent {
   referenceDate = input.required<Date>();
 
   protected isLoading = signal(true);
-  protected expenses: iExpenseView[] = Array(3).fill({});
+  protected expenses: iExpense[] = Array(3).fill({});
   protected totalValue = 0;
   protected splitedValue = 0;
   protected isFormDialogOpen = signal(false);
@@ -95,7 +94,7 @@ export class ExpenseListComponent {
 
     // Gera o total gasto por membro
     const balances = members.map(member => {
-      const memberExpenses = this.expenses.filter(e => e.payment_method_owner_id === member.user_id);
+      const memberExpenses = this.expenses.filter(e => e.payment_method?.owner_id === member.user_id);
       const totalValue = memberExpenses.reduce((sum, e) => sum + (e.value || 0), 0);
       const balance = Number((totalValue - this.splitedValue).toFixed(2));
 

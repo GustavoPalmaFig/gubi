@@ -59,6 +59,7 @@
                   <th>Data</th>
                   <th *ngIf="type === 'member'">Método</th>
                   <th>Observação</th>
+                  <th>Ações</th>
                 </tr>
               </ng-template>
               <ng-template pTemplate="body" let-expense>
@@ -68,6 +69,10 @@
                   <td>{{ expense.date | date: 'dd/MM/yyyy' }}</td>
                   <td *ngIf="type === 'member'">{{ getPaymentMethodName(expense) }}</td>
                   <td>{{ expense.note ?? '-' }}</td>
+                  <td>
+                    <p-button icon="pi pi-info-circle" [text]="true" severity="contrast" (click)="openDetailsDialog(expense)"></p-button>
+                    <p-button icon="pi pi-pen-to-square" [text]="true" severity="contrast" (click)="openFormDialog($event,expense)"></p-button>
+                  </td>
                 </tr>
               </ng-template>
               <ng-template pTemplate="footer">
@@ -83,3 +88,13 @@
     </p-accordion>
   </ng-template>
 </p-dialog>
+
+<app-expense-details-dialog [isOpen]="isDetailsDialogOpen" [expense]="selectedExpense()"> </app-expense-details-dialog>
+
+<app-expense-form-dialog
+  [isOpen]="isFormDialogOpen"
+  [selectedExpense]="selectedExpense()"
+  [space]="space()"
+  [referencePeriod]="referencePeriod()"
+  (touchExpense)="fetchPaymentMethods()"
+></app-expense-form-dialog>
