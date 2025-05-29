@@ -78,7 +78,7 @@
               <ng-template pTemplate="footer">
                 <tr>
                   <td class="font-semibold bg-gray-100">Total</td>
-                  <td class="font-semibold bg-gray-100" [attr.colspan]="type === 'member' ? 4 : 3">{{ calculateTotalValue(item.expenses) | currency: 'BRL' }}</td>
+                  <td class="font-semibold bg-gray-100" [attr.colspan]="type === 'member' ? 5 : 4">{{ calculateTotalValue(item.expenses) | currency: 'BRL' }}</td>
                 </tr>
               </ng-template>
             </p-table>

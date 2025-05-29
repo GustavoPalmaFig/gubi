@@ -1,0 +1,96 @@
+<div class="flex gap-2 items-center">
+  <div class="flex-1">
+    <p-iconfield>
+      <p-inputicon styleClass="pi pi-search" />
+      <input class="w-full" type="text" pInputText placeholder="Buscar despesas..." [(ngModel)]="filters().search" (ngModelChange)="applyFilters()" />
+    </p-iconfield>
+  </div>
+  <div class="flex gap-2 justify-end">
+    <p-button icon="pi pi-sliders-h" severity="contrast" (onClick)="openFilterDialog()"></p-button>
+    <p-select outlined severity="contrast" [options]="sortOptions" optionLabel="label" [(ngModel)]="selectedSortOption" [appendTo]="'body'">
+      <ng-template #item let-item>
+        <div class="flex items-center gap-2">
+          <span>{{ item.label }}</span>
+          <i [class]="item.icon"></i>
+        </div>
+      </ng-template>
+      <ng-template #selectedItem let-selectedOption>
+        <div class="flex items-center gap-2">
+          <span>{{ selectedOption.label }}</span>
+          <i [class]="selectedOption.icon"></i>
+        </div>
+      </ng-template>
+    </p-select>
+  </div>
+</div>
+
+<p-dialog
+  header="Filtrar Despesas"
+  modal
+  [visible]="isFilterDialogOpen()"
+  [closeOnEscape]="true"
+  [dismissableMask]="true"
+  (onHide)="closeFilterDialog()"
+  (visibleChange)="closeFilterDialog()"
+  styleClass="w-full md:w-1/2 lg:w-1/3 mx-4"
+>
+  <div class="flex flex-col gap-6 mt-2">
+    <div class="flex flex-col gap-2">
+      <p-slider [(ngModel)]="filters().maxValue" styleClass="w-full" [min]="sliderValues().min" [max]="sliderValues().max" [step]="10" />
+      <div class="flex justify-between">
+        <span class="text-sm text-gray-500">{{ sliderValues().min | currency: 'BRL' }}</span>
+        <span class="text-sm text-gray-500">{{ filters().maxValue | currency: 'BRL' }}</span>
+      </div>
+    </div>
+
+    <div>
+      <label for="paymentsMethods" class="text-sm font-medium">Métodos de Pagamento</label>
+      <p-select
+        id="paymentsMethods"
+        class="w-full mt-2"
+        [options]="paymentMethods()"
+        optionLabel="name"
+        optionValue="id"
+        [showClear]="true"
+        [(ngModel)]="filters().paymentMethodId"
+        placeholder="Selecione uma opção"
+        appendTo="body"
+      ></p-select>
+    </div>
+
+    <div>
+      <label for="dateRange" class="text-sm font-medium">Período</label>
+      <p-datepicker
+        id="dateRange"
+        styleClass="w-full mt-2"
+        [(ngModel)]="filters().dateRange"
+        [showIcon]="true"
+        [showButtonBar]="true"
+        selectionMode="range"
+        dateFormat="dd/mm/yy"
+        placeholder="dd/mm/aaaa - dd/mm/aaaa"
+        appendTo="body"
+      ></p-datepicker>
+    </div>
+
+    <div>
+      <label for="categories" class="text-sm font-medium">Categorias</label>
+      <p-select
+        id="categories"
+        class="w-full mt-2"
+        [options]="categories()"
+        optionLabel="label"
+        optionValue="value"
+        [showClear]="true"
+        [(ngModel)]="filters().categoryId"
+        placeholder="Selecione uma opção"
+        appendTo="body"
+      ></p-select>
+    </div>
+
+    <div class="flex justify-end gap-2 mt-4">
+      <p-button label="Limpar" severity="secondary" (click)="resetFilters()"></p-button>
+      <p-button label="Aplicar" severity="contrast" (click)="applyFilters()"></p-button>
+    </div>
+  </div>
+</p-dialog>

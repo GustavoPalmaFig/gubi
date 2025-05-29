@@ -107,4 +107,41 @@ export default class Utils {
 
     return color;
   }
+
+  static sorteListByProperty<T>(list: T[], property: keyof T, sortOrder: 'asc' | 'desc' = 'asc'): T[] {
+    return list.sort((a, b) => {
+      if (a[property] < b[property]) {
+        return sortOrder == 'asc' ? -1 : 1;
+      }
+      if (a[property] > b[property]) {
+        return sortOrder == 'asc' ? 1 : -1;
+      }
+      return 0;
+    });
+  }
+
+  static getDistinctValues<T>(list: T[], property?: keyof T): T[] {
+    const seen = new Set();
+
+    if (!Array.isArray(list)) {
+      return [];
+    }
+
+    return list.filter(item => {
+      if (item === null || item === undefined) {
+        return false;
+      }
+
+      const value = property ? item[property] : item;
+      if (seen.has(value)) {
+        return false;
+      }
+      seen.add(value);
+      return true;
+    });
+  }
+
+  static isDateInRange(date: Date, startDate: Date, endDate: Date): boolean {
+    return date >= startDate && date <= endDate;
+  }
 }

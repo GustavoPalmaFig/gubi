@@ -6,7 +6,7 @@ export interface iExpense {
   space_id: number;
   title: string;
   value?: number;
-  date?: Date;
+  date?: string;
   note?: string;
   reference_period: Date;
   payment_method_id?: number;

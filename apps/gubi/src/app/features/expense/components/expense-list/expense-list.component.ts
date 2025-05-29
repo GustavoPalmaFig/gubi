@@ -9,6 +9,7 @@ import { MessageService } from '@shared/services/message.service';
 import { Skeleton } from 'primeng/skeleton';
 import { Tooltip } from 'primeng/tooltip';
 import { ExpenseDetailsDialogComponent } from '../expense-details-dialog/expense-details-dialog.component';
+import { ExpenseFiltersComponent } from '../expense-filters/expense-filters.component';
 import { ExpenseFormDialogComponent } from '../expense-form-dialog/expense-form-dialog.component';
 import { ExpensesSummaryDialogComponent } from '../expenses-summary-dialog/expenses-summary-dialog.component';
 
@@ -20,7 +21,7 @@ interface Debt {
 
 @Component({
   selector: 'app-expense-list',
-  imports: [CommonModule, Button, Skeleton, Tooltip, ExpenseFormDialogComponent, ExpensesSummaryDialogComponent, ExpenseDetailsDialogComponent],
+  imports: [CommonModule, Button, Skeleton, Tooltip, ExpenseFormDialogComponent, ExpensesSummaryDialogComponent, ExpenseDetailsDialogComponent, ExpenseFiltersComponent],
   templateUrl: './expense-list.component.html',
   styleUrl: './expense-list.component.scss'
 })
@@ -33,7 +34,8 @@ export class ExpenseListComponent {
   referenceDate = input.required<Date>();
 
   protected isLoading = signal(true);
-  protected expenses: iExpense[] = Array(3).fill({});
+  protected expenses = signal<iExpense[]>(Array(3).fill({}));
+  protected filteredExpenses = signal<iExpense[]>([]);
   protected totalValue = 0;
   protected splitedValue = 0;
   protected isFormDialogOpen = signal(false);
@@ -48,13 +50,17 @@ export class ExpenseListComponent {
         this.fetchExpenses();
       }
     });
+
+    effect(() => {
+      this.filteredExpenses.set(this.expenses());
+    });
   }
 
   protected async fetchExpenses() {
     this.isLoading.set(true);
-    this.expenses = Array(3).fill({});
+    this.expenses.set(Array(3).fill({}));
     this.expenseApiService.getAllExpensesFromSpaceAndDate(this.space().id, this.referenceDate()).then(async expenses => {
-      this.expenses = expenses;
+      this.expenses.set(expenses);
       this.getTotalValue();
       this.getSplitedValue();
       this.isLoading.set(false);
@@ -63,7 +69,7 @@ export class ExpenseListComponent {
   }
 
   protected getTotalValue() {
-    this.totalValue = this.expenses.reduce((total, expense) => {
+    this.totalValue = this.expenses().reduce((total, expense) => {
       if (expense.value) {
         return total + expense.value;
       }
@@ -94,7 +100,7 @@ export class ExpenseListComponent {
 
     // Gera o total gasto por membro
     const balances = members.map(member => {
-      const memberExpenses = this.expenses.filter(e => e.payment_method?.owner_id === member.user_id);
+      const memberExpenses = this.expenses().filter(e => e.payment_method?.owner_id === member.user_id);
       const totalValue = memberExpenses.reduce((sum, e) => sum + (e.value || 0), 0);
       const balance = Number((totalValue - this.splitedValue).toFixed(2));
 
@@ -181,6 +187,6 @@ export class ExpenseListComponent {
     }
 
     this.messageService.showMessage('success', 'Excluído', 'Despesa excluída com sucesso');
-    this.expenses = this.expenses.filter(b => b.id !== expense.id);
+    this.expenses.update(e => e.filter(b => b.id !== expense.id));
   }
 }
