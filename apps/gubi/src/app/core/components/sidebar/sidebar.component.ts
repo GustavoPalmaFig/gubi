@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { Drawer } from 'primeng/drawer';
 import { LayoutService } from '@core/services/layout.service';
+import { Menu } from 'primeng/menu';
 import { Router, RouterLink } from '@angular/router';
 import { TooltipModule } from 'primeng/tooltip';
 import { UserAvatarComponent } from '@shared/components/user-avatar/user-avatar.component';
@@ -16,7 +17,7 @@ interface MenuItem {
 
 @Component({
   selector: 'app-sidebar',
-  imports: [Drawer, Button, RouterLink, CommonModule, TooltipModule, UserAvatarComponent],
+  imports: [Drawer, Button, RouterLink, CommonModule, TooltipModule, UserAvatarComponent, Menu],
   templateUrl: './sidebar.component.html',
   styleUrl: './sidebar.component.scss',
   standalone: true
