@@ -3,11 +3,12 @@ import { Component, Input, input, signal } from '@angular/core';
 import { Dialog } from 'primeng/dialog';
 import { ExpenseCategory } from '@features/expense/enums/expenseCategory.enum';
 import { iExpense } from '@features/expense/interfaces/expense.interface';
+import { TabsModule } from 'primeng/tabs';
 import { UserAvatarComponent } from '@shared/components/user-avatar/user-avatar.component';
 
 @Component({
   selector: 'app-expense-details-dialog',
-  imports: [CommonModule, Dialog, UserAvatarComponent],
+  imports: [CommonModule, Dialog, UserAvatarComponent, TabsModule],
   templateUrl: './expense-details-dialog.component.html',
   styleUrl: './expense-details-dialog.component.scss'
 })
