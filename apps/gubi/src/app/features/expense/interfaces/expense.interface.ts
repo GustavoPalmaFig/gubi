@@ -1,5 +1,6 @@
 import { iPaymentMethod } from '@features/payment-methods/interfaces/payment-method';
 import { iUser } from '@features/auth/interfaces/user.interface';
+import { iExpenseSplit } from './expense_split.interface';
 
 export interface iExpense {
   id: number;
@@ -17,6 +18,7 @@ export interface iExpense {
   updated_at?: Date;
   updated_by?: string;
 
+  expense_splits?: iExpenseSplit[];
   creator: iUser;
   updated_by_user: iUser;
   payment_method: iPaymentMethod;

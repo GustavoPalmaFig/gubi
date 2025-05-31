@@ -106,14 +106,29 @@
   }
 </div>
 
-<app-expense-form-dialog
-  [isOpen]="isFormDialogOpen"
-  [selectedExpense]="selectedExpense()"
-  [space]="space()"
-  [referencePeriod]="referenceDate()"
-  (touchExpense)="fetchExpenses()"
-></app-expense-form-dialog>
+@defer (when isFormDialogOpen()) {
+  <app-expense-form-dialog
+    [isOpen]="isFormDialogOpen"
+    [selectedExpense]="selectedExpense()"
+    [space]="space()"
+    [referencePeriod]="referenceDate()"
+    (touchExpense)="expenseHasBeenSaved($event)"
+  ></app-expense-form-dialog>
+}
 
-<app-expenses-summary-dialog [isOpen]="isSummaryDialogOpen" [space]="space()" [referencePeriod]="referenceDate()"></app-expenses-summary-dialog>
+@defer (when isSummaryDialogOpen()) {
+  <app-expenses-summary-dialog [isOpen]="isSummaryDialogOpen" [space]="space()" [referencePeriod]="referenceDate()"></app-expenses-summary-dialog>
+}
 
-<app-expense-details-dialog [isOpen]="isDetailsDialogOpen" [expense]="selectedExpense()"> </app-expense-details-dialog>
+@defer (when isDetailsDialogOpen()) {
+  <app-expense-details-dialog [isOpen]="isDetailsDialogOpen" [expense]="selectedExpense()"> </app-expense-details-dialog>
+}
+
+@defer (when isExpenseSplitFormDialogOpen()) {
+  <app-expense-split-dialog
+    [isDialogOpen]="isExpenseSplitFormDialogOpen"
+    [expense]="selectedExpense()!"
+    [spaceMembers]="space().members!"
+    (finishedSplitting)="fetchExpenses()"
+  ></app-expense-split-dialog>
+}

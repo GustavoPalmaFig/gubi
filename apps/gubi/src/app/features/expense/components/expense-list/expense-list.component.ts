@@ -11,6 +11,7 @@ import { Tooltip } from 'primeng/tooltip';
 import { ExpenseDetailsDialogComponent } from '../expense-details-dialog/expense-details-dialog.component';
 import { ExpenseFiltersComponent } from '../expense-filters/expense-filters.component';
 import { ExpenseFormDialogComponent } from '../expense-form-dialog/expense-form-dialog.component';
+import { ExpenseSplitDialogComponent } from '../expense-split-dialog/expense-split-dialog.component';
 import { ExpensesSummaryDialogComponent } from '../expenses-summary-dialog/expenses-summary-dialog.component';
 
 interface Debt {
@@ -21,7 +22,17 @@ interface Debt {
 
 @Component({
   selector: 'app-expense-list',
-  imports: [CommonModule, Button, Skeleton, Tooltip, ExpenseFormDialogComponent, ExpensesSummaryDialogComponent, ExpenseDetailsDialogComponent, ExpenseFiltersComponent],
+  imports: [
+    CommonModule,
+    Button,
+    Skeleton,
+    Tooltip,
+    ExpenseFormDialogComponent,
+    ExpensesSummaryDialogComponent,
+    ExpenseDetailsDialogComponent,
+    ExpenseFiltersComponent,
+    ExpenseSplitDialogComponent
+  ],
   templateUrl: './expense-list.component.html',
   styleUrl: './expense-list.component.scss'
 })
@@ -43,6 +54,7 @@ export class ExpenseListComponent {
   protected netDebts: Debt[] = [];
   protected isSummaryDialogOpen = signal(false);
   protected isDetailsDialogOpen = signal(false);
+  protected isExpenseSplitFormDialogOpen = signal(false);
 
   constructor() {
     effect(() => {
@@ -188,5 +200,17 @@ export class ExpenseListComponent {
 
     this.messageService.showMessage('success', 'Excluído', 'Despesa excluída com sucesso');
     this.expenses.update(e => e.filter(b => b.id !== expense.id));
+  }
+
+  protected expenseHasBeenSaved(expense: iExpense) {
+    const selected = this.selectedExpense();
+    const nowHasForceSplit = !selected?.force_split && expense.force_split;
+    if (nowHasForceSplit) {
+      this.isExpenseSplitFormDialogOpen.set(true);
+      this.selectedExpense.set(expense);
+    } else {
+      this.isFormDialogOpen.set(false);
+      this.fetchExpenses();
+    }
   }
 }
