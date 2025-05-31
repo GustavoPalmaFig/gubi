@@ -69,25 +69,21 @@ export class ExpenseSplitDialogComponent {
   }
 
   async saveSplit(): Promise<void> {
-    const splits = this.splitList();
-    const isEqualSplit = splits.every(split => split.split_value === splits[0].split_value);
-    if (!isEqualSplit) {
-      const { error } = await this.expenseApiService.createExpenseSplit(this.expense().id, splits);
+    const { error } = await this.expenseApiService.createExpenseSplit(this.expense().id, this.splitList());
 
-      if (error) {
-        this.messageService.showMessage('error', 'Erro', error);
-        return;
-      }
-
-      this.messageService.showMessage('success', 'Sucesso', 'Valores divididos com sucesso!');
+    if (error) {
+      this.messageService.showMessage('error', 'Erro', error);
+      return;
     }
+
+    this.messageService.showMessage('success', 'Sucesso', 'Valores divididos com sucesso!');
 
     this.closeSplitDialog();
   }
 
   onSplitValueChange(value: number, index: number): void {
     const splits = [...this.splitList()];
-    splits[index] = { ...splits[index], split_value: value };
+    splits[index] = { ...splits[index], split_value: value || 0 };
     this.splitList.set(splits);
   }
 }

@@ -5,9 +5,11 @@ import { ConfirmationService } from 'primeng/api';
 import { ExpenseApiService } from '@features/expense/services/expense-api.service';
 import { iExpense } from '@features/expense/interfaces/expense.interface';
 import { iSpace } from '@features/spaces/interfaces/space.interface';
+import { iUser } from '@features/auth/interfaces/user.interface';
 import { MessageService } from '@shared/services/message.service';
 import { Skeleton } from 'primeng/skeleton';
 import { Tooltip } from 'primeng/tooltip';
+import { UserAvatarComponent } from '@shared/components/user-avatar/user-avatar.component';
 import { ExpenseDetailsDialogComponent } from '../expense-details-dialog/expense-details-dialog.component';
 import { ExpenseFiltersComponent } from '../expense-filters/expense-filters.component';
 import { ExpenseFormDialogComponent } from '../expense-form-dialog/expense-form-dialog.component';
@@ -15,8 +17,8 @@ import { ExpenseSplitDialogComponent } from '../expense-split-dialog/expense-spl
 import { ExpensesSummaryDialogComponent } from '../expenses-summary-dialog/expenses-summary-dialog.component';
 
 interface Debt {
-  from: string;
-  to: string;
+  from: iUser;
+  to: iUser;
   amount: number;
 }
 
@@ -31,7 +33,8 @@ interface Debt {
     ExpensesSummaryDialogComponent,
     ExpenseDetailsDialogComponent,
     ExpenseFiltersComponent,
-    ExpenseSplitDialogComponent
+    ExpenseSplitDialogComponent,
+    UserAvatarComponent
   ],
   templateUrl: './expense-list.component.html',
   styleUrl: './expense-list.component.scss'
@@ -47,8 +50,8 @@ export class ExpenseListComponent {
   protected isLoading = signal(true);
   protected expenses = signal<iExpense[]>(Array(3).fill({}));
   protected filteredExpenses = signal<iExpense[]>([]);
-  protected totalValue = 0;
-  protected splitedValue = 0;
+  protected totalValue = signal(0);
+  protected splitedValue = signal(0);
   protected isFormDialogOpen = signal(false);
   protected selectedExpense = signal<iExpense | null>(null);
   protected netDebts: Debt[] = [];
@@ -81,75 +84,97 @@ export class ExpenseListComponent {
   }
 
   protected getTotalValue() {
-    this.totalValue = this.expenses().reduce((total, expense) => {
-      if (expense.value) {
-        return total + expense.value;
-      }
-      return total;
-    }, 0);
+    this.totalValue.set(
+      this.expenses().reduce((total, expense) => {
+        if (expense.value) {
+          return total + expense.value;
+        }
+        return total;
+      }, 0)
+    );
   }
 
   protected getSplitedValue() {
     const participants = this.space().members || [];
-    return (this.splitedValue = this.totalValue / participants.length);
+    return this.splitedValue.set(this.totalValue() / participants.length);
   }
 
-  protected getFirstName(fullName: string | undefined): string {
+  protected getAbbreviatedName(fullName: string | undefined): string {
     if (!fullName) {
       return 'Desconhecido';
     }
     const [firstName, lastNameInitial] = fullName.split(' ');
-
-    const hasDuplicateFirstName = this.space()
-      .members?.filter(member => member.user.fullname !== fullName)
-      .some(member => member.user.fullname.startsWith(firstName));
-
-    return hasDuplicateFirstName && lastNameInitial ? `${firstName} ${lastNameInitial[0]}.` : firstName;
+    return `${firstName} ${lastNameInitial[0]}.`;
   }
 
-  protected calculateIndividualDebts(): void {
-    const members = this.space().members || [];
+  protected calculateIndividualDebts() {
+    const debtMap = new Map<string, Map<string, number>>();
+    const spaceMembers = this.space().members || [];
+    const users = spaceMembers.map(m => m.user);
+    const userMap = new Map(users.map(u => [u.id, u]));
 
-    // Gera o total gasto por membro
-    const balances = members.map(member => {
-      const memberExpenses = this.expenses().filter(e => e.payment_method?.owner_id === member.user_id);
-      const totalValue = memberExpenses.reduce((sum, e) => sum + (e.value || 0), 0);
-      const balance = Number((totalValue - this.splitedValue).toFixed(2));
+    for (const expense of this.expenses()) {
+      const payerId = expense.payment_method?.owner_id ?? expense.creator_id;
+      const splits = expense.expense_splits;
 
-      return {
-        ownerId: member.user_id,
-        ownerName: this.getFirstName(member.user.fullname),
-        balance
-      };
-    });
+      if (splits && splits.length > 0) {
+        // Usa os valores do split manual
+        for (const split of splits) {
+          const userId = split.user_id;
+          const amount = split.split_value;
+          if (userId === payerId || amount === 0) continue;
 
-    // Separa devedores e credores
-    const debtors = balances.filter(b => b.balance < 0);
-    const creditors = balances.filter(b => b.balance > 0);
+          if (!debtMap.has(userId)) debtMap.set(userId, new Map());
 
-    const individualDebts: Debt[] = [];
+          const current = debtMap.get(userId)!.get(payerId) || 0;
+          debtMap.get(userId)!.set(payerId, +(current + amount).toFixed(2));
+        }
+      } else {
+        // Divide igualmente entre todos os membros
+        const total = expense.value ?? 0;
+        const equalShare = +(total / users.length).toFixed(2);
 
-    for (const debtor of debtors) {
-      for (const creditor of creditors) {
-        if (debtor.balance === 0 || creditor.balance === 0 || debtor.ownerId === creditor.ownerId) continue;
+        for (const user of users) {
+          if (user.id === payerId) continue;
 
-        const amount = Math.min(Math.abs(debtor.balance), creditor.balance);
-        if (amount >= 0.01) {
-          individualDebts.push({
-            from: debtor.ownerName,
-            to: creditor.ownerName,
-            amount: Number(amount.toFixed(2))
-          });
+          if (!debtMap.has(user.id)) debtMap.set(user.id, new Map());
 
-          debtor.balance += amount;
-          creditor.balance -= amount;
-          debtor.balance = Number(debtor.balance.toFixed(2));
-          creditor.balance = Number(creditor.balance.toFixed(2));
+          const current = debtMap.get(user.id)!.get(payerId) || 0;
+          debtMap.get(user.id)!.set(payerId, +(current + equalShare).toFixed(2));
         }
       }
     }
 
-    this.netDebts = individualDebts;
+    const results: Debt[] = [];
+    const processed = new Set<string>();
+
+    for (const [fromId, debts] of debtMap.entries()) {
+      for (const [toId, valueFromTo] of debts.entries()) {
+        const reverse = debtMap.get(toId)?.get(fromId) || 0;
+        const key = [fromId, toId].sort().join('-');
+        if (processed.has(key)) continue;
+
+        const diff = +(valueFromTo - reverse).toFixed(2);
+
+        if (diff > 0) {
+          results.push({
+            from: userMap.get(fromId)!,
+            to: userMap.get(toId)!,
+            amount: diff
+          });
+        } else if (diff < 0) {
+          results.push({
+            from: userMap.get(toId)!,
+            to: userMap.get(fromId)!,
+            amount: -diff
+          });
+        }
+
+        processed.add(key);
+      }
+    }
+
+    this.netDebts = results;
   }
 
   protected openDetailsDialog(expense: iExpense) {
@@ -199,7 +224,7 @@ export class ExpenseListComponent {
     }
 
     this.messageService.showMessage('success', 'Excluído', 'Despesa excluída com sucesso');
-    this.expenses.update(e => e.filter(b => b.id !== expense.id));
+    this.fetchExpenses();
   }
 
   protected expenseHasBeenSaved(expense: iExpense) {
