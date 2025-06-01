@@ -13,7 +13,7 @@ import Utils from '@shared/utils/utils';
 })
 export class UserAvatarComponent {
   public users = input.required<iUser | iUser[] | null>();
-  public size = input<'small' | 'normal' | 'large'>();
+  public size = input<'small' | 'normal' | 'large' | 'extra-large'>();
 
   protected get usersArray(): iUser[] {
     const users = this.users();
@@ -38,6 +38,8 @@ export class UserAvatarComponent {
 
   protected get sizeClass(): string {
     switch (this.size()) {
+      case 'extra-large':
+        return '!size-10';
       case 'large':
         return '!size-8';
       case 'small':

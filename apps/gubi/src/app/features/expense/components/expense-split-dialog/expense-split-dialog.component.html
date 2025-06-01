@@ -4,7 +4,7 @@
   [visible]="isDialogOpen()"
   (onHide)="closeSplitDialog()"
   (visibleChange)="closeSplitDialog()"
-  styleClass="w-full md:w-1/2 lg:w-1/3 mx-4 dialog-with-subtitle"
+  styleClass="w-full md:w-1/3 lg:w-1/4 mx-4 dialog-with-subtitle"
 >
   <p class="text-sm font-semibold text-gray-500">Defina como esta despesa será dividida.</p>
 
@@ -25,13 +25,14 @@
   </div>
 
   @for(splitObj of splitList(); track splitObj.user_id) {
-    <div class="flex items-center mt-4">
+    <div class="flex items-center mt-4 gap-4 w-full">
       <div class="flex items-center gap-2 w-full">
         <app-user-avatar [users]="splitObj.user" [size]="'large'"></app-user-avatar>
-        <span class="font-medium">{{ splitObj.user.fullname }}</span>
+        <span class="font-medium">{{ getAbbreviatedName(splitObj.user.fullname) }}</span>
       </div>
-
       <p-inputNumber
+        class="w-full"
+        inputStyleClass="w-full"
         id="value"
         mode="currency"
         inputId="locale-brazil"

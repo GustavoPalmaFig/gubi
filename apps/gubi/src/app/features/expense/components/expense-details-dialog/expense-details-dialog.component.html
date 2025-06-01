@@ -11,9 +11,7 @@
   <p-tabs value="0" class="w-full transparent-tabs">
     <p-tablist>
       <p-tab value="0">Detalhes</p-tab>
-      @if(expense()?.force_split) {
-        <p-tab value="1">Divisões</p-tab>
-      }
+      <p-tab value="1">Divisões</p-tab>
     </p-tablist>
     <p-tabpanels>
       <p-tabpanel value="0">
@@ -95,24 +93,29 @@
         <div class="rounded-lg border bg-card text-card-foreground shadow-sm">
           <div class="p-4">
             <h3 class="text-lg font-medium mb-4">Divisão da Despesa</h3>
-            <div class="space-y-3">
-              @for(splitObj of expense()?.expense_splits; track splitObj.user_id) {
-                <div class="flex items-center justify-between p-2 border rounded-md">
-                  <div class="flex items-center gap-2">
-                    <app-user-avatar [users]="splitObj.user" [size]="'large'"></app-user-avatar>
-                    <span class="font-medium">{{ splitObj.user.fullname }}</span>
+            @if(!expense()?.expense_splits) {
+              <p class="text-md text-gray-500">Nenhuma divisão personalizada foi registrada para esta despesa.</p>
+            }
+            @else {
+              <div class="space-y-3">
+                @for(splitObj of expense()?.expense_splits; track splitObj.user_id) {
+                  <div class="flex items-center justify-between p-2 border rounded-md">
+                    <div class="flex items-center gap-2">
+                      <app-user-avatar [users]="splitObj.user" [size]="'large'"></app-user-avatar>
+                      <span class="font-medium">{{ splitObj.user.fullname }}</span>
+                    </div>
+                    <div class="text-right">
+                      <p class="font-medium">{{ splitObj.split_value | currency: 'BRL' }}</p>
+                      <p class="text-xs">{{(splitObj.split_value/(expense()?.value || 0)) * 100}}% do total</p>
+                    </div>
                   </div>
-                  <div class="text-right">
-                    <p class="font-medium">{{ splitObj.split_value | currency: 'BRL' }}</p>
-                    <p class="text-xs">{{(splitObj.split_value/(expense()?.value || 0)) * 100}}% do total</p>
-                  </div>
+                }
+                <div class="flex justify-between items-center p-2 border-t pt-3 font-bold">
+                  <span>Total</span>
+                  <span>{{ expense()?.value | currency: 'BRL' }}</span>
                 </div>
-              }
-              <div class="flex justify-between items-center p-2 border-t pt-3 font-bold">
-                <span>Total</span>
-                <span>{{ expense()?.value | currency: 'BRL' }}</span>
               </div>
-            </div>
+            }
           </div>
         </div>
       </p-tabpanel>

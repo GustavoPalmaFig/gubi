@@ -11,18 +11,23 @@
   } @else {
     <div class="bg-card bg-white flex flex-col rounded-xl border shadow-sm">
       <div class="p-4">
-        <div class="text-md text-gray-400 font-normal">Total a Pagar</div>
-        <div class="text-2xl text-gray-700 font-bold">{{totalValue | currency: 'BRL'}}</div>
+        <div class="flex items-end gap-2">
+          <div class="text-md text-gray-400 font-normal">Total a pagar</div>
+          <i class="pi pi-question-circle mb-1" 
+            pTooltip="Valor referente à soma de todas as despesas. Desconsiderando as despesas com valores divididos de forma personalizada">
+          </i>
+        </div>
+        <div class="text-2xl text-gray-700 font-bold mt-2">{{totalValue() | currency: 'BRL'}}</div>
       </div>
     </div>
 
     <div class="bg-card bg-white flex flex-col rounded-xl border shadow-sm">
       <div class="p-4">
         <div class="flex items-end gap-2">
-          <div class="text-md text-gray-400 font-normal">Divisão entre Membros</div>
-          <i class="pi pi-question-circle mb-1" pTooltip="Valor referente a quanto cada membro deve pagar igualmente no período selecionado."></i>
+          <div class="text-md text-gray-400 font-normal">Divisão igualitária entre membros</div>
+          <i class="pi pi-question-circle mb-1" pTooltip="Valor referente a quanto cada membro deve pagar igualmente no período selecionado. Não levando em consideração as despesas com valores divididos de forma personalizada"></i>
         </div>
-        <div class="text-2xl text-gray-700 font-bold">{{splitedValue | currency: 'BRL'}}</div>
+        <div class="text-2xl text-gray-700 font-bold mt-2">{{splitedValue() | currency: 'BRL'}}</div>
       </div>
     </div>
 
@@ -33,17 +38,35 @@
       (keydown.enter)="isSummaryDialogOpen.set(true)"
     >
       <div class="p-4">
-        <div class="flex items-end gap-2">
-          <div class="text-md text-gray-400 font-normal">Resumo de Dívidas</div>
-          <i class="pi pi-question-circle mb-1" pTooltip="Este valor refere-se a quanto cada membro deve pagar aos demais no período selecionado."></i>
+        <div class="flex items-end gap-2 mb-2">
+          <div class="text-md text-gray-400 font-normal">Resumo de dívidas</div>
+          <i class="pi pi-question-circle mb-1" pTooltip="Este valor refere-se a quanto cada membro deve pagar aos demais no período selecionado. Considerando as despesas com divisões personalizadas"></i>
         </div>
         @for(netDebt of netDebts; track $index + 1) {
-          <div class="flex items-center gap-2 whitespace-nowrap overflow-hidden text-ellipsis max-w-full">
-            <span class="text-md text-gray-500 font-semibold text-ellipsis overflow-hidden">{{netDebt.from}} deve <span class="text-2xl text-gray-700 font-bold">{{netDebt.amount | currency: 'BRL'}}</span> para {{netDebt.to}}</span>
+          <div class="flex flex-row items-center gap-4 justify-between lg:justify-start">
+            <div class="flex items-center gap-3">
+              <app-user-avatar [users]="netDebt.from" [size]="'extra-large'"></app-user-avatar>
+              <div class="text-md">
+                <div class="font-semibold">{{ getAbbreviatedName(netDebt.from.fullname) }}</div>
+                <div class="flex items-center gap-1 text-sm text-gray-500 font-medium">
+                  <div>deve</div>
+                  <div class="text-green-600 text-md">{{ netDebt.amount | currency: 'BRL' }}</div>
+                  <div>para</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="flex items-start gap-3">
+              <app-user-avatar [users]="netDebt.to" [size]="'extra-large'"></app-user-avatar>
+              <div class="text-sm">
+                <div class="font-semibold">{{ getAbbreviatedName(netDebt.to.fullname) }}</div>
+              </div>
+            </div>
           </div>
-        } @empty {
-            <span class="text-md text-gray-500 mt-2 font-semibold text-ellipsis overflow-hidden">Nenhum saldo a receber</span>
-          }
+        } 
+        @empty {
+          <span class="text-md text-gray-500 mt-2 font-semibold text-ellipsis overflow-hidden">Nenhum saldo a receber</span>
+        }
       </div>
     </div>
 
