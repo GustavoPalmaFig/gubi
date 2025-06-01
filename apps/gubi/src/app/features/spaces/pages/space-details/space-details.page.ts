@@ -88,9 +88,7 @@ export class SpaceDetailsPage {
     ];
 
     const currentDate = Utils.dateToUTC(new Date());
-    const currentMonth =
-      this.referenceDates.find(date => date.value.getUTCMonth() === currentDate.getUTCMonth() && date.value.getUTCFullYear() === currentDate.getUTCFullYear()) ||
-      this.referenceDates[0];
+    const currentMonth = this.referenceDates[5];
     this.selectedReferenceDate.set(currentMonth.value);
   }
 
