@@ -62,7 +62,7 @@ export class ExpensesSummaryDialogComponent {
     this.membersExpenses = this.paymentMethods.reduce((acc, paymentMethod) => {
       const paymentMethods = [paymentMethod];
       const expenses = paymentMethod.expenses;
-      const name = paymentMethod.split_by_default ? 'Dividir' : paymentMethod.owner.fullname;
+      const name = paymentMethod.split_by_default ? 'Compartilhado' : paymentMethod.owner.fullname;
       const existingGroup = acc.find(group => group.name === name);
 
       if (existingGroup) {
