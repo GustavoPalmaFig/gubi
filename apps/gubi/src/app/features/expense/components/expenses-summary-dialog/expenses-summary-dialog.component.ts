@@ -11,6 +11,7 @@ import { PaymentMethodApiService } from '@features/payment-methods/services/paym
 import { TableModule } from 'primeng/table';
 import { TabsModule } from 'primeng/tabs';
 import { Tag } from 'primeng/tag';
+import Utils from '@shared/utils/utils';
 import { ExpenseDetailsDialogComponent } from '../expense-details-dialog/expense-details-dialog.component';
 import { ExpenseFormDialogComponent } from '../expense-form-dialog/expense-form-dialog.component';
 
@@ -28,6 +29,7 @@ type GroupedByUserAndSplit = {
 })
 export class ExpensesSummaryDialogComponent {
   protected paymentMethodApiService = inject(PaymentMethodApiService);
+  protected getAbbreviatedName = Utils.getAbbreviatedName;
 
   @Input() isOpen = signal(false);
 

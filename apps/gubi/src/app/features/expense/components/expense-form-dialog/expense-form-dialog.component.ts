@@ -18,6 +18,7 @@ import { PaymentMethodApiService } from '@features/payment-methods/services/paym
 import { PaymentMethodFormDialogComponent } from '@features/payment-methods/components/payment-method-form-dialog/payment-method-form-dialog.component';
 import { Select } from 'primeng/select';
 import { SpaceApiService } from '@features/spaces/services/space-api.service';
+import { Tag } from 'primeng/tag';
 import { TextareaModule } from 'primeng/textarea';
 import { Tooltip } from 'primeng/tooltip';
 import { UserAvatarComponent } from '@shared/components/user-avatar/user-avatar.component';
@@ -38,7 +39,8 @@ import Utils from '@shared/utils/utils';
     PaymentMethodFormDialogComponent,
     UserAvatarComponent,
     Checkbox,
-    Tooltip
+    Tooltip,
+    Tag
   ],
   templateUrl: './expense-form-dialog.component.html',
   styleUrl: './expense-form-dialog.component.scss'
@@ -48,6 +50,7 @@ export class ExpenseFormDialogComponent {
   protected expenseApiService = inject(ExpenseApiService);
   protected spaceApiService = inject(SpaceApiService);
   protected paymentMethodApiService = inject(PaymentMethodApiService);
+  protected getAbbreviatedName = Utils.getAbbreviatedName;
 
   @Input() isOpen = signal(false);
   @Output() touchExpense = new EventEmitter<iExpense>();
@@ -171,7 +174,8 @@ export class ExpenseFormDialogComponent {
       }
     }
 
-    return Array.from(groupsMap.values());
+    const sortedGroups = Array.from(groupsMap.values()).sort((a, b) => a.owner.fullname.localeCompare(b.owner.fullname));
+    return sortedGroups;
   }
 
   getPaymentOwner(selectedPayment: iPaymentMethod): iUser {

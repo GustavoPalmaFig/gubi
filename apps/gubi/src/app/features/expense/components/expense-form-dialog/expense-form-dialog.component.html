@@ -63,19 +63,21 @@
           <ng-template let-group #group>
             <div class="flex items-center gap-2">
               <app-user-avatar [users]="group.owner"></app-user-avatar>
-              <span>{{ group.owner.fullname }}</span>
+              <span>{{ getAbbreviatedName(group.owner.fullname) }}</span>
             </div>
           </ng-template>
           <ng-template #item let-item>
             <div class="flex items-center gap-2">
               <i class="pi pi-credit-card"></i>
               <span>{{ item.name }}</span>
+              <p-tag *ngIf="item.split_by_default" class="ml-4" styleClass="!text-xs" severity="info" value="Compartilhado" />
             </div>
           </ng-template>
           <ng-template #selectedItem let-selectedOption>
             <div class="flex items-center gap-2">
-              <app-user-avatar [users]="getPaymentOwner(selectedOption)"></app-user-avatar>
+              <app-user-avatar [users]="selectedOption.owner"></app-user-avatar>
               <span>{{ selectedOption.name }}</span>
+              <p-tag *ngIf="selectedOption.split_by_default" class="ml-4" styleClass="!text-xs" severity="info" value="Compartilhado" />
             </div>
           </ng-template>
           <ng-template #footer>

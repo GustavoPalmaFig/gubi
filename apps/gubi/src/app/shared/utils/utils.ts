@@ -144,4 +144,13 @@ export default class Utils {
   static isDateInRange(date: Date, startDate: Date, endDate: Date): boolean {
     return date >= startDate && date <= endDate;
   }
+
+  static getAbbreviatedName(fullName: string | undefined, partsAmount: 1 | 2 | 3 = 2): string {
+    if (!fullName) {
+      return 'Desconhecido';
+    }
+    const splited = fullName.split(' ');
+    const parts = splited.slice(0, partsAmount);
+    return parts.join(' ');
+  }
 }

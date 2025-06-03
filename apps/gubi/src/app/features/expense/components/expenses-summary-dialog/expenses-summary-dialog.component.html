@@ -41,7 +41,7 @@
               <div class="flex items-center gap-2">
                 <i *ngIf="type === 'method'" class="pi pi-credit-card"></i>
                 <i *ngIf="type === 'member'" [class]="type === 'member' && item.name === 'Compartilhado' ? 'pi pi-users !text-lg' : 'pi pi-user'"></i>
-                <span class="font-semibold">{{ item.name }}</span>
+                <span class="font-semibold">{{ type === 'method' ? item.name : getAbbreviatedName(item.name) }}</span>
                 <p-tag *ngIf="type === 'method' && item.split_by_default" class="ml-4" severity="info" value="Compartilhado" />
               </div>
               <div class="flex items-baseline gap-1 font-semibold mr-4">

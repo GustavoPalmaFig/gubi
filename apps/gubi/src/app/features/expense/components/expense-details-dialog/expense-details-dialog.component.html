@@ -48,6 +48,7 @@
                   <div class="flex items-center gap-2">
                     <app-user-avatar [users]="expense()?.payment_method?.owner!"></app-user-avatar>
                     <span class="font-medium">{{ expense()?.payment_method?.name }}</span>
+                    <p-tag *ngIf="expense()?.payment_method?.split_by_default" styleClass="!text-xs" severity="info" value="Compartilhado" />
                   </div>
                 }
               </div>
@@ -102,11 +103,11 @@
                   <div class="flex items-center justify-between p-2 border rounded-md">
                     <div class="flex items-center gap-2">
                       <app-user-avatar [users]="splitObj.user" [size]="'large'"></app-user-avatar>
-                      <span class="font-medium">{{ splitObj.user.fullname }}</span>
+                      <span class="font-medium">{{ getAbbreviatedName(splitObj.user.fullname) }}</span>
                     </div>
                     <div class="text-right">
                       <p class="font-medium">{{ splitObj.split_value | currency: 'BRL' }}</p>
-                      <p class="text-xs">{{(splitObj.split_value/(expense()?.value || 0)) * 100}}% do total</p>
+                      <p class="text-xs">{{getSplitPercentage(splitObj.split_value)}}</p>
                     </div>
                   </div>
                 }

@@ -10,6 +10,7 @@ import { MessageService } from '@shared/services/message.service';
 import { Skeleton } from 'primeng/skeleton';
 import { Tooltip } from 'primeng/tooltip';
 import { UserAvatarComponent } from '@shared/components/user-avatar/user-avatar.component';
+import Utils from '@shared/utils/utils';
 import { ExpenseDetailsDialogComponent } from '../expense-details-dialog/expense-details-dialog.component';
 import { ExpenseFiltersComponent } from '../expense-filters/expense-filters.component';
 import { ExpenseFormDialogComponent } from '../expense-form-dialog/expense-form-dialog.component';
@@ -43,6 +44,8 @@ export class ExpenseListComponent {
   protected expenseApiService = inject(ExpenseApiService);
   protected messageService = inject(MessageService);
   private confirmationService = inject(ConfirmationService);
+
+  protected getAbbreviatedName = Utils.getAbbreviatedName;
 
   space = input.required<iSpace>();
   referenceDate = input.required<Date>();
@@ -236,13 +239,5 @@ export class ExpenseListComponent {
       this.isFormDialogOpen.set(false);
       this.fetchExpenses();
     }
-  }
-
-  protected getAbbreviatedName(fullName: string | undefined): string {
-    if (!fullName) {
-      return 'Desconhecido';
-    }
-    const [firstName, lastNameInitial] = fullName.split(' ');
-    return `${firstName} ${lastNameInitial[0]}.`;
   }
 }

@@ -4,17 +4,21 @@ import { Dialog } from 'primeng/dialog';
 import { ExpenseCategory } from '@features/expense/enums/expenseCategory.enum';
 import { iExpense } from '@features/expense/interfaces/expense.interface';
 import { TabsModule } from 'primeng/tabs';
+import { Tag } from 'primeng/tag';
 import { UserAvatarComponent } from '@shared/components/user-avatar/user-avatar.component';
+import Utils from '@shared/utils/utils';
 
 @Component({
   selector: 'app-expense-details-dialog',
-  imports: [CommonModule, Dialog, UserAvatarComponent, TabsModule],
+  imports: [CommonModule, Dialog, UserAvatarComponent, TabsModule, Tag],
   templateUrl: './expense-details-dialog.component.html',
   styleUrl: './expense-details-dialog.component.scss'
 })
 export class ExpenseDetailsDialogComponent {
   @Input() isOpen = signal(false);
   expense = input.required<iExpense | null>();
+
+  protected getAbbreviatedName = Utils.getAbbreviatedName;
 
   protected expenseSplits = computed(() => {
     const expense = this.expense();
@@ -34,5 +38,11 @@ export class ExpenseDetailsDialogComponent {
   get categoryName(): string {
     const categoryId = this.expense()?.category_id;
     return categoryId ? ExpenseCategory[categoryId] || 'Outros' : 'Outros';
+  }
+
+  getSplitPercentage(value: number): string {
+    const totalExpense = this.expense()?.value || 0;
+    const percentage = Math.abs(value / totalExpense) * 100;
+    return `${percentage.toFixed(0)}% do total`;
   }
 }
