@@ -1,6 +1,6 @@
 import { Button } from 'primeng/button';
 import { CommonModule } from '@angular/common';
-import { Component, effect, inject, input, signal } from '@angular/core';
+import { Component, computed, effect, inject, input, signal } from '@angular/core';
 import { ConfirmationService } from 'primeng/api';
 import { ExpenseApiService } from '@features/expense/services/expense-api.service';
 import { iExpense } from '@features/expense/interfaces/expense.interface';
@@ -11,6 +11,7 @@ import { Skeleton } from 'primeng/skeleton';
 import { Tooltip } from 'primeng/tooltip';
 import { UserAvatarComponent } from '@shared/components/user-avatar/user-avatar.component';
 import Utils from '@shared/utils/utils';
+import { ExpenseBalanceDialogComponent } from '../expense-balance-dialog/expense-balance-dialog.component';
 import { ExpenseDetailsDialogComponent } from '../expense-details-dialog/expense-details-dialog.component';
 import { ExpenseFiltersComponent } from '../expense-filters/expense-filters.component';
 import { ExpenseFormDialogComponent } from '../expense-form-dialog/expense-form-dialog.component';
@@ -35,7 +36,8 @@ interface Debt {
     ExpenseDetailsDialogComponent,
     ExpenseFiltersComponent,
     ExpenseSplitDialogComponent,
-    UserAvatarComponent
+    UserAvatarComponent,
+    ExpenseBalanceDialogComponent
   ],
   templateUrl: './expense-list.component.html',
   styleUrl: './expense-list.component.scss'
@@ -52,6 +54,7 @@ export class ExpenseListComponent {
 
   protected isLoading = signal(true);
   protected expenses = signal<iExpense[]>(Array(3).fill({}));
+  protected spaceUsers = signal<iUser[]>([]);
   protected filteredExpenses = signal<iExpense[]>([]);
   protected totalValue = signal(0);
   protected splitedValue = signal(0);
@@ -61,11 +64,13 @@ export class ExpenseListComponent {
   protected isSummaryDialogOpen = signal(false);
   protected isDetailsDialogOpen = signal(false);
   protected isExpenseSplitFormDialogOpen = signal(false);
+  protected isBalanceDialogOpen = signal(false);
 
   constructor() {
     effect(() => {
       if (this.space() && this.referenceDate()) {
         this.fetchExpenses();
+        this.spaceUsers.set(this.space().members?.map(m => m.user) || []);
       }
     });
 
@@ -111,9 +116,7 @@ export class ExpenseListComponent {
 
   protected calculateIndividualDebts() {
     const debtMap = new Map<string, Map<string, number>>();
-    const spaceMembers = this.space().members || [];
-    const users = spaceMembers.map(m => m.user);
-    const userMap = new Map(users.map(u => [u.id, u]));
+    const userMap = new Map(this.spaceUsers().map(u => [u.id, u]));
 
     for (const expense of this.expenses()) {
       const receiverId = expense.payment_method?.owner_id ?? expense.creator_id;
@@ -135,9 +138,9 @@ export class ExpenseListComponent {
       } else {
         // Divisão igualitária entre todos os membros
         const total = expense.value ?? 0;
-        const equalShare = +(total / users.length).toFixed(2);
+        const equalShare = +(total / this.spaceUsers().length).toFixed(2);
 
-        for (const user of users) {
+        for (const user of this.spaceUsers()) {
           if (user.id === receiverId) continue;
 
           if (!debtMap.has(user.id)) debtMap.set(user.id, new Map());
