@@ -1,6 +1,4 @@
 import { ActivatedRoute, Router } from '@angular/router';
-import { Avatar } from 'primeng/avatar';
-import { AvatarGroupModule } from 'primeng/avatargroup';
 import { BillListComponent } from '@features/bill/components/bill-list/bill-list.component';
 import { Component, inject, signal } from '@angular/core';
 import { ExpenseListComponent } from '@features/expense/components/expense-list/expense-list.component';
@@ -72,24 +70,28 @@ export class SpaceDetailsPage {
   }
 
   private async getReferenceDates() {
-    this.referenceDates = [
-      { label: 'Janeiro 2025', value: new Date('2025-01-01') },
-      { label: 'Fevereiro 2025', value: new Date('2025-02-01') },
-      { label: 'Março 2025', value: new Date('2025-03-01') },
-      { label: 'Abril 2025', value: new Date('2025-04-01') },
-      { label: 'Maio 2025', value: new Date('2025-05-01') },
-      { label: 'Junho 2025', value: new Date('2025-06-01') },
-      { label: 'Julho 2025', value: new Date('2025-07-01') },
-      { label: 'Agosto 2025', value: new Date('2025-08-01') },
-      { label: 'Setembro 2025', value: new Date('2025-09-01') },
-      { label: 'Outubro 2025', value: new Date('2025-10-01') },
-      { label: 'Novembro 2025', value: new Date('2025-11-01') },
-      { label: 'Dezembro 2025', value: new Date('2025-12-01') }
-    ];
+    const start = new Date(2025, 0, 1); // Janeiro 2025
+    const today = new Date();
+    const end = new Date(today.getUTCFullYear(), today.getUTCMonth() + 6, 1); // Seis meses a frente
 
-    const currentDate = Utils.dateToUTC(new Date());
-    const currentMonth = this.referenceDates[5];
-    this.selectedReferenceDate.set(currentMonth.value);
+    const months: { label: string; value: Date }[] = [];
+
+    const iter = new Date(start);
+    while (iter <= end) {
+      const monthName = iter.toLocaleString('default', { month: 'long' });
+      const label = `${monthName} ${iter.getFullYear()}`;
+      months.push({
+        label: label.charAt(0).toUpperCase() + label.slice(1),
+        value: new Date(iter)
+      });
+      iter.setMonth(iter.getMonth() + 1);
+    }
+
+    this.referenceDates = months;
+
+    // Seleciona o mês atual por padrão
+    const found = months.find(m => m.value.getFullYear() === today.getFullYear() && m.value.getMonth() === today.getMonth());
+    this.selectedReferenceDate.set(found ? found.value : months[0].value);
   }
 
   protected setReferenceDate(date: Date) {

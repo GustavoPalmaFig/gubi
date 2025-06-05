@@ -32,17 +32,20 @@
     </div>
 
     <div
-      class="bg-card bg-white flex flex-col rounded-xl border shadow-sm cursor-pointer"
+      class="bg-card bg-white flex flex-col rounded-xl border shadow-sm"
+      [ngClass]="{ 'cursor-pointer': expenses().length > 0 }"
       tabindex="0"
-      (click)="isBalanceDialogOpen.set(true)"
-      (keydown.enter)="isBalanceDialogOpen.set(true)"
+      (click)="expenses().length > 0 ? isBalanceDialogOpen.set(true) : undefined"
+      (keydown.enter)="expenses().length > 0 ? isBalanceDialogOpen.set(true) : undefined"
     >
       <div class="p-4">
         <div class="flex items-center gap-2 mb-2">
           <div class="text-md text-gray-400 font-normal">Saldo entre membros</div>
-          <div class="flex justify-end flex-grow text-gray-700 text-sm font-semibold underline">
-            <span>ver detalhes</span>
-          </div>
+          @if(expenses().length > 0) {
+            <div class="flex justify-end flex-grow text-gray-700 text-sm font-semibold underline">
+              <span>ver detalhes</span>
+            </div>
+          }
         </div>
         @for(netDebt of netDebts; track $index + 1) {
           <div class="flex flex-row items-center gap-4 justify-between lg:justify-start">
