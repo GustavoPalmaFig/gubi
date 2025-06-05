@@ -56,11 +56,13 @@ export class ExpenseListComponent {
   protected expenses = signal<iExpense[]>(Array(3).fill({}));
   protected spaceUsers = signal<iUser[]>([]);
   protected filteredExpenses = signal<iExpense[]>([]);
-  protected totalValue = signal(0);
-  protected splitedValue = signal(0);
+  protected previousMonthDate = computed<Date>(() => Utils.adjustDateByMonths(this.referenceDate(), -1));
+  protected totalValue = computed<number>(() => this.getTotalValue());
+  protected previousMonthComparePercentage = signal<number>(0);
+  protected biggestExpenseValue = computed<iExpense>(() => this.getBiggestExpenseValue());
   protected isFormDialogOpen = signal(false);
   protected selectedExpense = signal<iExpense | null>(null);
-  protected netDebts: Debt[] = [];
+  protected netDebts = signal<Debt[]>([]);
   protected isSummaryDialogOpen = signal(false);
   protected isDetailsDialogOpen = signal(false);
   protected isExpenseSplitFormDialogOpen = signal(false);
@@ -84,34 +86,45 @@ export class ExpenseListComponent {
     this.expenses.set(Array(3).fill({}));
     this.expenseApiService.getAllExpensesFromSpaceAndDate(this.space().id, this.referenceDate()).then(async expenses => {
       this.expenses.set(expenses);
-      this.getTotalValue();
-      this.getSplitedValue();
-      this.isLoading.set(false);
+      this.getComparePercentage();
       this.calculateIndividualDebts();
+      this.isLoading.set(false);
     });
   }
 
-  protected getTotalValue() {
-    this.totalValue.set(
-      this.expenses().reduce((total, expense) => {
-        if (expense.force_split && expense.expense_splits) {
-          const splitValue = expense.expense_splits[0].split_value;
-          const isSplitEqually = expense.expense_splits.every(split => split.split_value === splitValue);
-          if (!isSplitEqually) {
-            return total;
-          }
-        }
-        if (expense.value) {
-          return total + expense.value;
-        }
-        return total;
-      }, 0)
-    );
+  protected getTotalValue(): number {
+    return this.expenses().reduce((total, expense) => {
+      if (expense.value) {
+        return total + expense.value;
+      }
+      return total;
+    }, 0);
   }
 
-  protected getSplitedValue() {
-    const participants = this.space().members || [];
-    return this.splitedValue.set(this.totalValue() / participants.length);
+  protected async getComparePercentage() {
+    const previousTotal = await this.expenseApiService.getTotalExpenseValueFromSpaceAndDate(this.space().id, this.previousMonthDate());
+    const currentTotal = this.totalValue();
+    let percentage = 0;
+
+    if (previousTotal === 0) {
+      percentage = currentTotal === 0 ? 0 : 1;
+    } else if (currentTotal != previousTotal) {
+      percentage = +((currentTotal - previousTotal) / previousTotal);
+    }
+
+    this.previousMonthComparePercentage.set(percentage);
+  }
+
+  protected getBiggestExpenseValue(): iExpense {
+    const expenses = this.expenses();
+    if (expenses.length === 0) return {} as iExpense;
+
+    return expenses.sort((a, b) => {
+      if (!a.value && !b.value && !a.date && !b.date) return 0;
+      const aValue = a.value || 0;
+      const bValue = b.value || 0;
+      return bValue - aValue;
+    })[0];
   }
 
   protected calculateIndividualDebts() {
@@ -179,7 +192,7 @@ export class ExpenseListComponent {
       }
     }
 
-    this.netDebts = results;
+    this.netDebts.set(results);
   }
 
   protected openDetailsDialog(expense: iExpense) {

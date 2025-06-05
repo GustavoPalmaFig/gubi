@@ -37,7 +37,7 @@
           </td>
           <td>
             @for(debt of reportItem.debt; track debt) {
-              <div class="flex justify-between w-full gap-1 text-sm font-semibold text-gray-500">
+              <div class="flex justify-between items-center w-full gap-1 text-sm font-semibold text-gray-500">
                 <span class="text-red-700">{{ abbreviatedName(debt.from.fullname, 1) }}</span>
                 <span>→</span>
                 <span class="text-green-700">{{ abbreviatedName(debt.to?.fullname, 1) }}:</span>
@@ -63,7 +63,7 @@
           <td class="flex flex-col gap-2">
             <div class="border-b border-gray-300 pb-2 mb-2">
               @for(accDebt of accumulatedDebt; track accDebt) {
-                <div class="flex gap-1 text-sm font-semibold text-gray-500">
+                <div class="flex gap-1 text-sm items-center font-semibold text-gray-500">
                   <span class="text-red-700">{{ abbreviatedName(accDebt.from.fullname, 1) }}</span>
                   <span>→</span>
                   <span class="text-green-700">{{ abbreviatedName(accDebt.to?.fullname, 1) }}:</span>
@@ -71,16 +71,14 @@
                 </div>
               }
             </div>
-            <div>
-              @for(fDebt of finalDebt; track fDebt) {
-                <div class="flex justify-between text-gray-500">
-                  <span class="text-red-700">{{ abbreviatedName(fDebt.from.fullname, 1) }}</span>
-                  <span>→</span>
-                  <span class="text-green-700">{{ abbreviatedName(fDebt.to?.fullname, 1) }}:</span>
-                  <span>{{ fDebt.value | currency: 'BRL' }}</span>
-                </div>
-              }
-            </div>
+            @for(fDebt of finalDebt; track fDebt) {
+              <div class="flex justify-between items-center text-gray-500">
+                <span class="text-red-700">{{ abbreviatedName(fDebt.from.fullname, 1) }}</span>
+                <span>→</span>
+                <span class="text-green-700">{{ abbreviatedName(fDebt.to?.fullname, 1) }}:</span>
+                <span>{{ fDebt.value | currency: 'BRL' }}</span>
+              </div>
+            }
           </td>
         </tr>
       </ng-template>

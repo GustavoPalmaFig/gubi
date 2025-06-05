@@ -9,28 +9,28 @@
     <p-skeleton styleClass="py-16" />
   } @else {
     <div class="bg-card bg-white flex flex-col rounded-xl border shadow-sm p-4">
-      <div class="text-md text-gray-400 font-normal leading-none">Total a Pagar</div>
+      <div class="text-md text-gray-600 font-medium leading-none">Total a Pagar</div>
       <div class="my-2 flex gap-2 items-center justify-between">
         <div class="text-2xl text-gray-700 font-bold">{{ totalValue() | currency: 'BRL' }}</div>
-        <div class="flex items-center gap-2 font-semibold" [ngClass]="previousMonthComparePercentage() > 0 ? 'text-red-600' : 'text-green-600'">
+        <div class="flex items-center gap-2 font-medium" [ngClass]="previousMonthComparePercentage() > 0 ? 'text-red-600' : 'text-green-600'">
           <i [ngClass]="previousMonthComparePercentage() > 0 ? 'pi pi-arrow-up-right' : 'pi pi-arrow-down-right'" style="font-size: 0.7rem; font-weight: 600;"></i>
             <div class="leading-none">{{ (previousMonthComparePercentage() < 0 ? -previousMonthComparePercentage() : previousMonthComparePercentage()) | percent: '1.1' }}</div>
         </div>
       </div>
-      <div class="text-sm text-gray-500 font-semibold leading-none">Comparado com {{ previousMonthDate() | date: 'MMMM'}} de {{ previousMonthDate() | date: 'yyyy'}}</div>
+      <div class="text-sm text-gray-500 font-medium leading-none">Comparado com {{ previousMonthDate() | date: 'MMMM'}} de {{ previousMonthDate() | date: 'yyyy'}}</div>
     </div>
 
     <div class="bg-card bg-white flex flex-col rounded-xl border shadow-sm p-4">
-        <div class="text-md text-gray-400 font-normal leading-none">Total Pago</div>
+        <div class="text-md text-gray-600 font-medium leading-none">Total Pago</div>
         <div class="text-2xl text-green-600 font-bold my-2">{{ paidValue() | currency: 'BRL' }}</div>
         <p-progressbar [value]="(paidPercentage() * 100)" [showValue]="false" color="black" styleClass="!h-2"/>
-        <div class="text-sm text-gray-500 font-semibold mt-1">{{ paidPercentage()| percent }} do total a pagar</div>
+        <div class="text-sm text-gray-500 font-medium mt-1">{{ paidPercentage()| percent }} do total a pagar</div>
     </div>
 
     <div class="bg-card bg-white flex flex-col rounded-xl border shadow-sm p-4">
-      <div class="text-md text-gray-400 font-normal leading-none">Divisão entre Membros</div>
+      <div class="text-md text-gray-600 font-medium leading-none">Divisão entre Membros</div>
       <div class="text-2xl text-gray-700 font-bold my-2">{{ (totalValue()/((space().members ?? []).length)) | currency: 'BRL' }}</div>
-      <div class="text-sm text-gray-500 font-semibold leading-none">Valor dividido igualmente entre membros do espaço</div>
+      <div class="text-sm text-gray-500 font-medium leading-none">Dividido igualmente entre membros do espaço</div>
     </div>
   }
 </div>

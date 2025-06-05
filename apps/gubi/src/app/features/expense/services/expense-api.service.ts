@@ -41,4 +41,9 @@ export class ExpenseApiService {
     const { error } = await this.supabaseService.client.from('expense_split').insert(split_data);
     return { error: Utils.handleErrorMessage(error) };
   }
+
+  async getTotalExpenseValueFromSpaceAndDate(target_space_id: number, target_reference_period: Date): Promise<number> {
+    const { data } = await this.supabaseService.client.rpc('get_total_expense_by_month', { target_space_id, target_reference_period });
+    return data ? parseFloat(data.toFixed(2)) : 0;
+  }
 }
