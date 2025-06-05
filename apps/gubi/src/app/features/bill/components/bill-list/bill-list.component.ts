@@ -56,7 +56,7 @@ export class BillListComponent {
       this.bills.set(bills);
       this.previousMonthBills.set(await this.getBillsFromPreviousMonth());
 
-      if (bills.length === 0 && this.previousMonthBills().length === 0) {
+      if (bills.length === 0 && this.previousMonthBills().length > 0) {
         await this.showCopyTemplateDialog();
       }
 

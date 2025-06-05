@@ -2,7 +2,7 @@
   <p-button label="Nova" icon="pi pi-plus-circle" severity="contrast" (click)="openFormDialog()"></p-button>
 </div>
 
-<div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6" [ngClass]="{ '!grid-cols-3': (space().members ?? []).length > 1 }">
   @if(isLoading()) {
     <p-skeleton styleClass="py-16" />
     <p-skeleton styleClass="py-16" />
@@ -27,11 +27,13 @@
         <div class="text-sm text-gray-500 font-medium mt-1">{{ paidPercentage()| percent }} do total a pagar</div>
     </div>
 
-    <div class="bg-card bg-white flex flex-col rounded-xl border shadow-sm p-4">
-      <div class="text-md text-gray-600 font-medium leading-none">Divisão entre Membros</div>
-      <div class="text-2xl text-gray-700 font-bold my-2">{{ (totalValue()/((space().members ?? []).length)) | currency: 'BRL' }}</div>
-      <div class="text-sm text-gray-500 font-medium leading-none">Dividido igualmente entre membros do espaço</div>
-    </div>
+    @if((space().members ?? []).length > 1) {
+      <div class="bg-card bg-white flex flex-col rounded-xl border shadow-sm p-4">
+        <div class="text-md text-gray-600 font-medium leading-none">Divisão entre Membros</div>
+        <div class="text-2xl text-gray-700 font-bold my-2">{{ (totalValue()/((space().members ?? []).length)) | currency: 'BRL' }}</div>
+        <div class="text-sm text-gray-500 font-medium leading-none">Dividido igualmente entre membros do espaço</div>
+      </div>
+    }
   }
 </div>
 
