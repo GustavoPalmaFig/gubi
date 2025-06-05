@@ -1,11 +1,12 @@
 import { Button } from 'primeng/button';
 import { CommonModule } from '@angular/common';
-import { Component, inject, signal, effect, input } from '@angular/core';
+import { Component, inject, signal, effect, input, computed } from '@angular/core';
 import { ConfirmationService } from 'primeng/api';
 import { FormsModule } from '@angular/forms';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { iSpace } from '@features/spaces/interfaces/space.interface';
 import { MessageService } from '@shared/services/message.service';
+import { ProgressBar } from 'primeng/progressbar';
 import { Skeleton } from 'primeng/skeleton';
 import { Tooltip } from 'primeng/tooltip';
 import Utils from '@shared/utils/utils';
@@ -15,7 +16,7 @@ import { iBill } from '../../interfaces/bill.interface';
 
 @Component({
   selector: 'app-bill-list',
-  imports: [CommonModule, Button, Skeleton, Tooltip, FormsModule, InputNumberModule, BillFormDialogComponent],
+  imports: [CommonModule, Button, Skeleton, Tooltip, FormsModule, InputNumberModule, BillFormDialogComponent, ProgressBar],
   templateUrl: './bill-list.component.html',
   styleUrl: './bill-list.component.scss'
 })
@@ -28,12 +29,15 @@ export class BillListComponent {
   referenceDate = input.required<Date>();
 
   protected isLoading = signal(true);
-  protected bills: iBill[] = Array(3).fill({});
-  protected previousMonthBills: iBill[] = [];
+  protected bills = signal<iBill[]>(Array(3).fill({}));
+  protected previousMonthBills = signal<iBill[]>([]);
+  protected previousMonthDate = computed<Date>(() => Utils.adjustDateByMonths(this.referenceDate(), -1));
+  protected previousMonthComparePercentage = computed<number>(() => this.getComparePercentage());
   protected billIdToEditValue = signal<number | null>(null);
   protected editValue: number | null = null;
-  protected totalValue = 0;
-  protected paidValue = 0;
+  protected totalValue = computed<number>(() => this.accumulateValue(this.bills(), 'value'));
+  protected paidValue = computed<number>(() => this.accumulateValue(this.bills(), 'payer'));
+  protected paidPercentage = computed<number>(() => this.getPaidValuePercentage());
   protected isFormDialogOpen = signal(false);
   protected selectedBill = signal<iBill | null>(null);
 
@@ -47,25 +51,17 @@ export class BillListComponent {
 
   protected async fetchBills() {
     this.isLoading.set(true);
-    this.bills = Array(3).fill({});
+    this.bills.set(Array(3).fill({}));
     this.billApiService.getAllBillsFromSpaceAndDate(this.space().id, this.referenceDate()).then(async bills => {
-      this.bills = bills;
+      this.bills.set(bills);
+      this.previousMonthBills.set(await this.getBillsFromPreviousMonth());
 
-      if (bills.length === 0) {
-        await this.handleNoBills();
+      if (bills.length === 0 && this.previousMonthBills().length === 0) {
+        await this.showCopyTemplateDialog();
       }
 
-      this.getTotalValue();
-      this.getTotalPaid();
       this.isLoading.set(false);
     });
-  }
-
-  private async handleNoBills() {
-    this.previousMonthBills = await this.getBillsFromPreviousMonth();
-    if (this.previousMonthBills.length > 0) {
-      await this.showCopyTemplateDialog();
-    }
   }
 
   protected async showCopyTemplateDialog() {
@@ -93,12 +89,11 @@ export class BillListComponent {
   }
 
   private async getBillsFromPreviousMonth() {
-    const previousMonth = Utils.adjustDateByMonths(this.referenceDate(), -1);
-    return await this.billApiService.getAllBillsFromSpaceAndDate(this.space().id, previousMonth);
+    return await this.billApiService.getAllBillsFromSpaceAndDate(this.space().id, this.previousMonthDate());
   }
 
   private async onBulkCreationFromPreviousMonth() {
-    const { error } = await this.billApiService.bulkCreateBills(this.previousMonthBills);
+    const { error } = await this.billApiService.bulkCreateBills(this.previousMonthBills());
 
     if (error) {
       this.messageService.showMessage('error', error, 'Erro ao copiar contas');
@@ -109,26 +104,32 @@ export class BillListComponent {
     this.fetchBills();
   }
 
-  protected getTotalValue() {
-    this.totalValue = this.bills.reduce((total, bill) => {
-      if (bill.value) {
+  protected accumulateValue(bills: iBill[], key: keyof iBill): number {
+    return bills.reduce((total, bill) => {
+      if (bill[key] && bill.value) {
         return total + bill.value;
       }
       return total;
     }, 0);
   }
 
-  protected getTotalPaid() {
-    this.paidValue = this.bills.reduce((total, bill) => {
-      if (bill.value && bill.payer) {
-        return total + bill.value;
-      }
-      return total;
-    }, 0);
+  protected getPaidValuePercentage(): number {
+    return this.totalValue() > 0 ? this.paidValue() / this.totalValue() : 0;
   }
 
-  protected getPercentage(): string {
-    return this.totalValue > 0 ? `${Math.round((this.paidValue / this.totalValue) * 100)}% do total` : '0% do total';
+  protected getComparePercentage(): number {
+    const previousTotal = this.accumulateValue(this.previousMonthBills(), 'value');
+    const currentTotal = this.totalValue();
+
+    if (previousTotal === 0) {
+      return currentTotal === 0 ? 0 : 1;
+    }
+
+    if (currentTotal === previousTotal) {
+      return 0;
+    }
+
+    return +((currentTotal - previousTotal) / previousTotal);
   }
 
   protected getCardStyle(bill: iBill): string {
@@ -249,6 +250,6 @@ export class BillListComponent {
     }
 
     this.messageService.showMessage('success', 'Excluído', 'Conta Excluída com sucesso');
-    this.bills = this.bills.filter(b => b.id !== bill.id);
+    this.bills.update(bills => bills.filter(b => b.id !== bill.id));
   }
 }
