@@ -3,7 +3,7 @@
   <p-button label="Nova" icon="pi pi-plus-circle" severity="contrast" (click)="openFormDialog($event)"></p-button>
 </div>
 
-<div class="grid grid-cols-1 md:grid-cols-2 gap-4" [ngClass]="{ '!grid-cols-3': spaceUsers().length > 1 }">
+<div class="grid grid-cols-1 gap-4" [ngClass]="spaceUsers().length > 1 ? 'lg:grid-cols-3' : 'lg:grid-cols-2'">
   @if(isLoading()) {
     <p-skeleton styleClass="py-16" />
     <p-skeleton styleClass="py-16" />
@@ -13,21 +13,30 @@
       <div class="text-md text-gray-600 font-medium leading-none">Total a Pagar</div>
       <div class="my-2 flex gap-2 items-center justify-between">
         <div class="text-2xl text-gray-700 font-bold">{{ totalValue() | currency: 'BRL' }}</div>
-        <div class="flex items-center gap-2 font-semibold" [ngClass]="previousMonthComparePercentage() > 0 ? 'text-red-600' : 'text-green-600'">
-          <i [ngClass]="previousMonthComparePercentage() > 0 ? 'pi pi-arrow-up-right' : 'pi pi-arrow-down-right'" style="font-size: 0.7rem; font-weight: 600;"></i>
-            <div class="leading-none">{{ (previousMonthComparePercentage() < 0 ? -previousMonthComparePercentage() : previousMonthComparePercentage()) | percent: '1.1' }}</div>
+        <div class="flex items-center gap-2 font-semibold leading-none" [ngClass]="previousMonthComparePercentage() > 0 ? 'text-red-600' : 'text-green-600'">
+          <i [ngClass]="previousMonthComparePercentage() > 0 ? 'pi pi-arrow-up bg-red-200 border-red-200' : 'pi pi-arrow-down bg-green-200 border-green-200'" class="flex items-center border rounded-full p-1 !text-[0.6rem] !leading-none font-bold"></i>
+          <span>{{ (previousMonthComparePercentage() < 0 ? -previousMonthComparePercentage() : previousMonthComparePercentage()) | percent: '1.1' }}</span>
         </div>
       </div>
       <div class="text-sm text-gray-500 leading-none font-medium">Comparado com {{ previousMonthDate() | date: 'MMMM'}} de {{ previousMonthDate() | date: 'yyyy'}}</div>
     </div>
 
     <div class="bg-card bg-white flex flex-col rounded-xl border shadow-sm p-4">
-      <div class="text-md text-gray-600 font-medium leading-none">Dia de maior gasto</div>
+      <div class="text-md text-gray-600 font-medium leading-none">Maior despesa</div>
       @if(biggestExpenseValue().id) {
-        <div class="text-2xl text-gray-700 font-bold my-2">{{ biggestExpenseValue() ? (biggestExpenseValue().value | currency: 'BRL') : '-' }}</div>
-        <div class="flex items-center text-sm text-gray-500 leading-none gap-1 font-medium">
-          <i class="pi pi-calendar"></i>
-          <span>{{ biggestExpenseValue().date | date: 'dd/MM' }}: {{ biggestExpenseValue().title }}</span>
+        <div class="my-2 flex gap-2">
+          <div class="text-2xl text-gray-700 font-bold">{{ biggestExpenseValue() ? (biggestExpenseValue().value | currency: 'BRL') : '-' }}</div>
+        </div>
+
+        <div class="flex items-end justify-between text-sm text-gray-500 leading-none gap-2 font-medium">
+          <div class="flex items-end gap-1 truncate">
+            <i class="pi pi-calendar"></i>
+            <span>{{ biggestExpenseValue().date | date: 'dd/MM' }}: {{ biggestExpenseValue().title }}</span>
+          </div>
+          <div class="flex items-center gap-1 justify-end truncate">
+            <i class="pi pi-credit-card"></i>
+            <span>{{ biggestExpenseValue().payment_method.name }}</span>
+          </div>
         </div>
       }
       @else {
@@ -67,9 +76,7 @@
   
             <div class="flex items-start gap-3">
               <app-user-avatar [users]="netDebt.to" [size]="'extra-large'"></app-user-avatar>
-              <div class="text-sm">
-                <div class="font-semibold">{{ getAbbreviatedName(netDebt.to.fullname) }}</div>
-              </div>
+              <div class="text-sm font-semibold">{{ getAbbreviatedName(netDebt.to.fullname) }}</div>
             </div>
           </div>
         } 

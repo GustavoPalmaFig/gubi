@@ -30,7 +30,6 @@ interface Debt {
     CommonModule,
     Button,
     Skeleton,
-    Tooltip,
     ExpenseFormDialogComponent,
     ExpensesSummaryDialogComponent,
     ExpenseDetailsDialogComponent,
@@ -54,7 +53,7 @@ export class ExpenseListComponent {
 
   protected isLoading = signal(true);
   protected expenses = signal<iExpense[]>(Array(3).fill({}));
-  protected spaceUsers = signal<iUser[]>([]);
+  protected spaceUsers = computed<iUser[]>(() => this.space().members?.map(m => m.user) || []);
   protected filteredExpenses = signal<iExpense[]>([]);
   protected previousMonthDate = computed<Date>(() => Utils.adjustDateByMonths(this.referenceDate(), -1));
   protected totalValue = computed<number>(() => this.getTotalValue());
@@ -72,7 +71,6 @@ export class ExpenseListComponent {
     effect(() => {
       if (this.space() && this.referenceDate()) {
         this.fetchExpenses();
-        this.spaceUsers.set(this.space().members?.map(m => m.user) || []);
       }
     });
 
@@ -120,7 +118,7 @@ export class ExpenseListComponent {
     if (expenses.length === 0) return {} as iExpense;
 
     return expenses.sort((a, b) => {
-      if (!a.value && !b.value && !a.date && !b.date) return 0;
+      if (!a.value && !b.value && !a.date && !b.date && a.payment_method) return 0;
       const aValue = a.value || 0;
       const bValue = b.value || 0;
       return bValue - aValue;
