@@ -1,3 +1,4 @@
+import { iSpace } from '@features/spaces/interfaces/space.interface';
 import { iUser } from '@features/auth/interfaces/user.interface';
 
 export interface iBill {
@@ -14,6 +15,7 @@ export interface iBill {
   updated_at?: Date;
   updated_by?: string;
 
+  space: iSpace;
   payer: iUser;
   creator: iUser;
   updated_by_user: iUser;

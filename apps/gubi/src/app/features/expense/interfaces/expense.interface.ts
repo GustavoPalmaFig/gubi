@@ -1,4 +1,5 @@
 import { iPaymentMethod } from '@features/payment-methods/interfaces/payment-method';
+import { iSpace } from '@features/spaces/interfaces/space.interface';
 import { iUser } from '@features/auth/interfaces/user.interface';
 import { iExpenseSplit } from './expense_split.interface';
 
@@ -18,6 +19,7 @@ export interface iExpense {
   updated_at?: Date;
   updated_by?: string;
 
+  space: iSpace;
   expense_splits?: iExpenseSplit[];
   creator: iUser;
   updated_by_user: iUser;

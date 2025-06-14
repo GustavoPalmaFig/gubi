@@ -10,7 +10,7 @@ import { iExpenseSplit } from '../interfaces/expense_split.interface';
 export class ExpenseApiService {
   private supabaseService = inject(SupabaseService);
 
-  async getAllExpensesFromSpaceAndDate(target_space_id: number, target_reference_period: Date): Promise<iExpense[]> {
+  async getAllExpensesFromSpaceAndDate(target_space_id: number | null, target_reference_period: Date): Promise<iExpense[]> {
     const { data } = await this.supabaseService.client.rpc('get_expenses_with_details', { target_space_id, target_reference_period });
     return data as iExpense[];
   }

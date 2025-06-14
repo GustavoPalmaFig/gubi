@@ -42,7 +42,8 @@ export class SidebarComponent {
 
   protected menuItems: MenuItem[] = [
     { label: 'Espaços', icon: 'pi pi-home', route: '/spaces' },
-    { label: 'Pagamentos', icon: 'pi pi-credit-card', route: '/payment-methods' }
+    { label: 'Pagamentos', icon: 'pi pi-credit-card', route: '/payment-methods' },
+    { label: 'Meus Gastos', icon: 'pi pi-dollar', route: '/my-spendings' }
   ];
 
   isActive(route: string): boolean {

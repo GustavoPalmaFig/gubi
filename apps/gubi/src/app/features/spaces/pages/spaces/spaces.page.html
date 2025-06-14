@@ -1,7 +1,7 @@
 <div class="flex justify-between items-start sm:items-end mb-10">
   <div>
-    <h1 class="text-2xl font-bold">Seus Espaços</h1>
-    <p class="text-md text-gray-500 mt-4">Gerencie suas despesas compartilhadas em diferentes espaços.</p>
+    <h1 class="text-2xl font-bold">Meus Espaços</h1>
+    <p class="text-md text-gray-500 mt-1">Gerencie suas despesas compartilhadas em diferentes espaços.</p>
   </div>
   <ng-container *ngTemplateOutlet="newButton"></ng-container>
 </div>
@@ -11,7 +11,7 @@
     <ng-template #grid let-items>
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         @for (space of items; track $index + 1) {
-          <app-space-card [space]="space" />
+        <app-space-card [space]="space" />
         }
       </div>
     </ng-template>

@@ -40,6 +40,10 @@ export const appRoutes: Route[] = [
       {
         path: 'payment-methods',
         loadComponent: () => import('./features/payment-methods/pages/payment-methods-list/payment-methods-list.page').then(m => m.PaymentMethodsListPage)
+      },
+      {
+        path: 'my-spendings',
+        loadComponent: () => import('./features/my-spendings/pages/my-spendings/my-spendings.page').then(m => m.MySpendingsPage)
       }
     ]
   }

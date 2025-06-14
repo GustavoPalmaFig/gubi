@@ -9,7 +9,7 @@ import { iBill } from '../interfaces/bill.interface';
 export class BillApiService {
   private supabaseService = inject(SupabaseService);
 
-  async getAllBillsFromSpaceAndDate(target_space_id: number, target_reference_period: Date): Promise<iBill[]> {
+  async getAllBillsFromSpaceAndDate(target_space_id: number | null, target_reference_period: Date): Promise<iBill[]> {
     const { data } = await this.supabaseService.client.rpc('get_bills', { target_space_id, target_reference_period });
     return data as iBill[];
   }

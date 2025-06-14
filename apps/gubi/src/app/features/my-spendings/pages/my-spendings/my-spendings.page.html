@@ -1,0 +1,88 @@
+<div class="mb-10">
+  <h1 class="text-2xl font-bold">Meus Gastos</h1>
+  <p class="text-md text-gray-500 mt-1">Acompanhe todos os seus gastos em contas e despesas em todos os espaços.</p>
+</div>
+
+<div class="grid grid-cols-1 lg:grid-cols-4 gap-4 mb-6">
+  @if(isLoading()) {
+  <p-skeleton styleClass="py-16" />
+  <p-skeleton styleClass="py-16" />
+  <p-skeleton styleClass="py-16" />
+  <p-skeleton styleClass="py-16" />
+  } @else { @for(card of cards(); track $index + 1) {
+  <div class="bg-card bg-white flex flex-col rounded-lg border shadow-sm p-4">
+    <div class="flex items-center justify-between gap-2 text-md text-gray-600 font-medium leading-none mb-1">
+      <h3>{{ card.title }}</h3>
+      <i [ngClass]="card.icon"></i>
+    </div>
+    <p class="text-2xl text-gray-700 font-bold my-2" [ngClass]="{'text-lg' : isNaN(card.content)}">{{ card.content }}</p>
+    <span class="text-sm text-gray-500 font-medium leading-none">{{ card.details }}</span>
+  </div>
+  }
+
+  <div class="col-span-full flex items-center justify-between mt-4">
+    <p class="text-xl font-bold">Lista de Gastos</p>
+    <div class="flex items-center gap-2">
+      <p-tag [value]="expenses().length + ' despesas'" [rounded]="true" severity="secondary" styleClass="cursor-pointer" />
+      <p-tag [value]="bills().length + ' contas'" [rounded]="true" severity="secondary" styleClass="cursor-pointer" />
+    </div>
+  </div>
+
+  <div class="col-span-full grid gap-4 overflow-x-auto">
+    @for(item of allSpendings(); track $index + 1) {
+
+    <div class="bg-card bg-white rounded-lg border shadow-sm hover:shadow-md transition-shadow p-4 h-50 flex flex-col justify-between text-neutral-500 font-semibold">
+      <div class="flex flex-col gap-1">
+        <div class="flex gap-3 items-center">
+          <h1 class="text-lg text-neutral-800 font-bold line-clamp-1">{{ expenseGuard(item) ? item.title : item.name }}</h1>
+          <div class="flex items-center rounded-full border px-2 py-1 text-xs font-semibold border-transparent bg-black text-white leading-none">
+            {{ expenseGuard(item) ? 'Despesa' : 'Conta' }}
+          </div>
+        </div>
+        <div class="flex items-center gap-2 text-sm leading-none">
+          <i class="pi pi-building"></i>
+          <span class="truncate">{{ item.space.name }}</span>
+        </div>
+      </div>
+
+      <div class="flex items-start gap-2 justify-between">
+        <div class="pt-3 mt-4 flex flex-col justify-end gap-3 text-sm leading-none">
+          @if(expenseGuard(item) && item.payment_method_id) {
+          <div class="flex items-center gap-2">
+            <i class="pi pi-calendar"></i>
+            <span class="font-semibold">{{ (expenseGuard(item) ? item.date : '') | date: 'dd/MM/yyyy' }}</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <i class="pi pi-credit-card"></i>
+            <span class="">{{ item.payment_method.name }}</span>
+          </div>
+          } @else if(billGuard(item)) {
+          <div class="flex items-center gap-2" [ngClass]="item.payer ? 'text-green-600' : 'text-red-600'">
+            <i [ngClass]="item.payer ? 'pi pi-check' : 'pi pi-calendar'"></i>
+            <span class="font-semibold">{{ item.payer ? 'Pago' : 'Vence em ' + (item.deadline | date: 'dd/MM/yyyy') }}</span>
+          </div>
+          } @if(item.space.members && item.space.members.length > 1) {
+          <div class="flex items-center gap-2">
+            <i class="pi pi-users"></i>
+            <span class="">{{ 'Dividido entre ' + item.space.members.length + ' membros' }}</span>
+          </div>
+          } @else {
+          <div class="flex items-center gap-2">
+            <i class="pi pi-user"></i>
+            <span class="">Espaço individual</span>
+          </div>
+          }
+        </div>
+
+        <div class="flex flex-col items-end justify-start">
+          <div class="text-2xl text-neutral-800 font-bold">{{ item.value | currency: 'BRL' }}</div>
+          @if(item.space.members && item.space.members.length > 1) {
+          <div class="text-xs">de {{ (getUserSpending(item)) | currency: 'BRL'}}</div>
+          }
+        </div>
+      </div>
+    </div>
+    }
+  </div>
+  }
+</div>
