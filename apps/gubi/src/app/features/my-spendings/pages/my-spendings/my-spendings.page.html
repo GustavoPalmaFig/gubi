@@ -156,7 +156,7 @@
     </div>
 
     <div class="col-span-full grid gap-4 overflow-x-auto">
-      @for(item of filteredSpendings(); track $index + 1) {
+      @for(item of pagedSpendings(); track $index + 1) {
         <div class="bg-card bg-white rounded-lg border shadow-sm hover:shadow-md transition-shadow p-4 h-50 flex flex-col justify-between text-neutral-500 font-semibold">
           <div class="flex flex-col gap-1">
             <div class="flex gap-3 items-center justify-between">
@@ -216,5 +216,19 @@
         </div>
       }
     </div>
+
+    <p-paginator
+      class="col-span-full"
+      styleClass="w-full !bg-transparent"
+      [first]="first()" 
+      [rows]="rows()" 
+      [totalRecords]="filteredSpendings().length"
+      [pageLinkSize]="3"
+      [rowsPerPageOptions]="[5, 10, 20, 30]"
+      [showFirstLastIcon]="false"
+      [alwaysShow]="false"
+      (onPageChange)="onPageChange($event)" 
+    />
   }
+  
 </div>

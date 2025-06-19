@@ -13,6 +13,7 @@ import { InputIconModule } from 'primeng/inputicon';
 import { InputTextModule } from 'primeng/inputtext';
 import { iSpace } from '@features/spaces/interfaces/space.interface';
 import { MultiSelect } from 'primeng/multiselect';
+import { Paginator, PaginatorState } from 'primeng/paginator';
 import { Router } from '@angular/router';
 import { Select } from 'primeng/select';
 import { Skeleton } from 'primeng/skeleton';
@@ -51,7 +52,7 @@ interface SortOption {
 
 @Component({
   selector: 'app-my-spendings',
-  imports: [CommonModule, Skeleton, Tag, FormsModule, IconFieldModule, InputIconModule, InputTextModule, Select, MultiSelect, Button, AccordionModule],
+  imports: [CommonModule, Skeleton, Tag, FormsModule, IconFieldModule, InputIconModule, InputTextModule, Select, MultiSelect, Button, AccordionModule, Paginator],
   templateUrl: './my-spendings.page.html',
   styleUrl: './my-spendings.page.scss',
   providers: [CurrencyPipe]
@@ -71,6 +72,7 @@ export class MySpendingsPage {
   protected expenses = signal<iExpense[]>([]);
   protected allSpendings = computed<(iBill | iExpense)[]>(() => [...this.bills(), ...this.expenses()]);
   protected filteredSpendings = signal<(iBill | iExpense)[]>(this.allSpendings());
+  protected pagedSpendings = signal<(iBill | iExpense)[]>(this.filteredSpendings());
   protected cards = computed<iSpendingsCard[]>(() => this.populateCards());
   protected typeTags = computed<iTypeTag[]>(() => this.buildTags());
 
@@ -112,6 +114,9 @@ export class MySpendingsPage {
   ];
 
   protected selectedSortOption = signal<SortOption>(this.sortOptions[0]);
+
+  protected first = signal(0);
+  protected rows = signal(10);
 
   constructor() {
     effect(() => {
@@ -155,6 +160,7 @@ export class MySpendingsPage {
     this.expenses.set(expenses ?? []);
     this.applyFilters();
     this.sortList();
+    this.onPageChange();
     this.isLoading.set(false);
   }
 
@@ -419,5 +425,14 @@ export class MySpendingsPage {
       }
       return 0;
     });
+  }
+
+  protected onPageChange(event?: PaginatorState) {
+    this.first.set(event?.first ?? 0);
+    this.rows.set(event?.rows ?? 10);
+    const startIndex = this.first();
+    const endIndex = startIndex + this.rows();
+    const paginatedSpendings = this.filteredSpendings().slice(startIndex, endIndex);
+    this.pagedSpendings.set(paginatedSpendings);
   }
 }
