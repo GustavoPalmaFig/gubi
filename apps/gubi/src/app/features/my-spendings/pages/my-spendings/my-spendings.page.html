@@ -3,14 +3,21 @@
   <p class="text-md text-gray-500 mt-1">Acompanhe todos os seus gastos em contas e despesas em todos os espaços.</p>
 </div>
 
-<div class="grid grid-cols-1 lg:grid-cols-4 gap-4 mb-6">
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
   @if(isLoading()) {
   <p-skeleton styleClass="py-16" />
   <p-skeleton styleClass="py-16" />
   <p-skeleton styleClass="py-16" />
   <p-skeleton styleClass="py-16" />
   } @else { @for(card of cards(); track $index + 1) {
-  <div class="bg-card bg-white flex flex-col rounded-lg border shadow-sm p-4">
+  <div
+    class="bg-card bg-white flex flex-col rounded-lg border shadow-sm p-4"
+    (click)="card.onClick()"
+    (keyup.enter)="card.onClick()"
+    tabindex="0"
+    role="button"
+    aria-pressed="false"
+  >
     <div class="flex items-center justify-between gap-2 text-md text-gray-600 font-medium leading-none mb-1">
       <h3>{{ card.title }}</h3>
       <i [ngClass]="card.icon"></i>
@@ -20,33 +27,107 @@
   </div>
   }
 
-  <div class="col-span-full flex items-center justify-between mt-4">
+  <div class="col-span-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 p-4 bg-card bg-white rounded-lg border shadow-sm">
+    <div class="flex flex-col gap-2">
+      <div class="flex items-center gap-2">
+        <i class="pi pi-calendar"></i>
+        <label for="search" class="text-sm font-medium">Pesquisar</label>
+      </div>
+      <p-iconfield>
+        <p-inputicon styleClass="pi pi-search" />
+        <input
+          id="search"
+          class="w-full"
+          type="text"
+          pInputText
+          placeholder="Buscar por título, espaço ou observação..."
+          [(ngModel)]="filters().search"
+          (ngModelChange)="applyFilters()"
+        />
+      </p-iconfield>
+    </div>
+
+    <div class="flex flex-col gap-2">
+      <div class="flex items-center gap-2">
+        <i class="pi pi-calendar"></i>
+        <label for="period" class="text-sm font-medium">Período</label>
+      </div>
+      <p-select
+        id="period"
+        class="w-full"
+        [options]="periods()"
+        optionLabel="label"
+        optionValue="value"
+        [(ngModel)]="filters().selectedPeriod"
+        (onChange)="changePeriod($event.value)"
+        appendTo="body"
+      ></p-select>
+    </div>
+
+    <div class="flex flex-col gap-2">
+      <div class="flex items-center gap-2">
+        <i class="pi pi-building"></i>
+        <label for="space" class="text-sm font-medium">Espaço</label>
+      </div>
+      <p-multiselect
+        id="space"
+        class="w-full"
+        [options]="spaces()"
+        optionLabel="name"
+        optionValue="id"
+        [(ngModel)]="filters().selectedSpacesIds"
+        (onPanelHide)="applyFilters()"
+        appendTo="body"
+      ></p-multiselect>
+    </div>
+
+    <div class="flex flex-col gap-2">
+      <label for="payment-method" class="text-sm font-medium">Métodos de Pagamento</label>
+      <p-multiselect
+        id="payment-method"
+        class="w-full"
+        [options]="paymentMethods()"
+        optionLabel="name"
+        optionValue="id"
+        [(ngModel)]="filters().selectedPaymentMethodsIds"
+        (onPanelHide)="applyFilters(true)"
+        selectedItemsLabel="{0} itens selecionados"
+        appendTo="body"
+      ></p-multiselect>
+    </div>
+
+    <div class="col-span-full flex justify-end gap-2 mt-4">
+      <p-button label="Limpar Filtros" severity="secondary" (click)="populateFilters()"></p-button>
+    </div>
+  </div>
+
+  <div id="spendingList" class="col-span-full flex items-center justify-between mt-2">
     <p class="text-xl font-bold">Lista de Gastos</p>
     <div class="flex items-center gap-2">
-      <p-tag [value]="expenses().length + ' despesas'" [rounded]="true" severity="secondary" styleClass="cursor-pointer" />
-      <p-tag [value]="bills().length + ' contas'" [rounded]="true" severity="secondary" styleClass="cursor-pointer" />
+      @for(item of filterTypeOptions(); track item.value) {
+      <p-tag [value]="item.label" rounded [severity]="item.isSelected ? 'contrast' : 'secondary'" styleClass="cursor-pointer" (click)="toggleType(item.value)" />
+      }
     </div>
   </div>
 
   <div class="col-span-full grid gap-4 overflow-x-auto">
-    @for(item of allSpendings(); track $index + 1) {
-
+    @for(item of filteredSpendings(); track $index + 1) {
     <div class="bg-card bg-white rounded-lg border shadow-sm hover:shadow-md transition-shadow p-4 h-50 flex flex-col justify-between text-neutral-500 font-semibold">
       <div class="flex flex-col gap-1">
-        <div class="flex gap-3 items-center">
+        <div class="flex gap-3 items-center justify-between">
           <h1 class="text-lg text-neutral-800 font-bold line-clamp-1">{{ expenseGuard(item) ? item.title : item.name }}</h1>
           <div class="flex items-center rounded-full border px-2 py-1 text-xs font-semibold border-transparent bg-black text-white leading-none">
             {{ expenseGuard(item) ? 'Despesa' : 'Conta' }}
           </div>
         </div>
-        <div class="flex items-center gap-2 text-sm leading-none">
+        <div class="flex items-center gap-2 text-sm">
           <i class="pi pi-building"></i>
           <span class="truncate">{{ item.space.name }}</span>
         </div>
       </div>
 
-      <div class="flex items-start gap-2 justify-between">
-        <div class="pt-3 mt-4 flex flex-col justify-end gap-3 text-sm leading-none">
+      <div class="flex items-center gap-2 justify-between">
+        <div class="pt-8 flex flex-col justify-end gap-3 text-sm leading-none">
           @if(expenseGuard(item) && item.payment_method_id) {
           <div class="flex items-center gap-2">
             <i class="pi pi-calendar"></i>
@@ -81,6 +162,11 @@
           }
         </div>
       </div>
+    </div>
+    } @empty {
+    <div class="bg-card bg-white rounded-lg border shadow-sm flex flex-col gap-2 p-4 text-center text-gray-500">
+      <p class="text-lg">Nenhum gasto encontrado</p>
+      <p class="text-sm">Tente ajustar os filtros ou adicionar um novo gasto</p>
     </div>
     }
   </div>
