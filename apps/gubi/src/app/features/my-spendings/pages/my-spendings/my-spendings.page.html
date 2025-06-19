@@ -5,170 +5,216 @@
 
 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
   @if(isLoading()) {
-  <p-skeleton styleClass="py-16" />
-  <p-skeleton styleClass="py-16" />
-  <p-skeleton styleClass="py-16" />
-  <p-skeleton styleClass="py-16" />
-  } @else { @for(card of cards(); track $index + 1) {
-  <div
-    class="bg-card bg-white flex flex-col rounded-lg border shadow-sm p-4"
-    (click)="card.onClick()"
-    (keyup.enter)="card.onClick()"
-    tabindex="0"
-    role="button"
-    aria-pressed="false"
-  >
-    <div class="flex items-center justify-between gap-2 text-md text-gray-600 font-medium leading-none mb-1">
-      <h3>{{ card.title }}</h3>
-      <i [ngClass]="card.icon"></i>
-    </div>
-    <p class="text-2xl text-gray-700 font-bold my-2" [ngClass]="{'text-lg' : isNaN(card.content)}">{{ card.content }}</p>
-    <span class="text-sm text-gray-500 font-medium leading-none">{{ card.details }}</span>
-  </div>
-  }
-
-  <div class="col-span-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 p-4 bg-card bg-white rounded-lg border shadow-sm">
-    <div class="flex flex-col gap-2">
-      <div class="flex items-center gap-2">
-        <i class="pi pi-calendar"></i>
-        <label for="search" class="text-sm font-medium">Pesquisar</label>
+    <p-skeleton styleClass="py-16" />
+    <p-skeleton styleClass="py-16" />
+    <p-skeleton styleClass="py-16" />
+    <p-skeleton styleClass="py-16" />
+  } 
+  @else { 
+    @for(card of cards(); track $index + 1) {
+      <div
+        class="bg-card bg-white flex flex-col rounded-lg border shadow-sm p-4"
+        (click)="card.onClick()"
+        (keyup.enter)="card.onClick()"
+        tabindex="0"
+        role="button"
+        aria-pressed="false"
+      >
+        <div class="flex items-center justify-between gap-2 text-md text-gray-600 font-medium leading-none mb-1">
+          <h3>{{ card.title }}</h3>
+          <i [ngClass]="card.icon"></i>
+        </div>
+        <p class="text-2xl text-gray-700 font-bold my-2" [ngClass]="{'text-lg' : isNaN(card.content)}">{{ card.content }}</p>
+        <span class="text-sm text-gray-500 font-medium leading-none">{{ card.details }}</span>
       </div>
-      <p-iconfield>
-        <p-inputicon styleClass="pi pi-search" />
-        <input
-          id="search"
-          class="w-full"
-          type="text"
-          pInputText
-          placeholder="Buscar por título, espaço ou observação..."
-          [(ngModel)]="filters().search"
-          (ngModelChange)="applyFilters()"
-        />
-      </p-iconfield>
+    }
+
+    <div class="col-span-full">
+      <p-accordion styleClass="">
+        <p-accordion-panel value="0">
+          <p-accordion-header>
+            <div class="flex items-center gap-2 text-gray-600 font-medium leading-none">
+              <i class="pi pi-sliders-h"></i>
+              <span class="text-sm font-medium">Filtros</span>
+            </div>
+          </p-accordion-header>
+          <p-accordion-content>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 items-end justify-end">
+              <div class="flex flex-col gap-2">
+                <div class="flex items-center gap-2">
+                  <i class="pi pi-calendar"></i>
+                  <label for="period" class="text-sm font-medium">Período</label>
+                </div>
+                <p-select
+                  id="period"
+                  class="w-full"
+                  [options]="periods()"
+                  optionLabel="label"
+                  optionValue="value"
+                  [(ngModel)]="filters().selectedPeriod"
+                  (onChange)="changePeriod($event.value)"
+                  appendTo="body"
+                ></p-select>
+              </div>
+
+              <div class="flex flex-col gap-2">
+                <div class="flex items-center gap-2">
+                  <i class="pi pi-filter"></i>
+                  <label for="type" class="text-sm font-medium">Tipo</label>
+                </div>
+                <p-multiselect
+                  id="type"
+                  class="w-full"
+                  [options]="types"
+                  optionLabel="label"
+                  optionValue="value"
+                  [(ngModel)]="filters().selectedTypes"
+                  (onPanelHide)="applyFilters()"
+                  appendTo="body"
+                ></p-multiselect>
+              </div>
+
+              <div class="flex flex-col gap-2">
+                <div class="flex items-center gap-2">
+                  <i class="pi pi-building"></i>
+                  <label for="space" class="text-sm font-medium">Espaço</label>
+                </div>
+                <p-multiselect
+                  id="space"
+                  class="w-full"
+                  [options]="spaces()"
+                  optionLabel="name"
+                  optionValue="id"
+                  [(ngModel)]="filters().selectedSpacesIds"
+                  (onPanelHide)="applyFilters()"
+                  appendTo="body"
+                ></p-multiselect>
+              </div>
+
+              <div class="flex flex-col gap-2">
+                <div class="flex items-center gap-2">
+                  <i class="pi pi-credit-card"></i>
+                  <label for="payment" class="text-sm font-medium">Métodos de Pagamento</label>
+                </div>
+                <p-multiselect
+                  id="payment-method"
+                  class="w-full"
+                  [options]="paymentMethods()"
+                  optionLabel="name"
+                  optionValue="id"
+                  [(ngModel)]="filters().selectedPaymentMethodsIds"
+                  (onPanelHide)="applyFilters(true)"
+                  selectedItemsLabel="{0} itens selecionados"
+                  appendTo="body"
+                ></p-multiselect>
+              </div>
+
+              <p-iconfield class="sm:my-2 lg:my-0 lg:col-span-3">
+                <p-inputicon styleClass="pi pi-search" />
+                <input
+                  id="search"
+                  class="w-full"
+                  inputStyleClass="w-full"
+                  type="text"
+                  pInputText
+                  placeholder="Buscar por título, espaço ou observação..."
+                  [(ngModel)]="filters().search"
+                  (ngModelChange)="applyFilters()"
+                />
+              </p-iconfield>
+
+              <div class="mt-2 flex justify-between items-center gap-2 lg:col-span-1">
+                <p-button label="Limpar Filtros" severity="secondary" (click)="resetFilters()"></p-button>
+                <p-select outlined severity="contrast" [options]="sortOptions" optionLabel="label" [(ngModel)]="selectedSortOption" [appendTo]="'body'">
+                  <ng-template #item let-item>
+                    <div class="flex items-center gap-2">
+                      <span>{{ item.label }}</span>
+                      <i [class]="item.icon"></i>
+                    </div>
+                  </ng-template>
+                  <ng-template #selectedItem let-selectedOption>
+                    <div class="flex items-center gap-2">
+                      <span>{{ selectedOption.label }}</span>
+                      <i [class]="selectedOption.icon"></i>
+                    </div>
+                  </ng-template>
+                </p-select>
+              </div>
+            </div>
+          </p-accordion-content>
+        </p-accordion-panel>
+      </p-accordion>
     </div>
 
-    <div class="flex flex-col gap-2">
+    <div id="spendingList" class="col-span-full flex items-center justify-between mt-2">
+      <p class="text-xl font-bold">Lista de Gastos</p>
       <div class="flex items-center gap-2">
-        <i class="pi pi-calendar"></i>
-        <label for="period" class="text-sm font-medium">Período</label>
+        @for(item of typeTags(); track item.value) {
+          <p-tag [value]="item.label" rounded [severity]="item.isSelected ? 'contrast' : 'secondary'" />
+        }
       </div>
-      <p-select
-        id="period"
-        class="w-full"
-        [options]="periods()"
-        optionLabel="label"
-        optionValue="value"
-        [(ngModel)]="filters().selectedPeriod"
-        (onChange)="changePeriod($event.value)"
-        appendTo="body"
-      ></p-select>
     </div>
 
-    <div class="flex flex-col gap-2">
-      <div class="flex items-center gap-2">
-        <i class="pi pi-building"></i>
-        <label for="space" class="text-sm font-medium">Espaço</label>
-      </div>
-      <p-multiselect
-        id="space"
-        class="w-full"
-        [options]="spaces()"
-        optionLabel="name"
-        optionValue="id"
-        [(ngModel)]="filters().selectedSpacesIds"
-        (onPanelHide)="applyFilters()"
-        appendTo="body"
-      ></p-multiselect>
-    </div>
+    <div class="col-span-full grid gap-4 overflow-x-auto">
+      @for(item of filteredSpendings(); track $index + 1) {
+        <div class="bg-card bg-white rounded-lg border shadow-sm hover:shadow-md transition-shadow p-4 h-50 flex flex-col justify-between text-neutral-500 font-semibold">
+          <div class="flex flex-col gap-1">
+            <div class="flex gap-3 items-center justify-between">
+              <h1 class="text-lg text-neutral-800 font-bold line-clamp-1">{{ expenseGuard(item) ? item.title : item.name }}</h1>
+              <div class="flex items-center rounded-full border px-2 py-1 text-xs font-semibold border-transparent bg-black text-white leading-none">
+                {{ expenseGuard(item) ? 'Despesa' : 'Conta' }}
+              </div>
+            </div>
+            <div class="flex items-center gap-2 text-sm">
+              <i class="pi pi-building"></i>
+              <span class="truncate">{{ item.space.name }}</span>
+            </div>
+          </div>
 
-    <div class="flex flex-col gap-2">
-      <label for="payment-method" class="text-sm font-medium">Métodos de Pagamento</label>
-      <p-multiselect
-        id="payment-method"
-        class="w-full"
-        [options]="paymentMethods()"
-        optionLabel="name"
-        optionValue="id"
-        [(ngModel)]="filters().selectedPaymentMethodsIds"
-        (onPanelHide)="applyFilters(true)"
-        selectedItemsLabel="{0} itens selecionados"
-        appendTo="body"
-      ></p-multiselect>
-    </div>
+          <div class="flex items-center gap-2 justify-between">
+            <div class="pt-8 flex flex-col justify-end gap-3 text-sm leading-none">
+              @if(expenseGuard(item) && item.payment_method_id) {
+              <div class="flex items-center gap-2">
+                <i class="pi pi-calendar"></i>
+                <span class="font-semibold">{{ (expenseGuard(item) ? item.date : '') | date: 'dd/MM/yyyy' }}</span>
+              </div>
+              <div class="flex items-center gap-2">
+                <i class="pi pi-credit-card"></i>
+                <span class="">{{ item.payment_method.name }}</span>
+              </div>
+              } @else if(billGuard(item)) {
+              <div class="flex items-center gap-2" [ngClass]="item.payer ? 'text-green-600' : 'text-red-600'">
+                <i [ngClass]="item.payer ? 'pi pi-check' : 'pi pi-calendar'"></i>
+                <span class="font-semibold">{{ item.payer ? 'Pago' : 'Vence em ' + (item.deadline | date: 'dd/MM/yyyy') }}</span>
+              </div>
+              } @if(item.space.members && item.space.members.length > 1) {
+              <div class="flex items-center gap-2">
+                <i class="pi pi-users"></i>
+                <span class="">{{ 'Dividido entre ' + item.space.members.length + ' membros' }}</span>
+              </div>
+              } @else {
+              <div class="flex items-center gap-2">
+                <i class="pi pi-user"></i>
+                <span class="">Espaço individual</span>
+              </div>
+              }
+            </div>
 
-    <div class="col-span-full flex justify-end gap-2 mt-4">
-      <p-button label="Limpar Filtros" severity="secondary" (click)="populateFilters()"></p-button>
-    </div>
-  </div>
-
-  <div id="spendingList" class="col-span-full flex items-center justify-between mt-2">
-    <p class="text-xl font-bold">Lista de Gastos</p>
-    <div class="flex items-center gap-2">
-      @for(item of filterTypeOptions(); track item.value) {
-      <p-tag [value]="item.label" rounded [severity]="item.isSelected ? 'contrast' : 'secondary'" styleClass="cursor-pointer" (click)="toggleType(item.value)" />
+            <div class="flex flex-col items-end justify-start">
+              <div class="text-2xl text-neutral-800 font-bold">{{ item.value | currency: 'BRL' }}</div>
+              @if(item.space.members && item.space.members.length > 1) {
+              <div class="text-xs">de {{ (getUserSpending(item)) | currency: 'BRL'}}</div>
+              }
+            </div>
+          </div>
+        </div>
+      } 
+      @empty {
+        <div class="bg-card bg-white rounded-lg border shadow-sm flex flex-col gap-2 p-4 text-center text-gray-500">
+          <p class="text-lg">Nenhum gasto encontrado</p>
+          <p class="text-sm">Tente ajustar os filtros ou adicionar um novo gasto</p>
+        </div>
       }
     </div>
-  </div>
-
-  <div class="col-span-full grid gap-4 overflow-x-auto">
-    @for(item of filteredSpendings(); track $index + 1) {
-    <div class="bg-card bg-white rounded-lg border shadow-sm hover:shadow-md transition-shadow p-4 h-50 flex flex-col justify-between text-neutral-500 font-semibold">
-      <div class="flex flex-col gap-1">
-        <div class="flex gap-3 items-center justify-between">
-          <h1 class="text-lg text-neutral-800 font-bold line-clamp-1">{{ expenseGuard(item) ? item.title : item.name }}</h1>
-          <div class="flex items-center rounded-full border px-2 py-1 text-xs font-semibold border-transparent bg-black text-white leading-none">
-            {{ expenseGuard(item) ? 'Despesa' : 'Conta' }}
-          </div>
-        </div>
-        <div class="flex items-center gap-2 text-sm">
-          <i class="pi pi-building"></i>
-          <span class="truncate">{{ item.space.name }}</span>
-        </div>
-      </div>
-
-      <div class="flex items-center gap-2 justify-between">
-        <div class="pt-8 flex flex-col justify-end gap-3 text-sm leading-none">
-          @if(expenseGuard(item) && item.payment_method_id) {
-          <div class="flex items-center gap-2">
-            <i class="pi pi-calendar"></i>
-            <span class="font-semibold">{{ (expenseGuard(item) ? item.date : '') | date: 'dd/MM/yyyy' }}</span>
-          </div>
-          <div class="flex items-center gap-2">
-            <i class="pi pi-credit-card"></i>
-            <span class="">{{ item.payment_method.name }}</span>
-          </div>
-          } @else if(billGuard(item)) {
-          <div class="flex items-center gap-2" [ngClass]="item.payer ? 'text-green-600' : 'text-red-600'">
-            <i [ngClass]="item.payer ? 'pi pi-check' : 'pi pi-calendar'"></i>
-            <span class="font-semibold">{{ item.payer ? 'Pago' : 'Vence em ' + (item.deadline | date: 'dd/MM/yyyy') }}</span>
-          </div>
-          } @if(item.space.members && item.space.members.length > 1) {
-          <div class="flex items-center gap-2">
-            <i class="pi pi-users"></i>
-            <span class="">{{ 'Dividido entre ' + item.space.members.length + ' membros' }}</span>
-          </div>
-          } @else {
-          <div class="flex items-center gap-2">
-            <i class="pi pi-user"></i>
-            <span class="">Espaço individual</span>
-          </div>
-          }
-        </div>
-
-        <div class="flex flex-col items-end justify-start">
-          <div class="text-2xl text-neutral-800 font-bold">{{ item.value | currency: 'BRL' }}</div>
-          @if(item.space.members && item.space.members.length > 1) {
-          <div class="text-xs">de {{ (getUserSpending(item)) | currency: 'BRL'}}</div>
-          }
-        </div>
-      </div>
-    </div>
-    } @empty {
-    <div class="bg-card bg-white rounded-lg border shadow-sm flex flex-col gap-2 p-4 text-center text-gray-500">
-      <p class="text-lg">Nenhum gasto encontrado</p>
-      <p class="text-sm">Tente ajustar os filtros ou adicionar um novo gasto</p>
-    </div>
-    }
-  </div>
   }
 </div>

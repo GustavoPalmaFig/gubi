@@ -1,3 +1,4 @@
+import { AccordionModule } from 'primeng/accordion';
 import { AuthService } from '@features/auth/services/auth.service';
 import { BillApiService } from '@features/bill/services/bill-api.service';
 import { Button } from 'primeng/button';
@@ -27,23 +28,30 @@ interface iSpendingsCard {
   onClick: () => void;
 }
 
-interface iFilterTypeOptions {
+interface iTypeTag {
   value: number;
   label: string;
   isSelected: boolean;
-  list: iBill[] | iExpense[];
 }
 
 interface iFilterProps {
   search: string;
+  selectedTypes: number[];
   selectedPeriod: Date;
   selectedSpacesIds: number[];
   selectedPaymentMethodsIds: number[];
 }
 
+interface SortOption {
+  label: string;
+  key: string;
+  icon: string;
+  sortOrder: 'asc' | 'desc';
+}
+
 @Component({
   selector: 'app-my-spendings',
-  imports: [CommonModule, Skeleton, Tag, FormsModule, IconFieldModule, InputIconModule, InputTextModule, Select, MultiSelect, Button],
+  imports: [CommonModule, Skeleton, Tag, FormsModule, IconFieldModule, InputIconModule, InputTextModule, Select, MultiSelect, Button, AccordionModule],
   templateUrl: './my-spendings.page.html',
   styleUrl: './my-spendings.page.scss',
   providers: [CurrencyPipe]
@@ -64,32 +72,22 @@ export class MySpendingsPage {
   protected allSpendings = computed<(iBill | iExpense)[]>(() => [...this.bills(), ...this.expenses()]);
   protected filteredSpendings = signal<(iBill | iExpense)[]>(this.allSpendings());
   protected cards = computed<iSpendingsCard[]>(() => this.populateCards());
-  protected selectedTypes = signal<number[]>([1, 2]);
-  protected filterTypeOptions = computed<iFilterTypeOptions[]>(() => [
-    {
-      value: 1,
-      label: this.bills().length + ' Contas',
-      isSelected: this.selectedTypes().includes(1),
-      list: this.bills()
-    },
-    {
-      value: 2,
-      label: this.expenses().length + ' Despesas',
-      isSelected: this.selectedTypes().includes(2),
-      list: this.expenses()
-    }
-  ]);
+  protected typeTags = computed<iTypeTag[]>(() => this.buildTags());
 
   protected periods = computed<{ label: string; value: Date }[]>(() => this.getAvailablePeriods());
+  protected types: { label: string; value: number }[] = [
+    { label: 'Contas', value: 1 },
+    { label: 'Despesas', value: 2 }
+  ];
 
-  protected spaces = computed((getAll = false) => {
-    const spendingsToConsider = getAll ? this.allSpendings() : this.filteredSpendings();
+  protected spaces = computed(() => {
+    const spendingsToConsider = this.allSpendings();
     const allSpaces = spendingsToConsider.map(spending => spending.space);
     return allSpaces.length > 0 ? Utils.getDistinctValues(allSpaces, 'id') : [];
   });
 
   protected paymentMethods = computed(() => {
-    const allMethods = this.filteredSpendings()
+    const allMethods = this.allSpendings()
       .filter(s => this.expenseGuard(s))
       .filter(s => s.payment_method_id)
       .map(expense => expense.payment_method);
@@ -98,10 +96,22 @@ export class MySpendingsPage {
 
   protected filters = signal<iFilterProps>({
     search: '',
+    selectedTypes: [1, 2],
     selectedPeriod: this.referenceDate(),
     selectedSpacesIds: [],
     selectedPaymentMethodsIds: []
   });
+
+  protected sortOptions: SortOption[] = [
+    { label: 'Data', key: 'date', icon: 'pi pi-sort-amount-down', sortOrder: 'asc' },
+    { label: 'Data', key: 'date', icon: 'pi pi-sort-amount-up-alt', sortOrder: 'desc' },
+    { label: 'Valor', key: 'value', icon: 'pi pi-sort-numeric-down', sortOrder: 'asc' },
+    { label: 'Valor', key: 'value', icon: 'pi pi-sort-numeric-up-alt', sortOrder: 'desc' },
+    { label: 'Título', key: 'title', icon: 'pi pi-sort-alpha-down', sortOrder: 'asc' },
+    { label: 'Título', key: 'title', icon: 'pi pi-sort-alpha-up-alt', sortOrder: 'desc' }
+  ];
+
+  protected selectedSortOption = signal<SortOption>(this.sortOptions[0]);
 
   constructor() {
     effect(() => {
@@ -110,11 +120,13 @@ export class MySpendingsPage {
     });
 
     effect(() => {
-      this.filterSpendingsByType();
+      this.populateFilters();
     });
 
     effect(() => {
-      this.populateFilters();
+      if (this.selectedSortOption()) {
+        this.sortList();
+      }
     });
   }
 
@@ -141,6 +153,8 @@ export class MySpendingsPage {
     this.populateSpaces(bills, expenses, spaces);
     this.bills.set(bills ?? []);
     this.expenses.set(expenses ?? []);
+    this.applyFilters();
+    this.sortList();
     this.isLoading.set(false);
   }
 
@@ -260,35 +274,36 @@ export class MySpendingsPage {
     ];
   }
 
-  protected isNaN(value: string): boolean {
-    return isNaN(Number(value)) || value === null || value === undefined;
-  }
+  protected buildTags() {
+    const filteredSpendings = this.filteredSpendings();
+    const filteredBills = filteredSpendings.filter(this.billGuard);
+    const filteredExpenses = filteredSpendings.filter(this.expenseGuard);
 
-  protected toggleType(type: number) {
-    const current = this.selectedTypes();
-    let newTypes: number[] = [];
-
-    if (current.includes(type)) {
-      newTypes = current.filter(t => t !== type);
-    } else {
-      newTypes = [...current, type];
-    }
-
-    if (newTypes.length === 0) return; // Não permite desmarcar todos os tipos
-    this.selectedTypes.set(newTypes);
-  }
-
-  protected filterSpendingsByType() {
-    const currentFilters = this.filterTypeOptions().filter(option => option.isSelected);
-    this.filteredSpendings.set(currentFilters.map(option => option.list).flat());
+    return [
+      {
+        value: 1,
+        label: `${filteredBills.length} Contas`,
+        isSelected: filteredBills.length > 0 && this.filters().selectedTypes.includes(1)
+      },
+      {
+        value: 2,
+        label: `${filteredExpenses.length} Despesas`,
+        isSelected: filteredExpenses.length > 0 && this.filters().selectedTypes.includes(2)
+      }
+    ];
   }
 
   protected scrollToList(filterType: number) {
     const element = document.getElementById('spendingList');
     if (element) {
-      this.selectedTypes.set(filterType === 0 ? [1, 2] : [filterType]);
       element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      this.filters.update(f => ({ ...f, selectedTypes: filterType === 0 ? [1, 2] : [filterType] }));
+      this.applyFilters();
     }
+  }
+
+  protected isNaN(value: string): boolean {
+    return isNaN(Number(value)) || value === null || value === undefined;
   }
 
   protected getAvailablePeriods(): { label: string; value: Date }[] {
@@ -312,11 +327,13 @@ export class MySpendingsPage {
   }
 
   protected populateFilters() {
+    const types = this.types;
     const spaces = this.spaces();
     const payment_methods = this.paymentMethods();
 
     this.filters.set({
       search: '',
+      selectedTypes: types.map(type => type.value),
       selectedPeriod: this.referenceDate(),
       selectedSpacesIds: spaces.map(space => space.id),
       selectedPaymentMethodsIds: payment_methods.map(payment_method => payment_method.id)
@@ -324,7 +341,7 @@ export class MySpendingsPage {
   }
 
   protected applyFilters(filterPaymentMethods = false) {
-    const { search, selectedPeriod, selectedSpacesIds, selectedPaymentMethodsIds } = this.filters();
+    const { search, selectedTypes, selectedPeriod, selectedSpacesIds, selectedPaymentMethodsIds } = this.filters();
     let result = [...this.allSpendings()];
 
     if (search) {
@@ -345,6 +362,17 @@ export class MySpendingsPage {
       });
     }
 
+    if (selectedTypes && selectedTypes.length > 0) {
+      result = result.filter(item => {
+        if (this.billGuard(item)) {
+          return selectedTypes.includes(1);
+        } else if (this.expenseGuard(item)) {
+          return selectedTypes.includes(2);
+        }
+        return false;
+      });
+    }
+
     if (selectedSpacesIds && selectedSpacesIds.length > 0) {
       result = result.filter(item => selectedSpacesIds.includes(item.space_id));
     }
@@ -362,5 +390,34 @@ export class MySpendingsPage {
 
   protected resetFilters() {
     this.filteredSpendings.set([...this.allSpendings()]);
+  }
+
+  protected sortList() {
+    const sortOption = this.selectedSortOption();
+    if (!sortOption) return;
+
+    this.filteredSpendings().sort((a: any, b: any) => {
+      let propertyA = '';
+      let propertyB = '';
+
+      if (sortOption.key == 'title') {
+        propertyA = this.billGuard(a) ? 'name' : 'title';
+        propertyB = this.billGuard(b) ? 'name' : 'title';
+      } else if (sortOption.key == 'date') {
+        propertyA = this.billGuard(a) ? 'paid_at' : 'date';
+        propertyB = this.billGuard(b) ? 'paid_at' : 'date';
+      } else {
+        propertyA = sortOption.key as keyof (iBill | iExpense);
+        propertyB = sortOption.key as keyof (iBill | iExpense);
+      }
+
+      if (a[propertyA] < b[propertyB]) {
+        return sortOption.sortOrder == 'asc' ? -1 : 1;
+      }
+      if (a[propertyA] > b[propertyB]) {
+        return sortOption.sortOrder == 'asc' ? 1 : -1;
+      }
+      return 0;
+    });
   }
 }
