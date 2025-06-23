@@ -1,6 +1,6 @@
 <div class="mb-10">
   <h1 class="text-2xl font-bold">Meus Gastos</h1>
-  <p class="text-md text-gray-500 mt-1">Acompanhe todos os seus gastos em contas e despesas em todos os espaços.</p>
+  <p class="text-md text-neutral-500 mt-1">Acompanhe todos os seus gastos em contas e despesas em todos os espaços.</p>
 </div>
 
 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
@@ -20,12 +20,12 @@
         role="button"
         aria-pressed="false"
       >
-        <div class="flex items-center justify-between gap-2 text-md text-gray-600 font-medium leading-none mb-1">
+        <div class="flex items-center justify-between gap-2 text-md text-neutral-600 font-medium leading-none mb-1">
           <h3>{{ card.title }}</h3>
           <i [ngClass]="card.icon"></i>
         </div>
-        <p class="text-2xl text-gray-700 font-bold my-2" [ngClass]="{'text-lg' : isNaN(card.content)}">{{ card.content }}</p>
-        <span class="text-sm text-gray-500 font-medium leading-none">{{ card.details }}</span>
+        <p class="text-2xl text-neutral-700 font-bold my-2" [ngClass]="{'text-lg' : isNaN(card.content)}">{{ card.content }}</p>
+        <span class="text-sm text-neutral-500 font-medium leading-none">{{ card.details }}</span>
       </div>
     }
 
@@ -33,7 +33,7 @@
       <p-accordion styleClass="">
         <p-accordion-panel value="0">
           <p-accordion-header>
-            <div class="flex items-center gap-2 text-gray-600 font-medium leading-none">
+            <div class="flex items-center gap-2 text-neutral-600 font-medium leading-none">
               <i class="pi pi-sliders-h"></i>
               <span class="text-sm font-medium">Filtros</span>
             </div>
@@ -160,7 +160,13 @@
 
     <div class="col-span-full grid gap-4 overflow-x-auto">
       @for(item of pagedSpendings(); track $index + 1) {
-        <div class="bg-card bg-white rounded-lg border shadow-sm hover:shadow-md transition-shadow p-4 h-50 flex flex-col justify-between text-neutral-500 font-semibold">
+        <div 
+          class="bg-card bg-white rounded-lg border shadow-sm p-4 h-50 flex flex-col justify-between text-neutral-500 font-semibold"
+          tabindex="0"
+          (click)="openDetailsDialog(item);"
+          (keydown.enter)="openDetailsDialog(item)"
+          (keydown.space)="openDetailsDialog(item)"
+          [ngClass]="{'cursor-pointer hover:shadow-md transition-shadow' : expenseGuard(item)}">
           <div class="flex flex-col gap-1">
             <div class="flex gap-3 items-center justify-between">
               <h1 class="text-lg text-neutral-800 font-bold line-clamp-1">{{ expenseGuard(item) ? item.title : item.name }}</h1>
@@ -213,7 +219,7 @@
         </div>
       } 
       @empty {
-        <div class="bg-card bg-white rounded-lg border shadow-sm flex flex-col gap-2 p-4 text-center text-gray-500">
+        <div class="bg-card bg-white rounded-lg border shadow-sm flex flex-col gap-2 p-4 text-center text-neutral-500">
           <p class="text-lg">Nenhum gasto encontrado</p>
           <p class="text-sm">Tente ajustar os filtros ou adicionar um novo gasto</p>
         </div>
@@ -233,5 +239,8 @@
       (onPageChange)="onPageChange($event)" 
     />
   }
-  
 </div>
+
+@defer (when isExpenseDetailsDialogOpen()) {
+  <app-expense-details-dialog [isOpen]="isExpenseDetailsDialogOpen" [expense]="selectedExpense()"> </app-expense-details-dialog>
+}

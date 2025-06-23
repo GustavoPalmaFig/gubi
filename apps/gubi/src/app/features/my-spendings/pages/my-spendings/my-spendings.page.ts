@@ -5,6 +5,7 @@ import { Button } from 'primeng/button';
 import { CommonModule, CurrencyPipe } from '@angular/common';
 import { Component, computed, effect, inject, signal } from '@angular/core';
 import { ExpenseApiService } from '@features/expense/services/expense-api.service';
+import { ExpenseDetailsDialogComponent } from '@features/expense/components/expense-details-dialog/expense-details-dialog.component';
 import { FormsModule } from '@angular/forms';
 import { iBill } from '@features/bill/interfaces/bill.interface';
 import { iExpense } from '@features/expense/interfaces/expense.interface';
@@ -50,7 +51,7 @@ interface SortOption {
 
 @Component({
   selector: 'app-my-spendings',
-  imports: [CommonModule, Skeleton, Tag, FormsModule, InputText, Select, MultiSelect, Button, AccordionModule, Paginator],
+  imports: [CommonModule, Skeleton, Tag, FormsModule, InputText, Select, MultiSelect, Button, AccordionModule, Paginator, ExpenseDetailsDialogComponent],
   templateUrl: './my-spendings.page.html',
   styleUrl: './my-spendings.page.scss',
   providers: [CurrencyPipe]
@@ -87,6 +88,8 @@ export class MySpendingsPage {
   protected selectedSortOption = signal<SortOption>(this.sortOptions[0]);
   protected first = signal(0);
   protected rows = signal(10);
+  protected isExpenseDetailsDialogOpen = signal(false);
+  protected selectedExpense = signal<iExpense | null>(null);
 
   protected allSpendings = computed<(iBill | iExpense)[]>(() => [...this.bills(), ...this.expenses()]);
 
@@ -448,5 +451,12 @@ export class MySpendingsPage {
   protected onPageChange(event?: PaginatorState) {
     this.first.set(event?.first ?? 0);
     this.rows.set(event?.rows ?? 10);
+  }
+
+  protected openDetailsDialog(item: iExpense | iBill) {
+    if (this.expenseGuard(item)) {
+      this.selectedExpense.set(item);
+      this.isExpenseDetailsDialogOpen.set(true);
+    }
   }
 }
