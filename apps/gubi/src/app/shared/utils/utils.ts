@@ -153,4 +153,13 @@ export default class Utils {
     const parts = splited.slice(0, partsAmount);
     return parts.join(' ');
   }
+
+  static normalizeText(text?: string): string {
+    if (!text || text == '') return '';
+    return text
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .replace(/[^a-zA-Z0-9]/g, '')
+      .toLowerCase();
+  }
 }

@@ -69,7 +69,7 @@
                   optionLabel="label"
                   optionValue="value"
                   [(ngModel)]="filters().selectedTypes"
-                  (onPanelHide)="applyFilters()"
+                  (onPanelHide)="onFiltersChange()"
                   appendTo="body"
                 ></p-multiselect>
               </div>
@@ -86,7 +86,7 @@
                   optionLabel="name"
                   optionValue="id"
                   [(ngModel)]="filters().selectedSpacesIds"
-                  (onPanelHide)="applyFilters()"
+                  (onPanelHide)="onFiltersChange()"
                   appendTo="body"
                 ></p-multiselect>
               </div>
@@ -103,14 +103,17 @@
                   optionLabel="name"
                   optionValue="id"
                   [(ngModel)]="filters().selectedPaymentMethodsIds"
-                  (onPanelHide)="applyFilters(true)"
+                  (onPanelHide)="onFiltersChange(true)"
                   selectedItemsLabel="{0} itens selecionados"
                   appendTo="body"
                 ></p-multiselect>
               </div>
 
-              <p-iconfield class="sm:my-2 lg:my-0 lg:col-span-3">
-                <p-inputicon styleClass="pi pi-search" />
+              <div class="lg:col-span-3 flex flex-col gap-2">
+                <div class="flex items-center gap-2">
+                  <i class="pi pi-search"></i>
+                  <label for="payment" class="text-sm font-medium">Pesquisar</label>
+                </div>
                 <input
                   id="search"
                   class="w-full"
@@ -119,9 +122,9 @@
                   pInputText
                   placeholder="Buscar por título, espaço ou observação..."
                   [(ngModel)]="filters().search"
-                  (ngModelChange)="applyFilters()"
+                  (ngModelChange)="onFiltersChange()"
                 />
-              </p-iconfield>
+              </div>
 
               <div class="mt-2 flex justify-between items-center gap-2 lg:col-span-1">
                 <p-button label="Limpar Filtros" severity="secondary" (click)="resetFilters()"></p-button>
@@ -220,12 +223,12 @@
     <p-paginator
       class="col-span-full"
       styleClass="w-full !bg-transparent"
-      [first]="first()" 
-      [rows]="rows()" 
+      [first]="first()"
+      [rows]="rows()"
       [totalRecords]="filteredSpendings().length"
       [pageLinkSize]="3"
-      [rowsPerPageOptions]="[5, 10, 20, 30]"
-      [showFirstLastIcon]="false"
+      [rowsPerPageOptions]="[5, 10, 20, 30, filteredSpendings().length]"
+      [showFirstLastIcon]="true"
       [alwaysShow]="false"
       (onPageChange)="onPageChange($event)" 
     />

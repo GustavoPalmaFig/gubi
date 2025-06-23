@@ -7,4 +7,12 @@
     --tw-shadow-colored: 0 1px 2px 0 var(--tw-shadow-color) !important;
     box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow) !important;
   }
+
+  .p-paginator-page,
+  .p-paginator-next,
+  .p-paginator-last,
+  .p-paginator-first,
+  .p-paginator-prev {
+    min-width: 2rem;
+  }
 }
