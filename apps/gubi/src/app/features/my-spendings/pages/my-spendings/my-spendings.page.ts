@@ -18,6 +18,7 @@ import { Select } from 'primeng/select';
 import { Skeleton } from 'primeng/skeleton';
 import { SpaceApiService } from '@features/spaces/services/space-api.service';
 import { Tag } from 'primeng/tag';
+import { UserAvatarComponent } from '@shared/components/user-avatar/user-avatar.component';
 import Utils from '@shared/utils/utils';
 
 interface iSpendingsCard {
@@ -51,7 +52,7 @@ interface SortOption {
 
 @Component({
   selector: 'app-my-spendings',
-  imports: [CommonModule, Skeleton, Tag, FormsModule, InputText, Select, MultiSelect, Button, AccordionModule, Paginator, ExpenseDetailsDialogComponent],
+  imports: [CommonModule, Skeleton, Tag, FormsModule, InputText, Select, MultiSelect, Button, AccordionModule, Paginator, ExpenseDetailsDialogComponent, UserAvatarComponent],
   templateUrl: './my-spendings.page.html',
   styleUrl: './my-spendings.page.scss',
   providers: [CurrencyPipe]
@@ -63,6 +64,7 @@ export class MySpendingsPage {
   protected authService = inject(AuthService);
   private currencyPipe = inject(CurrencyPipe);
   private router = inject(Router);
+  protected getusersFromMembers = Utils.getusersFromMembers;
 
   private userId = this.authService.currentUser()?.id;
   protected isLoading = signal(false);
@@ -421,25 +423,28 @@ export class MySpendingsPage {
   protected sortList(list: (iBill | iExpense)[]): (iBill | iExpense)[] {
     const sortOption = this.selectedSortOption();
 
-    const sorted = list.sort((a: any, b: any) => {
-      let propertyA = '';
-      let propertyB = '';
+    const sorted = list.sort((a: iBill | iExpense, b: iBill | iExpense) => {
+      let valueA: string | Date | number | undefined;
+      let valueB: string | Date | number | undefined;
 
-      if (sortOption.key == 'title') {
-        propertyA = this.billGuard(a) ? 'name' : 'title';
-        propertyB = this.billGuard(b) ? 'name' : 'title';
-      } else if (sortOption.key == 'date') {
-        propertyA = this.billGuard(a) ? 'paid_at' : 'date';
-        propertyB = this.billGuard(b) ? 'paid_at' : 'date';
+      if (sortOption.key === 'title') {
+        valueA = this.billGuard(a) ? a.name : this.expenseGuard(a) ? a.title : '';
+        valueB = this.billGuard(b) ? b.name : this.expenseGuard(b) ? b.title : '';
+      } else if (sortOption.key === 'date') {
+        valueA = this.billGuard(a) ? a.paid_at : this.expenseGuard(a) ? a.date : '';
+        valueB = this.billGuard(b) ? b.paid_at : this.expenseGuard(b) ? b.date : '';
+      } else if (sortOption.key === 'value') {
+        valueA = a.value;
+        valueB = b.value;
       } else {
-        propertyA = sortOption.key as keyof (iBill | iExpense);
-        propertyB = sortOption.key as keyof (iBill | iExpense);
+        valueA = '';
+        valueB = '';
       }
 
-      if (a[propertyA] < b[propertyB]) {
+      if (valueA && valueB && valueA < valueB) {
         return sortOption.sortOrder == 'asc' ? -1 : 1;
       }
-      if (a[propertyA] > b[propertyB]) {
+      if (valueA && valueB && valueA > valueB) {
         return sortOption.sortOrder == 'asc' ? 1 : -1;
       }
       return 0;

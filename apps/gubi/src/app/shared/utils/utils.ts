@@ -1,3 +1,6 @@
+import { iSpaceMember } from '@features/spaces/interfaces/space_member.interface';
+import { iUser } from '@features/auth/interfaces/user.interface';
+
 export default class Utils {
   static handleErrorMessage(error: unknown): string {
     if (!error) return '';
@@ -161,5 +164,9 @@ export default class Utils {
       .replace(/[\u0300-\u036f]/g, '')
       .replace(/[^a-zA-Z0-9]/g, '')
       .toLowerCase();
+  }
+
+  static getusersFromMembers(members: iSpaceMember[] | undefined): iUser[] {
+    return members?.map(m => m.user) ?? [];
   }
 }
