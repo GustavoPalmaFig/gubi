@@ -169,4 +169,29 @@ export default class Utils {
   static getusersFromMembers(members: iSpaceMember[] | undefined): iUser[] {
     return members?.map(m => m.user) ?? [];
   }
+
+  static get currentMonth() {
+    const today = new Date();
+    return new Date(today.getUTCFullYear(), today.getUTCMonth(), 1);
+  }
+
+  static getAvailablePeriods(): { label: string; value: Date }[] {
+    const start = new Date(2025, 0, 1); // Janeiro 2025
+    const today = new Date();
+    const end = new Date(today.getUTCFullYear(), today.getUTCMonth() + 6, 1); // Seis meses a frente
+
+    const months: { label: string; value: Date }[] = [];
+
+    const iter = new Date(start);
+    while (iter <= end) {
+      const monthName = iter.toLocaleString('default', { month: 'long' });
+      const label = `${monthName} ${iter.getFullYear()}`;
+      months.push({
+        label: label.charAt(0).toUpperCase() + label.slice(1),
+        value: new Date(iter)
+      });
+      iter.setMonth(iter.getMonth() + 1);
+    }
+    return months;
+  }
 }

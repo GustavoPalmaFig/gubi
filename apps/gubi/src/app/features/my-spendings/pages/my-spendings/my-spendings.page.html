@@ -30,123 +30,12 @@
     }
 
     <div class="col-span-full">
-      <p-accordion styleClass="">
-        <p-accordion-panel value="0">
-          <p-accordion-header>
-            <div class="flex items-center gap-2 text-neutral-600 font-medium leading-none">
-              <i class="pi pi-sliders-h"></i>
-              <span class="text-sm font-medium">Filtros</span>
-            </div>
-          </p-accordion-header>
-          <p-accordion-content>
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 items-end justify-end">
-              <div class="flex flex-col gap-2">
-                <div class="flex items-center gap-2">
-                  <i class="pi pi-calendar"></i>
-                  <label for="period" class="text-sm font-medium">Período</label>
-                </div>
-                <p-select
-                  id="period"
-                  class="w-full"
-                  [options]="periods()"
-                  optionLabel="label"
-                  optionValue="value"
-                  [(ngModel)]="filters().selectedPeriod"
-                  (onChange)="changePeriod($event.value)"
-                  appendTo="body"
-                ></p-select>
-              </div>
-
-              <div class="flex flex-col gap-2">
-                <div class="flex items-center gap-2">
-                  <i class="pi pi-filter"></i>
-                  <label for="type" class="text-sm font-medium">Tipo</label>
-                </div>
-                <p-multiselect
-                  id="type"
-                  class="w-full"
-                  [options]="types"
-                  optionLabel="label"
-                  optionValue="value"
-                  [(ngModel)]="filters().selectedTypes"
-                  (onPanelHide)="onFiltersChange()"
-                  appendTo="body"
-                ></p-multiselect>
-              </div>
-
-              <div class="flex flex-col gap-2">
-                <div class="flex items-center gap-2">
-                  <i class="pi pi-building"></i>
-                  <label for="space" class="text-sm font-medium">Espaço</label>
-                </div>
-                <p-multiselect
-                  id="space"
-                  class="w-full"
-                  [options]="spaces()"
-                  optionLabel="name"
-                  optionValue="id"
-                  [(ngModel)]="filters().selectedSpacesIds"
-                  (onPanelHide)="onFiltersChange()"
-                  appendTo="body"
-                ></p-multiselect>
-              </div>
-
-              <div class="flex flex-col gap-2">
-                <div class="flex items-center gap-2">
-                  <i class="pi pi-credit-card"></i>
-                  <label for="payment" class="text-sm font-medium">Métodos de Pagamento</label>
-                </div>
-                <p-multiselect
-                  id="payment-method"
-                  class="w-full"
-                  [options]="paymentMethods()"
-                  optionLabel="name"
-                  optionValue="id"
-                  [(ngModel)]="filters().selectedPaymentMethodsIds"
-                  (onPanelHide)="onFiltersChange(true)"
-                  selectedItemsLabel="{0} itens selecionados"
-                  appendTo="body"
-                ></p-multiselect>
-              </div>
-
-              <div class="lg:col-span-3 flex flex-col gap-2">
-                <div class="flex items-center gap-2">
-                  <i class="pi pi-search"></i>
-                  <label for="payment" class="text-sm font-medium">Pesquisar</label>
-                </div>
-                <input
-                  id="search"
-                  class="w-full"
-                  inputStyleClass="w-full"
-                  type="text"
-                  pInputText
-                  placeholder="Buscar por título, espaço ou observação..."
-                  [(ngModel)]="filters().search"
-                  (ngModelChange)="onFiltersChange()"
-                />
-              </div>
-
-              <div class="mt-2 flex justify-between items-end gap-2 lg:col-span-1">
-                <p-select outlined severity="contrast" [options]="sortOptions" optionLabel="label" [(ngModel)]="selectedSortOption" [appendTo]="'body'">
-                  <ng-template #item let-item>
-                    <div class="flex items-center gap-2">
-                      <span>{{ item.label }}</span>
-                      <i [class]="item.icon"></i>
-                    </div>
-                  </ng-template>
-                  <ng-template #selectedItem let-selectedOption>
-                    <div class="flex items-center gap-2">
-                      <span>Ordernar por {{ selectedOption.label }}</span>
-                      <i [class]="selectedOption.icon"></i>
-                    </div>
-                  </ng-template>
-                </p-select>
-                <p-button label="Limpar Filtros" severity="secondary" (click)="resetFilters()"></p-button>
-              </div>
-            </div>
-          </p-accordion-content>
-        </p-accordion-panel>
-      </p-accordion>
+      <app-my-spendings-filters 
+        [allSpendings]="allSpendings()" 
+        [referenceDate]="referenceDate()" 
+        (changeFilteredList)="onFilteredSpendingsChange($event)"
+        (changePeriod)="changePeriodEvent($event)">
+      </app-my-spendings-filters>
     </div>
 
     <div id="spendingList" class="col-span-full flex items-center justify-between mt-2">
