@@ -127,8 +127,7 @@
               </div>
 
               <div class="mt-2 flex justify-between items-center gap-2 lg:col-span-1">
-                <p-button label="Limpar Filtros" severity="secondary" (click)="resetFilters()"></p-button>
-                <p-select outlined severity="contrast" [options]="sortOptions" optionLabel="label" [(ngModel)]="selectedSortOption" [appendTo]="'body'">
+                <p-select outlined severity="contrast" [options]="sortOptions" optionLabel="label" [(ngModel)]="selectedSortOption" [appendTo]="'body'" class="flex-1">
                   <ng-template #item let-item>
                     <div class="flex items-center gap-2">
                       <span>{{ item.label }}</span>
@@ -137,11 +136,12 @@
                   </ng-template>
                   <ng-template #selectedItem let-selectedOption>
                     <div class="flex items-center gap-2">
-                      <span>{{ selectedOption.label }}</span>
+                      <span>Ordernar por {{ selectedOption.label }}</span>
                       <i [class]="selectedOption.icon"></i>
                     </div>
                   </ng-template>
                 </p-select>
+                <p-button label="Limpar Filtros" severity="secondary" (click)="resetFilters()"></p-button>
               </div>
             </div>
           </p-accordion-content>
@@ -183,29 +183,34 @@
           <div class="flex items-center gap-2 justify-between">
             <div class="pt-8 flex flex-col justify-end gap-3 text-sm leading-none">
               @if(expenseGuard(item) && item.payment_method_id) {
-              <div class="flex items-center gap-2">
-                <i class="pi pi-calendar"></i>
-                <span class="font-semibold">{{ (expenseGuard(item) ? item.date : '') | date: 'dd/MM/yyyy' }}</span>
-              </div>
-              <div class="flex items-center gap-2">
-                <i class="pi pi-credit-card"></i>
-                <span class="">{{ item.payment_method.name }}</span>
-              </div>
+                <div class="flex items-center gap-2">
+                  <i class="pi pi-calendar"></i>
+                  <span class="font-semibold">{{ (expenseGuard(item) ? item.date : '') | date: 'dd/MM/yyyy' }}</span>
+                </div>
+                <div class="flex items-center gap-2">
+                  <i class="pi pi-credit-card"></i>
+                  <span>{{ item.payment_method.name }}</span>
+                </div>
               } @else if(billGuard(item)) {
-              <div class="flex items-center gap-2" [ngClass]="item.payer ? 'text-green-600' : 'text-red-600'">
-                <i [ngClass]="item.payer ? 'pi pi-check' : 'pi pi-calendar'"></i>
-                <span class="font-semibold">{{ item.payer ? 'Pago' : 'Vence em ' + (item.deadline | date: 'dd/MM/yyyy') }}</span>
-              </div>
+                <div class="flex items-center gap-2" [ngClass]="item.payer ? 'text-green-600' : 'text-red-600'">
+                  <i [ngClass]="item.payer ? 'pi pi-check' : 'pi pi-calendar'"></i>
+                  <span class="font-semibold">{{ item.payer ? 'Pago' : 'Vence em ' + (item.deadline | date: 'dd/MM/yyyy') }}</span>
+                </div>
               } @if(item.space.members && item.space.members.length > 1) {
-              <div class="flex items-center gap-2">
-                <i class="pi pi-users"></i>
-                <span class="">{{ 'Dividido entre ' + item.space.members.length + ' membros' }}</span>
-              </div>
+                <div class="flex items-center gap-2">
+                  <i class="pi pi-users"></i>
+                  <span>{{ 'Dividido entre ' + item.space.members.length + ' membros' }}</span>
+                </div>
               } @else {
-              <div class="flex items-center gap-2">
-                <i class="pi pi-user"></i>
-                <span class="">Espaço individual</span>
-              </div>
+                <div class="flex items-center gap-2">
+                  <i class="pi pi-user"></i>
+                  <span>Espaço individual</span>
+                </div>
+              } @if(expenseGuard(item) && item.note) {
+                <div class="flex items-center gap-2 p-2 bg-neutral-100 rounded-md border">
+                  <i class="pi pi-book"></i>
+                  <span class="line-clamp-1">{{ item.note }}</span>
+                </div>
               }
             </div>
 
