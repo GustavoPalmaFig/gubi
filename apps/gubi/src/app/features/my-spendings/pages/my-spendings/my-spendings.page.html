@@ -5,143 +5,142 @@
 
 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
   @if(isLoading()) {
-    <p-skeleton styleClass="py-16" />
-    <p-skeleton styleClass="py-16" />
-    <p-skeleton styleClass="py-16" />
-    <p-skeleton styleClass="py-16" />
-  } 
-  @else { 
-    @for(card of cards(); track $index + 1) {
-      <div
-        class="bg-card bg-white flex flex-col rounded-lg border shadow-sm p-4"
-        (click)="card.onClick()"
-        (keyup.enter)="card.onClick()"
-        tabindex="0"
-        role="button"
-        aria-pressed="false"
-      >
-        <div class="flex items-center justify-between gap-2 text-md text-neutral-600 font-medium leading-none mb-1">
-          <h3>{{ card.title }}</h3>
-          <i [ngClass]="card.icon"></i>
-        </div>
-        <p class="text-2xl text-neutral-700 font-bold my-2" [ngClass]="{'text-lg' : isNaN(card.content)}">{{ card.content }}</p>
-        <span class="text-sm text-neutral-500 font-medium leading-none">{{ card.details }}</span>
-      </div>
-    }
-
-    <div class="col-span-full">
-      <app-my-spendings-filters 
-        [allSpendings]="allSpendings()" 
-        [referenceDate]="referenceDate()" 
-        (changeFilteredList)="onFilteredSpendingsChange($event)"
-        (changePeriod)="changePeriodEvent($event)">
-      </app-my-spendings-filters>
+  <p-skeleton styleClass="py-16" />
+  <p-skeleton styleClass="py-16" />
+  <p-skeleton styleClass="py-16" />
+  <p-skeleton styleClass="py-16" />
+  } @else { @for(card of cards(); track $index + 1) {
+  <div
+    class="bg-card bg-white flex flex-col rounded-lg border shadow-sm p-4"
+    (click)="card.onClick()"
+    (keyup.enter)="card.onClick()"
+    tabindex="0"
+    role="button"
+    aria-pressed="false"
+  >
+    <div class="flex items-center justify-between gap-2 text-md text-neutral-600 font-medium leading-none mb-1">
+      <h3>{{ card.title }}</h3>
+      <i [ngClass]="card.icon"></i>
     </div>
+    <p class="text-2xl text-neutral-700 font-bold my-2" [ngClass]="{'text-lg' : isNaN(card.content)}">{{ card.content }}</p>
+    <span class="text-sm text-neutral-500 font-medium leading-none">{{ card.details }}</span>
+  </div>
+  }
 
-    <div id="spendingList" class="col-span-full flex items-center justify-between mt-2">
-      <p class="text-xl font-bold">Lista de Gastos</p>
-      <div class="flex items-center gap-2">
-        @for(item of typeTags(); track item.value) {
-          <p-tag [value]="item.label" rounded [severity]="item.isSelected ? 'contrast' : 'secondary'" />
-        }
-      </div>
-    </div>
+  <div class="col-span-full">
+    <app-my-spendings-filters
+      [allSpendings]="allSpendings()"
+      [referenceDate]="referenceDate()"
+      (changeFilteredList)="onFilteredSpendingsChange($event)"
+      (changePeriod)="changePeriodEvent($event)"
+    >
+    </app-my-spendings-filters>
+  </div>
 
-    <div class="col-span-full grid gap-4 overflow-x-auto">
-      @for(item of pagedSpendings(); track $index + 1) {
-        <div 
-          class="bg-card bg-white rounded-lg border shadow-sm p-4 h-50 flex flex-col justify-between text-neutral-500 font-semibold"
-          tabindex="0"
-          (click)="openDetailsDialog(item);"
-          (keydown.enter)="openDetailsDialog(item)"
-          (keydown.space)="openDetailsDialog(item)"
-          [ngClass]="{'cursor-pointer hover:shadow-md transition-shadow' : expenseGuard(item)}">
-          <div class="flex flex-col gap-1">
-            <div class="flex gap-3 items-center justify-between">
-              <h1 class="text-lg text-neutral-800 font-bold line-clamp-1">{{ expenseGuard(item) ? item.title : item.name }}</h1>
-              <div class="flex items-center rounded-full border px-2 py-1 text-xs font-semibold border-transparent bg-black text-white leading-none">
-                {{ expenseGuard(item) ? 'Despesa' : 'Conta' }}
-              </div>
-            </div>
-            <div class="flex items-center justify-between gap-2 text-sm">
-              <div class="flex items-center gap-2">
-                <i class="pi pi-building"></i>
-                <span class="truncate">{{ item.space.name }}</span>
-              </div>
-              @if(item.space.members && item.space.members.length > 1) {
-                <app-user-avatar [users]="getusersFromMembers(item.space.members)" [size]="'large'"></app-user-avatar>
-              }
-            </div>
-          </div>
-
-          <div class="flex items-center gap-2 justify-between">
-            <div class="pt-8 flex flex-col justify-end gap-3 text-sm leading-none">
-              @if(expenseGuard(item) && item.payment_method_id) {
-                <div class="flex items-center gap-2">
-                  <i class="pi pi-calendar"></i>
-                  <span class="font-semibold">{{ (expenseGuard(item) ? item.date : '') | date: 'dd/MM/yyyy' }}</span>
-                </div>
-                <div class="flex items-center gap-2">
-                  <i class="pi pi-credit-card"></i>
-                  <span>{{ item.payment_method.name }}</span>
-                </div>
-              } @else if(billGuard(item)) {
-                <div class="flex items-center gap-2" [ngClass]="item.paid_at ? 'text-green-600' : 'text-red-600'">
-                  <i [ngClass]="item.paid_at ? 'pi pi-check' : 'pi pi-calendar'"></i>
-                  <span class="font-semibold">{{ item.paid_at ? 'Pago em ' + (item.paid_at | date: 'dd/MM/yyyy') : 'Vence em ' + (item.deadline | date: 'dd/MM/yyyy') }}</span>
-                </div>
-              } @if(item.space.members && item.space.members.length > 1) {
-                <div class="flex items-center gap-2">
-                  <i class="pi pi-users"></i>
-                  <span>{{ 'Dividido entre ' + item.space.members.length + ' membros' }}</span>
-                </div>
-              } @else {
-                <div class="flex items-center gap-2">
-                  <i class="pi pi-user"></i>
-                  <span>Espaço individual</span>
-                </div>
-              }
-            </div>
-
-            <div class="flex flex-col items-end justify-start">
-              <div class="text-2xl text-neutral-800 font-bold">{{ item.value | currency: 'BRL' }}</div>
-              @if(item.space.members && item.space.members.length > 1) {
-              <div class="text-xs">de {{ (getUserSpending(item)) | currency: 'BRL'}}</div>
-              }
-            </div>
-          </div>
-
-          @if(expenseGuard(item) && item.note) {
-            <div class="mt-3 flex items-center gap-2 p-2 bg-neutral-100 rounded-md border">
-              <i class="pi pi-book"></i>
-              <span class="line-clamp-1">{{ item.note }}</span>
-            </div>
-          }
-        </div>
-      } 
-      @empty {
-        <div class="bg-card bg-white rounded-lg border shadow-sm flex flex-col gap-2 p-4 text-center text-neutral-500">
-          <p class="text-lg">Nenhum gasto encontrado</p>
-          <p class="text-sm">Tente ajustar os filtros ou adicionar um novo gasto</p>
-        </div>
+  <div id="spendingList" class="col-span-full flex items-center justify-between mt-2">
+    <p class="text-xl font-bold">Lista de Gastos</p>
+    <div class="flex items-center gap-2">
+      @for(item of typeTags(); track item.value) {
+      <p-tag [value]="item.label" rounded [severity]="item.isSelected ? 'contrast' : 'secondary'" />
       }
     </div>
+  </div>
 
-    <p-paginator
-      class="col-span-full"
-      styleClass="w-full !bg-transparent"
-      [first]="first()"
-      [rows]="rows()"
-      [totalRecords]="filteredSpendings().length"
-      [pageLinkSize]="3"
-      [rowsPerPageOptions]="[5, 10, 20, 30, filteredSpendings().length]"
-      [showFirstLastIcon]="true"
-      [alwaysShow]="filteredSpendings().length > 10"
-      (onPageChange)="onPageChange($event)" 
-    />
+  <div class="col-span-full grid gap-4 overflow-x-auto">
+    @for(item of pagedSpendings(); track $index + 1) {
+    <div
+      class="bg-card bg-white rounded-lg border shadow-sm p-4 h-50 flex flex-col justify-between text-neutral-500 font-semibold"
+      tabindex="0"
+      (click)="openDetailsDialog(item);"
+      (keydown.enter)="openDetailsDialog(item)"
+      (keydown.space)="openDetailsDialog(item)"
+      [ngClass]="{'cursor-pointer hover:shadow-md transition-shadow' : expenseGuard(item)}"
+    >
+      <div class="flex flex-col gap-1">
+        <div class="flex gap-3 items-center justify-between">
+          <h1 class="text-lg text-neutral-800 font-bold line-clamp-1">{{ expenseGuard(item) ? item.title : item.name }}</h1>
+          <div class="flex items-center rounded-full border px-2 py-1 text-xs font-semibold border-transparent bg-black text-white leading-none">
+            {{ expenseGuard(item) ? 'Despesa' : 'Conta' }}
+          </div>
+        </div>
+        <div class="flex items-center justify-between gap-2 text-sm">
+          <div class="flex items-center gap-2">
+            <i class="pi pi-building"></i>
+            <span class="truncate">{{ item.space.name }}</span>
+          </div>
+          @if(item.space.members && item.space.members.length > 1) {
+          <app-user-avatar [users]="getusersFromMembers(item.space.members)" [size]="'large'"></app-user-avatar>
+          }
+        </div>
+      </div>
+
+      <div class="flex items-center gap-2 justify-between">
+        <div class="pt-8 flex flex-col justify-end gap-3 text-sm leading-none">
+          @if(expenseGuard(item) && item.payment_method_id) {
+          <div class="flex items-center gap-2">
+            <i class="pi pi-calendar"></i>
+            <span class="font-semibold">{{ (expenseGuard(item) ? item.date : '') | date: 'dd/MM/yyyy' }}</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <i class="pi pi-credit-card"></i>
+            <span>{{ item.payment_method.name }}</span>
+          </div>
+          } @else if(billGuard(item)) {
+          <div class="flex items-center gap-2" [ngClass]="item.paid_at ? 'text-green-600' : 'text-red-600'">
+            <i [ngClass]="item.paid_at ? 'pi pi-check' : 'pi pi-calendar'"></i>
+            <span class="font-semibold">{{ item.paid_at ? 'Pago em ' + (item.paid_at | date: 'dd/MM/yyyy') : 'Vence em ' + (item.deadline | date: 'dd/MM/yyyy') }}</span>
+          </div>
+          } @if(item.space.members && item.space.members.length > 1) {
+          <div class="flex items-center gap-2">
+            <i class="pi pi-users"></i>
+            <span>{{ 'Dividido entre ' + item.space.members.length + ' membros' }}</span>
+          </div>
+          } @else {
+          <div class="flex items-center gap-2">
+            <i class="pi pi-user"></i>
+            <span>Espaço individual</span>
+          </div>
+          }
+        </div>
+
+        <div class="flex flex-col items-end justify-start">
+          <div class="text-2xl text-neutral-800 font-bold">{{ (getUserSpending(item)) | currency: 'BRL' }}</div>
+          @if(item.space.members && item.space.members.length > 1) {
+          <div class="text-xs">de {{ item.value | currency: 'BRL'}}</div>
+          }
+        </div>
+      </div>
+
+      @if(expenseGuard(item) && item.note) {
+      <div class="mt-3 flex items-center gap-2 p-2 bg-neutral-100 rounded-md border">
+        <i class="pi pi-book"></i>
+        <span class="line-clamp-1">{{ item.note }}</span>
+      </div>
+      }
+    </div>
+    } @empty {
+    <div class="bg-card bg-white rounded-lg border shadow-sm flex flex-col gap-2 p-4 text-center text-neutral-500">
+      <p class="text-lg">Nenhum gasto encontrado</p>
+      <p class="text-sm">Tente ajustar os filtros ou adicionar um novo gasto</p>
+    </div>
+    }
+  </div>
+
+  <p-paginator
+    class="col-span-full"
+    styleClass="w-full !bg-transparent"
+    [first]="first()"
+    [rows]="rows()"
+    [totalRecords]="filteredSpendings().length"
+    [pageLinkSize]="3"
+    [rowsPerPageOptions]="[5, 10, 20, 30, filteredSpendings().length]"
+    [showFirstLastIcon]="true"
+    [alwaysShow]="filteredSpendings().length > 10"
+    (onPageChange)="onPageChange($event)"
+  />
   }
 </div>
 
 @defer (when isExpenseDetailsDialogOpen()) {
-  <app-expense-details-dialog [isOpen]="isExpenseDetailsDialogOpen" [expense]="selectedExpense()"> </app-expense-details-dialog>
+<app-expense-details-dialog [isOpen]="isExpenseDetailsDialogOpen" [expense]="selectedExpense()"> </app-expense-details-dialog>
 }

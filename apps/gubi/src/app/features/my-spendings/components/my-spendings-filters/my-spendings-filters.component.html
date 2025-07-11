@@ -36,6 +36,7 @@
             [options]="types"
             optionLabel="label"
             optionValue="value"
+            placeholder="Selecione"
             [(ngModel)]="filters().selectedTypes"
             (onPanelHide)="onFiltersChange()"
             appendTo="body"
@@ -53,6 +54,7 @@
             [options]="spaces()"
             optionLabel="name"
             optionValue="id"
+            placeholder="Selecione"
             [(ngModel)]="filters().selectedSpacesIds"
             (onPanelHide)="onFiltersChange()"
             appendTo="body"
@@ -67,14 +69,29 @@
           <p-multiselect
             id="payment-method"
             class="w-full"
-            [options]="paymentMethods()"
+            [options]="groupedPaymentMethods"
+            [(ngModel)]="filters().selectedPaymentMethodsIds"
             optionLabel="name"
             optionValue="id"
-            [(ngModel)]="filters().selectedPaymentMethodsIds"
-            (onPanelHide)="onFiltersChange(true)"
-            selectedItemsLabel="{0} itens selecionados"
+            placeholder="Selecione"
             appendTo="body"
-          ></p-multiselect>
+            [group]="true"
+            (onPanelHide)="onFiltersChange(true)"
+          >
+            <ng-template let-group #group>
+              <div class="flex items-center gap-2">
+                <app-user-avatar [users]="group.owner"></app-user-avatar>
+                <span>{{ getAbbreviatedName(group.owner.fullname) }}</span>
+              </div>
+            </ng-template>
+            <ng-template #item let-item>
+              <div class="flex items-center gap-2">
+                <i class="pi pi-credit-card"></i>
+                <span>{{ item.name }}</span>
+                <p-tag *ngIf="item.split_by_default" class="ml-4" styleClass="!text-xs" severity="info" value="Compartilhado" />
+              </div>
+            </ng-template>
+          </p-multiselect>
         </div>
 
         <div class="lg:col-span-3 flex flex-col gap-2">
@@ -109,7 +126,7 @@
               </div>
             </ng-template>
           </p-select>
-          <p-button label="Limpar Filtros" severity="secondary" (click)="resetFilters()"></p-button>
+          <p-button label="Limpar" severity="secondary" (click)="resetFilters()"></p-button>
         </div>
       </div>
     </p-accordion-content>

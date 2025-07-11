@@ -6,9 +6,13 @@ import { FormsModule } from '@angular/forms';
 import { iBill } from '@features/bill/interfaces/bill.interface';
 import { iExpense } from '@features/expense/interfaces/expense.interface';
 import { InputText } from 'primeng/inputtext';
+import { iPaymentMethod } from '@features/payment-methods/interfaces/payment-method';
+import { iUser } from '@features/auth/interfaces/user.interface';
 import { MultiSelect } from 'primeng/multiselect';
 import { Select } from 'primeng/select';
-import MyExpendingUtils from '@features/my-spendings/utils/utils';
+import { Tag } from 'primeng/tag';
+import { UserAvatarComponent } from '@shared/components/user-avatar/user-avatar.component';
+import MySpendingUtils from '@features/my-spendings/utils/utils';
 import Utils from '@shared/utils/utils';
 
 interface iFilterProps {
@@ -28,7 +32,7 @@ interface SortOption {
 
 @Component({
   selector: 'app-my-spendings-filters',
-  imports: [CommonModule, FormsModule, InputText, Select, MultiSelect, Button, AccordionModule],
+  imports: [CommonModule, FormsModule, InputText, Select, MultiSelect, Button, AccordionModule, UserAvatarComponent, Tag],
   templateUrl: './my-spendings-filters.component.html',
   styleUrl: './my-spendings-filters.component.scss'
 })
@@ -38,8 +42,9 @@ export class MySpendingsFiltersComponent {
   changePeriod = output<Date>();
   changeFilteredList = output<(iBill | iExpense)[]>();
 
-  private billGuard = MyExpendingUtils.billGuard;
-  private expenseGuard = MyExpendingUtils.expenseGuard;
+  private billGuard = MySpendingUtils.billGuard;
+  private expenseGuard = MySpendingUtils.expenseGuard;
+  protected getAbbreviatedName = Utils.getAbbreviatedName;
 
   private filteredSpendings = computed<(iBill | iExpense)[]>(() => {
     const filtered = this.filterSpendings();
@@ -99,18 +104,13 @@ export class MySpendingsFiltersComponent {
   }
 
   protected populateFilters() {
-    const types = this.types;
-    const spaces = this.spaces();
-    const payment_methods = this.paymentMethods();
-
     this.filters.set({
       search: '',
-      selectedTypes: types.map(type => type.value),
+      selectedTypes: [],
       selectedPeriod: this.referenceDate(),
-      selectedSpacesIds: spaces.map(space => space.id),
-      selectedPaymentMethodsIds: payment_methods.map(payment_method => payment_method.id)
+      selectedSpacesIds: [],
+      selectedPaymentMethodsIds: []
     });
-    this.paymentMethodsTouched.set(false);
   }
 
   protected onFiltersChange(isPaymentTouched = false) {
@@ -205,5 +205,28 @@ export class MySpendingsFiltersComponent {
 
   public setSelectedTypes(types: number[]) {
     this.filters.update(f => ({ ...f, selectedTypes: types }));
+  }
+
+  get groupedPaymentMethods() {
+    const groupsMap = new Map<string, { owner: iUser; items: iPaymentMethod[] }>();
+
+    for (const method of this.paymentMethods()) {
+      const owner = method.owner;
+
+      if (!groupsMap.has(owner.id)) {
+        groupsMap.set(owner.id, {
+          owner,
+          items: []
+        });
+      }
+
+      const group = groupsMap.get(owner.id);
+      if (group) {
+        group.items.push(method);
+      }
+    }
+
+    const sortedGroups = Array.from(groupsMap.values()).sort((a, b) => a.owner.fullname.localeCompare(b.owner.fullname));
+    return sortedGroups;
   }
 }

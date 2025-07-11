@@ -1,7 +1,7 @@
 import { iBill } from '@features/bill/interfaces/bill.interface';
 import { iExpense } from '@features/expense/interfaces/expense.interface';
 
-export default class MyExpendingUtils {
+export default class MySpendingUtils {
   static billGuard(bill: iBill | iExpense): bill is iBill {
     return 'payer_id' in bill;
   }

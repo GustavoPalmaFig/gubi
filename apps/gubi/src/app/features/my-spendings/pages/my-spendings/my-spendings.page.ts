@@ -15,7 +15,7 @@ import { Skeleton } from 'primeng/skeleton';
 import { SpaceApiService } from '@features/spaces/services/space-api.service';
 import { Tag } from 'primeng/tag';
 import { UserAvatarComponent } from '@shared/components/user-avatar/user-avatar.component';
-import MyExpendingUtils from '@features/my-spendings/utils/utils';
+import MySpendingUtils from '@features/my-spendings/utils/utils';
 import Utils from '@shared/utils/utils';
 
 interface iSpendingsCard {
@@ -49,8 +49,8 @@ export class MySpendingsPage {
   private currencyPipe = inject(CurrencyPipe);
   private router = inject(Router);
   protected getusersFromMembers = Utils.getusersFromMembers;
-  protected billGuard = MyExpendingUtils.billGuard;
-  protected expenseGuard = MyExpendingUtils.expenseGuard;
+  protected billGuard = MySpendingUtils.billGuard;
+  protected expenseGuard = MySpendingUtils.expenseGuard;
 
   private userId = this.authService.currentUser()?.id;
   protected isLoading = signal(false);
