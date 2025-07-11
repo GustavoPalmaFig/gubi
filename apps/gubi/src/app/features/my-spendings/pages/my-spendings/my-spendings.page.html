@@ -27,6 +27,20 @@
   </div>
   }
 
+  <div
+    class="sm:col-span-full md:col-span-1 bg-card bg-white flex flex-col rounded-lg border shadow-sm p-4"
+    (click)="isChartDialogOpen.set(true)"
+    (keyup.enter)="isChartDialogOpen.set(true)"
+    tabindex="0"
+    role="button"
+    aria-pressed="false"
+  >
+    <div class="flex items-center justify-between gap-2 text-md text-neutral-600 font-medium leading-none mb-1">
+      <h3>{{ 'Visualizar Gráficos' }}</h3>
+      <i class="pi pi-chart-pie"></i>
+    </div>
+  </div>
+
   <div class="col-span-full">
     <app-my-spendings-filters
       [allSpendings]="allSpendings()"
@@ -143,4 +157,20 @@
 
 @defer (when isExpenseDetailsDialogOpen()) {
 <app-expense-details-dialog [isOpen]="isExpenseDetailsDialogOpen" [expense]="selectedExpense()"> </app-expense-details-dialog>
+} @defer (when isChartDialogOpen()) {
+<p-dialog
+  header="Gráficos de Gastos"
+  [modal]="true"
+  [visible]="isChartDialogOpen()"
+  [closeOnEscape]="true"
+  [dismissableMask]="true"
+  (onHide)="isChartDialogOpen.set(false)"
+  (visibleChange)="isChartDialogOpen.set(false)"
+  styleClass="w-full md:w-1/2 mx-4"
+>
+  <div class="flex items-center justify-center">
+    <app-my-spendings-charts [spendings]="filteredSpendings()" />
+  </div>
+</p-dialog>
+
 }

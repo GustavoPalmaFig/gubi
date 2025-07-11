@@ -2,12 +2,14 @@ import { AuthService } from '@features/auth/services/auth.service';
 import { BillApiService } from '@features/bill/services/bill-api.service';
 import { CommonModule, CurrencyPipe } from '@angular/common';
 import { Component, computed, effect, inject, signal, ViewChild } from '@angular/core';
+import { DialogModule } from 'primeng/dialog';
 import { ExpenseApiService } from '@features/expense/services/expense-api.service';
 import { ExpenseDetailsDialogComponent } from '@features/expense/components/expense-details-dialog/expense-details-dialog.component';
 import { FormsModule } from '@angular/forms';
 import { iBill } from '@features/bill/interfaces/bill.interface';
 import { iExpense } from '@features/expense/interfaces/expense.interface';
 import { iSpace } from '@features/spaces/interfaces/space.interface';
+import { MySpendingsChartsComponent } from '@features/my-spendings/components/my-spendings-charts/my-spendings-charts.component';
 import { MySpendingsFiltersComponent } from '@features/my-spendings/components/my-spendings-filters/my-spendings-filters.component';
 import { Paginator, PaginatorState } from 'primeng/paginator';
 import { Router } from '@angular/router';
@@ -34,7 +36,18 @@ interface iTypeTag {
 
 @Component({
   selector: 'app-my-spendings',
-  imports: [CommonModule, Skeleton, Tag, FormsModule, MySpendingsFiltersComponent, Paginator, ExpenseDetailsDialogComponent, UserAvatarComponent],
+  imports: [
+    CommonModule,
+    Skeleton,
+    Tag,
+    FormsModule,
+    MySpendingsFiltersComponent,
+    Paginator,
+    ExpenseDetailsDialogComponent,
+    UserAvatarComponent,
+    MySpendingsChartsComponent,
+    DialogModule
+  ],
   templateUrl: './my-spendings.page.html',
   styleUrl: './my-spendings.page.scss',
   providers: [CurrencyPipe]
@@ -70,6 +83,7 @@ export class MySpendingsPage {
     const endIndex = startIndex + this.rows();
     return this.filteredSpendings().slice(startIndex, endIndex);
   });
+  protected isChartDialogOpen = signal(false);
 
   constructor() {
     effect(() => {
