@@ -92,6 +92,47 @@ export class MySpendingsChartsComponent {
         ]
       }
     },
+    responsive: {
+      rules: [
+        {
+          condition: {
+            maxWidth: 600
+          },
+          chartOptions: {
+            chart: {
+              height: 200,
+              width: 350
+            },
+            plotOptions: {
+              pie: {
+                center: ['35%', '50%'],
+                dataLabels: [
+                  {
+                    enabled: true,
+                    distance: 20
+                  },
+                  {
+                    enabled: true,
+                    distance: -30,
+                    format: '{point.percentage:.1f}%',
+                    style: {
+                      fontSize: '12px',
+                      textOutline: 'none',
+                      opacity: 0.7
+                    },
+                    filter: {
+                      operator: '>',
+                      property: 'percentage',
+                      value: 10
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        }
+      ]
+    },
     series: []
   };
   chartConstructor: ChartConstructorType = 'chart';
