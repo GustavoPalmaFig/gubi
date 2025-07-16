@@ -111,7 +111,7 @@ export default class Utils {
     return color;
   }
 
-  static sorteListByProperty<T>(list: T[], property: keyof T, sortOrder: 'asc' | 'desc' = 'asc'): T[] {
+  static sortListByProperty<T>(list: T[], property: keyof T, sortOrder: 'asc' | 'desc' = 'asc'): T[] {
     return list.sort((a, b) => {
       if (a[property] < b[property]) {
         return sortOrder == 'asc' ? -1 : 1;

@@ -181,7 +181,7 @@ export class ExpenseFiltersComponent {
     const sortOption = this.selectedSortOption();
     if (!sortOption) return;
 
-    Utils.sorteListByProperty(this.filteredExpenses(), sortOption.key as keyof iExpense, sortOption.sortOrder);
+    Utils.sortListByProperty(this.filteredExpenses(), sortOption.key as keyof iExpense, sortOption.sortOrder);
   }
 
   protected resetFilters() {

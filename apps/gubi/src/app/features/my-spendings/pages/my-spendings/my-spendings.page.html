@@ -168,9 +168,7 @@
   (visibleChange)="isChartDialogOpen.set(false)"
   styleClass="w-full md:w-1/2 mx-4"
 >
-  <div class="flex items-center justify-center">
-    <app-my-spendings-charts [spendings]="filteredSpendings()" />
-  </div>
+  <app-my-spendings-charts [spendings]="filteredSpendings()" />
 </p-dialog>
 
 }

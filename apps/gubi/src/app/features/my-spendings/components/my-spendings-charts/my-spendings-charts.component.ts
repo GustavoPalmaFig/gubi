@@ -1,14 +1,19 @@
-import { Component, computed, effect, input } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { Component, computed, effect, input, signal } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { HighchartsChartComponent, ChartConstructorType } from 'highcharts-angular';
 import { iBill } from '@features/bill/interfaces/bill.interface';
 import { iExpense } from '@features/expense/interfaces/expense.interface';
 import { iPaymentMethod } from '@features/payment-methods/interfaces/payment-method';
+import { iUser } from '@features/auth/interfaces/user.interface';
+import { SelectButton } from 'primeng/selectbutton';
+import { UserAvatarComponent } from '@shared/components/user-avatar/user-avatar.component';
 import MySpendingUtils from '@features/my-spendings/utils/utils';
 import Utils from '@shared/utils/utils';
 
 @Component({
   selector: 'app-my-spendings-charts',
-  imports: [HighchartsChartComponent],
+  imports: [CommonModule, FormsModule, HighchartsChartComponent, SelectButton, UserAvatarComponent],
   templateUrl: './my-spendings-charts.component.html',
   styleUrl: './my-spendings-charts.component.scss'
 })
@@ -24,7 +29,25 @@ export class MySpendingsChartsComponent {
     return allMethods.length > 0 ? Utils.getDistinctValues(allMethods, 'id') : [];
   });
 
-  chartOptions: Highcharts.Options = {
+  protected stateOptions: { label: string; value: number }[] = [
+    { label: 'Gráfico', value: 0 },
+    { label: 'Tabela', value: 1 }
+  ];
+
+  protected selectedOption = signal(0);
+  protected paymentMethodsAmount = computed<{ name: string; owner: iUser; y: number }[]>(() => {
+    const methods = this.paymentMethods();
+    const amount =
+      methods.map(method => ({
+        name: method.name,
+        owner: method.owner,
+        y: Number(this.getTotalSpentByMethod(method.id).toFixed(2))
+      })) || [];
+
+    return Utils.sortListByProperty(amount, 'y', 'asc');
+  });
+
+  protected chartOptions: Highcharts.Options = {
     chart: {
       type: 'pie',
       zooming: {
@@ -37,7 +60,7 @@ export class MySpendingsChartsComponent {
       panKey: 'shift'
     },
     title: {
-      text: 'Divisão de gastos por método de pagamento'
+      text: ''
     },
     tooltip: {
       format: 'R$ {point.y:.1f}'
@@ -69,36 +92,7 @@ export class MySpendingsChartsComponent {
         ]
       }
     },
-    series: [
-      {
-        type: 'pie',
-        name: 'Percentage',
-        data: [
-          {
-            name: 'Water',
-            y: 55.02
-          },
-          {
-            name: 'Fat',
-            sliced: true,
-            selected: true,
-            y: 26.71
-          },
-          {
-            name: 'Carbohydrates',
-            y: 1.09
-          },
-          {
-            name: 'Protein',
-            y: 15.5
-          },
-          {
-            name: 'Ash',
-            y: 1.68
-          }
-        ]
-      }
-    ]
+    series: []
   };
   chartConstructor: ChartConstructorType = 'chart';
   updateFlag = false;
@@ -106,20 +100,14 @@ export class MySpendingsChartsComponent {
 
   constructor() {
     effect(() => {
-      const methods = this.paymentMethods();
-      if (methods.length > 0) {
-        this.chartOptions.series = [
-          {
-            type: 'pie',
-            name: 'Percentage',
-            data: methods.map(method => ({
-              name: method.name,
-              y: Number(this.getTotalSpentByMethod(method.id).toFixed(2))
-            }))
-          }
-        ];
-        this.updateFlag = true;
-      }
+      this.chartOptions.series = [
+        {
+          type: 'pie',
+          name: 'Percentage',
+          data: this.paymentMethodsAmount()
+        }
+      ];
+      this.updateFlag = true;
     });
   }
 
