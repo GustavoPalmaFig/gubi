@@ -31,7 +31,7 @@ export class ManageSpaceMembersComponent {
   protected spaceId = computed(() => this.spaceService.selectedSpace()?.id);
 
   protected searchValue: iUser | null = null;
-  protected members: iSpaceMember[] = [];
+  protected members: (iSpaceMember | iUser)[] = [];
   protected filteredUsers: iUser[] = [];
   protected newSelectedUsers: iUser[] = [];
   protected isLoading = signal(false);
@@ -63,7 +63,6 @@ export class ManageSpaceMembersComponent {
     if (!spaceId) return;
     const availableUsers = await this.spaceApiService.getMembersToInvite(spaceId, event.query);
     this.filteredUsers = availableUsers.filter(user => !this.newSelectedUsers.some(selectedUser => selectedUser.id === user.id));
-    console.log('filteredUsers', this.filteredUsers);
   }
 
   setNewUsers(event: AutoCompleteSelectEvent) {
@@ -72,8 +71,8 @@ export class ManageSpaceMembersComponent {
     this.members.push(event.value);
   }
 
-  isNewMember(member: iSpaceMember): boolean {
-    return this.newSelectedUsers.some(selectedUser => selectedUser.id === member.user_id);
+  isNewMember(member: iSpaceMember | iUser): member is iUser {
+    return 'id' in member;
   }
 
   resetState(): void {
@@ -115,10 +114,10 @@ export class ManageSpaceMembersComponent {
     return this.isCreator && !member.is_owner;
   }
 
-  handleRemoveMember(member: iSpaceMember) {
+  handleRemoveMember(member: iSpaceMember | iUser) {
     if (this.isNewMember(member)) {
-      this.newSelectedUsers = this.newSelectedUsers.filter(selectedUser => selectedUser.id !== member.user_id);
-      this.members = this.members.filter(m => m.user_id !== member.user_id);
+      this.newSelectedUsers = this.newSelectedUsers.filter(selectedUser => selectedUser.id !== member.id);
+      this.members = this.members.filter(m => (this.isNewMember(m) && m.id !== member.id) || !this.isNewMember(m));
       return;
     }
 
@@ -155,7 +154,7 @@ export class ManageSpaceMembersComponent {
     }
 
     this.messageService.showMessage('success', 'Sucesso', 'Usuário removido do Espaço');
-    this.members = this.members.filter(m => m.user_id !== member.user_id);
+    this.members = this.members.filter(m => !this.isNewMember(m) && m.user_id !== member.user_id);
     this.isLoading.set(false);
   }
 }

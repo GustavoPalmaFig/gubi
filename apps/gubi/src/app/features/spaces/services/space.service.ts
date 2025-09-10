@@ -33,6 +33,7 @@ export class SpaceService {
 
   toggleMembersDialog(isOpen: boolean): void {
     this._isMembersDialogOpen.set(isOpen);
+    if (!isOpen) this.getAvailableSpaces();
   }
 
   selectSpace(event: Event, space: iSpace | null): void {
