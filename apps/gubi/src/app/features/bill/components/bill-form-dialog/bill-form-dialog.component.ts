@@ -1,5 +1,6 @@
 import { BillApiService } from '@features/bill/services/bill-api.service';
 import { ButtonModule } from 'primeng/button';
+import { Checkbox } from 'primeng/checkbox';
 import { CommonModule } from '@angular/common';
 import { Component, computed, effect, EventEmitter, inject, Input, input, Output, signal } from '@angular/core';
 import { DatePickerModule } from 'primeng/datepicker';
@@ -12,11 +13,12 @@ import { iSpace } from '@features/spaces/interfaces/space.interface';
 import { MessageService } from '@shared/services/message.service';
 import { Select } from 'primeng/select';
 import { SpaceApiService } from '@features/spaces/services/space-api.service';
+import { Tooltip } from 'primeng/tooltip';
 import Utils from '@shared/utils/utils';
 
 @Component({
   selector: 'app-bill-form-dialog',
-  imports: [CommonModule, DialogModule, ButtonModule, InputTextModule, InputNumberModule, DatePickerModule, Select, ReactiveFormsModule],
+  imports: [CommonModule, DialogModule, ButtonModule, InputTextModule, InputNumberModule, DatePickerModule, Select, ReactiveFormsModule, Checkbox, Tooltip],
   templateUrl: './bill-form-dialog.component.html',
   styleUrl: './bill-form-dialog.component.scss'
 })
@@ -46,7 +48,8 @@ export class BillFormDialogComponent {
       deadline: new FormControl<Date | null>(null),
       payer_id: new FormControl<string | null>(null),
       paid_at: new FormControl<Date | null>(null),
-      reference_period: new FormControl<Date | null>(null)
+      reference_period: new FormControl<Date | null>(null),
+      force_split: new FormControl<boolean>(false)
     });
 
     effect(() => {

@@ -59,6 +59,18 @@
         placeholder="dd/mm/aaaa"
       ></p-datepicker>
     </div>
+    <div class="flex items-end gap-2">
+      <p-checkbox id="force_split" formControlName="force_split" binary> </p-checkbox>
+      <label for="force_split" class="text-sm font-medium">Definir divisão personalizada</label>
+      <i class="pi pi-question-circle" [pTooltip]="tooltipContent" tooltipPosition="top">
+        <ng-template #tooltipContent>
+          <div class="flex flex-col items-center text-sm p-2 gap-2">
+            <div>Por padrão, as contas são divididas igualmente entre todos os membros do espaço.</div>
+            <div>Caso queira dividir o valor de forma personalizada, selecione esta opção.</div>
+          </div>
+        </ng-template>
+      </i>
+    </div>
     <div class="flex justify-end pt-6">
       <p-button
         type="submit"

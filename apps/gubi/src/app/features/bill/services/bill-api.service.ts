@@ -2,6 +2,7 @@ import { inject, Injectable } from '@angular/core';
 import { SupabaseService } from '@shared/services/supabase/supabase.service';
 import Utils from '@shared/utils/utils';
 import { iBill } from '../interfaces/bill.interface';
+import { iBillSplit } from '../interfaces/bill_split.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -10,7 +11,7 @@ export class BillApiService {
   private supabaseService = inject(SupabaseService);
 
   async getAllBillsFromSpaceAndDate(target_space_id: number | null, target_reference_period: Date): Promise<iBill[]> {
-    const { data } = await this.supabaseService.client.rpc('get_bills', { target_space_id, target_reference_period });
+    const { data } = await this.supabaseService.client.rpc('get_bills_with_details', { target_space_id, target_reference_period });
     return data as iBill[];
   }
 
@@ -56,6 +57,13 @@ export class BillApiService {
 
   async deleteBill(billId: number): Promise<{ error?: string }> {
     const { error } = await this.supabaseService.client.from('bill').delete().eq('id', billId);
+    return { error: Utils.handleErrorMessage(error) };
+  }
+
+  async createBillSplit(bill_id: number, bill_splits: iBillSplit[]): Promise<{ error?: string }> {
+    const split_data = bill_splits.map(({ user, ...split }) => split);
+    await this.supabaseService.client.from('bill_split').delete().eq('bill_id', bill_id);
+    const { error } = await this.supabaseService.client.from('bill_split').insert(split_data);
     return { error: Utils.handleErrorMessage(error) };
   }
 }

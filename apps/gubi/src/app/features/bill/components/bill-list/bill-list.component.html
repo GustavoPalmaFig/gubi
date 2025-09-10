@@ -4,114 +4,103 @@
 
 <div class="grid grid-cols-1 gap-4 mb-6" [ngClass]="(space().members ?? []).length > 1 ? 'lg:grid-cols-3' : 'lg:grid-cols-2'">
   @if(isLoading()) {
-    <p-skeleton styleClass="py-16" />
-    <p-skeleton styleClass="py-16" />
-    <p-skeleton styleClass="py-16" />
+  <p-skeleton styleClass="py-16" />
+  <p-skeleton styleClass="py-16" />
+  <p-skeleton styleClass="py-16" />
   } @else {
-    <div class="bg-card bg-white flex flex-col rounded-xl border shadow-sm p-4">
-      <div class="text-md text-gray-600 font-medium leading-none">Total a Pagar</div>
-      <div class="my-2 flex gap-2 items-center justify-between">
-        <div class="text-2xl text-gray-700 font-bold">{{ totalValue() | currency: 'BRL' }}</div>
-        <div class="flex items-center gap-2 text-md font-medium leading-none" [ngClass]="previousMonthComparePercentage() > 0 ? 'text-red-600' : 'text-green-600'">
-          <i [ngClass]="previousMonthComparePercentage() > 0 ? 'pi pi-arrow-up bg-red-200 border-red-200' : 'pi pi-arrow-down bg-green-200 border-green-200'" class="flex items-center border rounded-full px-1 pt-1 pb-[0.25rem] !text-[0.6rem] !leading-none font-bold"></i>
-          <span>{{ (previousMonthComparePercentage() < 0 ? -previousMonthComparePercentage() : previousMonthComparePercentage()) | percent: '1.1' }}</span>
-        </div>
+  <div class="bg-card bg-white flex flex-col rounded-xl border shadow-sm p-4">
+    <div class="text-md text-gray-600 font-medium leading-none">Total a Pagar</div>
+    <div class="my-2 flex gap-2 items-center justify-between">
+      <div class="text-2xl text-gray-700 font-bold">{{ totalValue() | currency: 'BRL' }}</div>
+      <div class="flex items-center gap-2 text-md font-medium leading-none" [ngClass]="previousMonthComparePercentage() > 0 ? 'text-red-600' : 'text-green-600'">
+        <i
+          [ngClass]="previousMonthComparePercentage() > 0 ? 'pi pi-arrow-up bg-red-200 border-red-200' : 'pi pi-arrow-down bg-green-200 border-green-200'"
+          class="flex items-center border rounded-full px-1 pt-1 pb-[0.25rem] !text-[0.6rem] !leading-none font-bold"
+        ></i>
+        <span>{{ (previousMonthComparePercentage() < 0 ? -previousMonthComparePercentage() : previousMonthComparePercentage()) | percent: '1.1' }}</span>
       </div>
-      <div class="text-sm text-gray-500 font-medium leading-none">Comparado com {{ previousMonthDate() | date: 'MMMM'}} de {{ previousMonthDate() | date: 'yyyy'}}</div>
     </div>
+    <div class="text-sm text-gray-500 font-medium leading-none">Comparado com {{ previousMonthDate() | date: 'MMMM'}} de {{ previousMonthDate() | date: 'yyyy'}}</div>
+  </div>
 
-    <div class="bg-card bg-white flex flex-col rounded-xl border shadow-sm p-4">
-        <div class="text-md text-gray-600 font-medium leading-none">Total Pago</div>
-        <div class="text-2xl text-green-600 font-bold my-2">{{ paidValue() | currency: 'BRL' }}</div>
-        <p-progressbar [value]="(paidPercentage() * 100)" [showValue]="false" color="black" styleClass="!h-2"/>
-        <div class="text-sm text-gray-500 font-medium mt-1">{{ paidPercentage()| percent }} do total a pagar</div>
-    </div>
+  <div class="bg-card bg-white flex flex-col rounded-xl border shadow-sm p-4">
+    <div class="text-md text-gray-600 font-medium leading-none">Total Pago</div>
+    <div class="text-2xl text-green-600 font-bold my-2">{{ paidValue() | currency: 'BRL' }}</div>
+    <p-progressbar [value]="(paidPercentage() * 100)" [showValue]="false" color="black" styleClass="!h-2" />
+    <div class="text-sm text-gray-500 font-medium mt-1">{{ paidPercentage()| percent }} do total a pagar</div>
+  </div>
 
-    @if((space().members ?? []).length > 1) {
-      <div class="bg-card bg-white flex flex-col rounded-xl border shadow-sm p-4">
-        <div class="text-md text-gray-600 font-medium leading-none">Divisão entre Membros</div>
-        <div class="text-2xl text-gray-700 font-bold my-2">{{ (totalValue()/((space().members ?? []).length)) | currency: 'BRL' }}</div>
-        <div class="text-sm text-gray-500 font-medium leading-none">Dividido igualmente entre membros do espaço</div>
-      </div>
-    }
-  }
+  @if((space().members ?? []).length > 1) {
+  <div class="bg-card bg-white flex flex-col rounded-xl border shadow-sm p-4">
+    <div class="text-md text-gray-600 font-medium leading-none">Divisão entre Membros</div>
+    <div class="text-2xl text-gray-700 font-bold my-2">{{ (totalValue()/((space().members ?? []).length)) | currency: 'BRL' }}</div>
+    <div class="text-sm text-gray-500 font-medium leading-none">Dividido igualmente entre membros do espaço</div>
+  </div>
+  } }
 </div>
 
 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 border-t pt-6">
-  @for (bill of bills(); track $index + 1) { 
-    @if(isLoading()) {
-      <p-skeleton styleClass="py-16" />
-    }
-    @else {
-      <div class="bg-card flex h-40 flex-col rounded-xl border shadow-sm px-4 pt-2 pb-4" [ngClass]="getCardStyle(bill)">
-        <h1 class="text-lg font-semibold line-clamp-2">{{ bill.name }}</h1>
-    
-        <div class="flex flex-col flex-grow">
-          <div class="flex items-center justify-between mt-2">
-            @if(billIdToEditValue() === bill.id) {
-              <p-inputnumber
-                mode="currency"
-                inputId="locale-brazil"
-                currency="BRL"
-                min="0"
-                locale="pt-BR"
-                [showButtons]="false"
-                [(ngModel)]="editValue"
-                (keydown.enter)="onUpdateBillValue()"
-                (keydown.escape)="closeValueEdit()"
-                (blur)="closeValueEdit()"
-              />
-            } @else {
-              <div
-                class="text-lg text-gray-500 font-bold pr-1 cursor-pointer"
-                pTooltip="Alterar valor"
-                tabindex="0"
-                (click)="openValueEdit(bill)"
-                (keydown.enter)="openValueEdit(bill)"
-              >
-                {{ bill.value | currency: 'BRL' }}
-              </div>
-            }
-    
-            <div class="flex items-center">
-              @if(!bill.payer) {
-                <p-button icon="pi pi-check" [text]="true" severity="success" pTooltip="Marcar como Paga" (click)="markAsPaid(bill)"></p-button>
-              }
-                <p-button icon="pi pi-pen-to-square" [text]="true" severity="contrast" (click)="openFormDialog(bill)"></p-button>
-                <p-button icon="pi pi-trash" [text]="true" severity="contrast" (click)="openDeleteConfirmDialog($event, bill)"></p-button>
-            </div>
-          </div>
+  @for (bill of bills(); track $index + 1) { @if(isLoading()) {
+  <p-skeleton styleClass="py-16" />
+  } @else {
+  <div class="bg-card flex h-40 flex-col rounded-xl border shadow-sm px-4 pt-2 pb-4" [ngClass]="getCardStyle(bill)">
+    <h1 class="text-lg font-semibold line-clamp-2">{{ bill.name }}</h1>
+
+    <div class="flex flex-col flex-grow">
+      <div class="flex items-center justify-between mt-2">
+        @if(billIdToEditValue() === bill.id) {
+        <p-inputnumber
+          mode="currency"
+          inputId="locale-brazil"
+          currency="BRL"
+          min="0"
+          locale="pt-BR"
+          [showButtons]="false"
+          [(ngModel)]="editValue"
+          (keydown.enter)="onUpdateBillValue()"
+          (keydown.escape)="closeValueEdit()"
+          (blur)="closeValueEdit()"
+        />
+        } @else {
+        <div class="text-lg text-gray-500 font-bold pr-1 cursor-pointer" pTooltip="Alterar valor" tabindex="0" (click)="openValueEdit(bill)" (keydown.enter)="openValueEdit(bill)">
+          {{ bill.value | currency: 'BRL' }}
         </div>
-    
-        <div class="mt-auto pt-3 border-t flex items-center justify-between">
-          <div class="flex mt-2 items-center justify-start gap-2 text-sm" [ngClass]="bill.paid_at ? ' text-green-600' : 'text-red-500'">
-            <i [ngClass]="bill.paid_at ? 'pi pi-check' : 'pi pi-calendar'"></i>
-            <span class="font-semibold">{{ (bill.payer ? bill.paid_at : bill.deadline) | date: 'dd/MM/yyyy' }}</span>
-          </div>
-          @if(bill.payer) {
-            <div class="flex mt-2 items-center justify-start gap-2 text-sm text-gray-500">
-              <i class="pi pi-user"></i>
-              <span>Responsável: </span>
-              <span class="font-semibold">{{ getPayerFirstName(bill.payer.fullname) }}</span>
-            </div>
-          }
-        </div>
-      </div>
-    }
-  }
-  @empty {
-    @if(isLoading()) {
-      <p-skeleton styleClass="py-16" />
-    }
-    @else {
-      <div class="bg-card bg-white text-center border rounded-xl shadow-sm p-8 col-span-full flex flex-col gap-4">
-        <h1 class="text-lg text-gray-500">Nenhuma conta registrada para este período.</h1>
-        @if(previousMonthBills.length > 0) {
-          <p-button label="Copiar mês anterior" icon="pi pi-plus-circle" severity="contrast" (click)="showCopyTemplateDialog()"></p-button>
         }
+
+        <div class="flex items-center">
+          @if(!bill.payer) {
+          <p-button icon="pi pi-check" [text]="true" severity="success" pTooltip="Marcar como Paga" (click)="markAsPaid(bill)"></p-button>
+          }
+          <p-button icon="pi pi-pen-to-square" [text]="true" severity="contrast" (click)="openFormDialog(bill)"></p-button>
+          <p-button icon="pi pi-trash" [text]="true" severity="contrast" (click)="openDeleteConfirmDialog($event, bill)"></p-button>
+        </div>
       </div>
+    </div>
+
+    <div class="mt-auto pt-3 border-t flex items-center justify-between">
+      <div class="flex mt-2 items-center justify-start gap-2 text-sm" [ngClass]="bill.paid_at ? ' text-green-600' : 'text-red-500'">
+        <i [ngClass]="bill.paid_at ? 'pi pi-check' : 'pi pi-calendar'"></i>
+        <span class="font-semibold">{{ (bill.payer ? bill.paid_at : bill.deadline) | date: 'dd/MM/yyyy' }}</span>
+      </div>
+      @if(bill.payer) {
+      <div class="flex mt-2 items-center justify-start gap-2 text-sm text-gray-500">
+        <i class="pi pi-user"></i>
+        <span>Responsável: </span>
+        <span class="font-semibold">{{ getPayerFirstName(bill.payer.fullname) }}</span>
+      </div>
+      }
+    </div>
+  </div>
+  } } @empty { @if(isLoading()) {
+  <p-skeleton styleClass="py-16" />
+  } @else {
+  <div class="bg-card bg-white text-center border rounded-xl shadow-sm p-8 col-span-full flex flex-col gap-4">
+    <h1 class="text-lg text-gray-500">Nenhuma conta registrada para este período.</h1>
+    @if(previousMonthBills.length > 0) {
+    <p-button label="Copiar mês anterior" icon="pi pi-plus-circle" severity="contrast" (click)="showCopyTemplateDialog()"></p-button>
     }
-  }
+  </div>
+  } }
 </div>
 
 <app-bill-form-dialog
@@ -119,5 +108,14 @@
   [selectedBill]="selectedBill()"
   [space]="space()"
   [referencePeriod]="referenceDate()"
-  (touchBill)="fetchBills()"
+  (touchBill)="billHasBeenSaved($event)"
 ></app-bill-form-dialog>
+
+@defer (when isBillSplitFormDialogOpen()) {
+<app-bill-split-dialog
+  [isDialogOpen]="isBillSplitFormDialogOpen"
+  [bill]="selectedBill()!"
+  [spaceMembers]="space().members!"
+  (finishedSplitting)="fetchBills()"
+></app-bill-split-dialog>
+}

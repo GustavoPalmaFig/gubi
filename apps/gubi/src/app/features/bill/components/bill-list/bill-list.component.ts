@@ -12,11 +12,12 @@ import { Tooltip } from 'primeng/tooltip';
 import Utils from '@shared/utils/utils';
 import { BillApiService } from '../../services/bill-api.service';
 import { BillFormDialogComponent } from '../bill-form-dialog/bill-form-dialog.component';
+import { BillSplitDialogComponent } from '../bill-split-dialog/bill-split-dialog.component';
 import { iBill } from '../../interfaces/bill.interface';
 
 @Component({
   selector: 'app-bill-list',
-  imports: [CommonModule, Button, Skeleton, Tooltip, FormsModule, InputNumberModule, BillFormDialogComponent, ProgressBar],
+  imports: [CommonModule, Button, Skeleton, Tooltip, FormsModule, InputNumberModule, BillFormDialogComponent, ProgressBar, BillSplitDialogComponent],
   templateUrl: './bill-list.component.html',
   styleUrl: './bill-list.component.scss'
 })
@@ -39,6 +40,7 @@ export class BillListComponent {
   protected paidValue = computed<number>(() => this.accumulateValue(this.bills(), 'payer'));
   protected paidPercentage = computed<number>(() => this.getPaidValuePercentage());
   protected isFormDialogOpen = signal(false);
+  protected isBillSplitFormDialogOpen = signal(false);
   protected selectedBill = signal<iBill | null>(null);
 
   constructor() {
@@ -251,5 +253,17 @@ export class BillListComponent {
 
     this.messageService.showMessage('success', 'Excluído', 'Conta Excluída com sucesso');
     this.bills.update(bills => bills.filter(b => b.id !== bill.id));
+  }
+
+  protected billHasBeenSaved(bill: iBill) {
+    const selected = this.selectedBill();
+    const nowHasForceSplit = !selected?.force_split && bill.force_split;
+    if (nowHasForceSplit) {
+      this.isBillSplitFormDialogOpen.set(true);
+      this.selectedBill.set(bill);
+    } else {
+      this.isFormDialogOpen.set(false);
+      this.fetchBills();
+    }
   }
 }
