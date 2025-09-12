@@ -49,18 +49,19 @@
     <div class="flex flex-col flex-grow">
       <div class="flex items-center justify-between mt-2">
         @if(billIdToEditValue() === bill.id) {
-        <p-inputnumber
-          mode="currency"
-          inputId="locale-brazil"
-          currency="BRL"
-          min="0"
-          locale="pt-BR"
-          [showButtons]="false"
-          [(ngModel)]="editValue"
-          (keydown.enter)="onUpdateBillValue()"
-          (keydown.escape)="closeValueEdit()"
-          (blur)="closeValueEdit()"
-        />
+          <p-inputnumber
+            mode="currency"
+            inputId="locale-brazil"
+            currency="BRL"
+            min="0"
+            locale="pt-BR"
+            size="small"
+            [showButtons]="false"
+            [(ngModel)]="editValue"
+            (keydown.enter)="onUpdateBillValue()"
+            (keydown.escape)="closeValueEdit()"
+            (blur)="closeValueEdit()"
+          />
         } @else {
         <div class="text-lg text-gray-500 font-bold pr-1 cursor-pointer" pTooltip="Alterar valor" tabindex="0" (click)="openValueEdit(bill)" (keydown.enter)="openValueEdit(bill)">
           {{ bill.value | currency: 'BRL' }}
@@ -69,8 +70,9 @@
 
         <div class="flex items-center">
           @if(!bill.payer) {
-          <p-button icon="pi pi-check" [text]="true" severity="success" pTooltip="Marcar como Paga" (click)="markAsPaid(bill)"></p-button>
+            <p-button icon="pi pi-check" [text]="true" severity="success" pTooltip="Marcar como Paga" (click)="markAsPaid(bill)"></p-button>
           }
+          <p-button icon="pi pi-info-circle" [text]="true" severity="contrast" (click)="openDetailsDialog(bill)"></p-button>
           <p-button icon="pi pi-pen-to-square" [text]="true" severity="contrast" (click)="openFormDialog(bill)"></p-button>
           <p-button icon="pi pi-trash" [text]="true" severity="contrast" (click)="openDeleteConfirmDialog($event, bill)"></p-button>
         </div>
@@ -118,4 +120,8 @@
   [spaceMembers]="space().members!"
   (finishedSplitting)="fetchBills()"
 ></app-bill-split-dialog>
+}
+
+@defer (when isDetailsDialogOpen()) {
+  <app-bill-details-dialog [isOpen]="isDetailsDialogOpen" [bill]="selectedBill()"> </app-bill-details-dialog>
 }

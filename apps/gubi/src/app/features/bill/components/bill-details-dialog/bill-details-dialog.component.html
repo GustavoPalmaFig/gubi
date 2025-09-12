@@ -1,0 +1,97 @@
+<p-dialog
+  [header]="bill()?.name"
+  [modal]="true"
+  [visible]="isOpen()"
+  [closeOnEscape]="true"
+  [dismissableMask]="true"
+  (onHide)="close()"
+  (visibleChange)="close()"
+  styleClass="w-full md:w-1/2 lg:w-1/3 mx-4"
+>
+  <p-tabs value="0" class="w-full transparent-tabs">
+    <p-tablist>
+      <p-tab value="0">Detalhes</p-tab>
+      <p-tab value="1">Divisões</p-tab>
+    </p-tablist>
+    <p-tabpanels>
+      <p-tabpanel value="0">
+        <div class="rounded-lg border bg-card text-card-foreground shadow-sm">
+          <div class="p-4 space-y-4">
+            <div class="flex justify-between items-center">
+              <h1 class="text-lg font-medium">Informações Básicas</h1>
+              <div
+                class="inline-flex items-center rounded-full border px-2.5 py-1 text-md font-semibold"
+                [ngClass]="{'bg-green-50 border-green-200 text-green-600' : bill()?.payer }"
+              >
+                {{ bill()?.payer ? 'Pago' : 'Não pago'}}
+              </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div class="flex flex-col gap-1">
+                <div class="flex items-center gap-2">
+                  <i class="pi pi-wallet"></i>
+                  <p class="text-sm">Valor</p>
+                </div>
+                <p class="font-medium">{{ bill()?.value | currency: 'BRL' }}</p>
+              </div>
+
+              <div class="flex flex-col gap-1">
+                <div class="flex items-center gap-2">
+                  <i class="pi pi-calendar"></i>
+                  <p class="text-sm">Vencimento</p>
+                </div>
+                <p class="font-medium">{{ bill()?.deadline| date: 'dd/MM/yyyy' }}</p>
+              </div>
+
+              <div class="flex flex-col gap-1">
+                <div class="flex items-center gap-2">
+                  <i class="pi pi-user"></i>
+                  <p class="text-sm">{{ bill()?.payer ? 'Pago por' : 'Criado por' }}</p>
+                </div>
+                <p class="font-medium">{{ bill()?.payer ? bill()?.payer?.fullname : bill()?.creator?.fullname }}</p>
+              </div>
+
+              <div class="flex flex-col gap-1">
+                <div class="flex items-center gap-2">
+                  <i class="pi pi-clock"></i>
+                  <p class="text-sm">{{ bill()?.payer ? 'Pago em' : 'Criado em' }}</p>
+                </div>
+                <p class="font-medium">{{ (bill()?.payer ? bill()?.paid_at : bill()?.created_at) | date: 'dd/MM/yyyy' }}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </p-tabpanel>
+      <p-tabpanel value="1">
+        <div class="rounded-lg border bg-card text-card-foreground shadow-sm">
+          <div class="p-4">
+            <h3 class="text-lg font-medium mb-4">Divisão da Conta</h3>
+            @if(!bill()?.bill_splits) {
+            <p class="text-md text-gray-500">Nenhuma divisão personalizada foi registrada para esta conta.</p>
+            } @else {
+            <div class="space-y-3">
+              @for(splitObj of bill()?.bill_splits; track splitObj.user_id) {
+              <div class="flex items-center justify-between p-2 border rounded-md">
+                <div class="flex items-center gap-2">
+                  <app-user-avatar [users]="splitObj.user" [size]="'large'"></app-user-avatar>
+                  <span class="font-medium">{{ getAbbreviatedName(splitObj.user.fullname) }}</span>
+                </div>
+                <div class="text-right">
+                  <p class="font-medium">{{ splitObj.split_value | currency: 'BRL' }}</p>
+                  <p class="text-xs">{{getSplitPercentage(splitObj.split_value)}}</p>
+                </div>
+              </div>
+              }
+              <div class="flex justify-between items-center p-2 border-t pt-3 font-bold">
+                <span>Total</span>
+                <span>{{ bill()?.value | currency: 'BRL' }}</span>
+              </div>
+            </div>
+            }
+          </div>
+        </div>
+      </p-tabpanel>
+    </p-tabpanels>
+  </p-tabs>
+</p-dialog>

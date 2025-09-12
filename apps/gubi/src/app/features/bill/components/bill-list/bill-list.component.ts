@@ -11,13 +11,14 @@ import { Skeleton } from 'primeng/skeleton';
 import { Tooltip } from 'primeng/tooltip';
 import Utils from '@shared/utils/utils';
 import { BillApiService } from '../../services/bill-api.service';
+import { BillDetailsDialogComponent } from '../bill-details-dialog/bill-details-dialog.component';
 import { BillFormDialogComponent } from '../bill-form-dialog/bill-form-dialog.component';
 import { BillSplitDialogComponent } from '../bill-split-dialog/bill-split-dialog.component';
 import { iBill } from '../../interfaces/bill.interface';
 
 @Component({
   selector: 'app-bill-list',
-  imports: [CommonModule, Button, Skeleton, Tooltip, FormsModule, InputNumberModule, BillFormDialogComponent, ProgressBar, BillSplitDialogComponent],
+  imports: [CommonModule, Button, Skeleton, Tooltip, FormsModule, InputNumberModule, BillFormDialogComponent, ProgressBar, BillSplitDialogComponent, BillDetailsDialogComponent],
   templateUrl: './bill-list.component.html',
   styleUrl: './bill-list.component.scss'
 })
@@ -40,6 +41,7 @@ export class BillListComponent {
   protected paidValue = computed<number>(() => this.accumulateValue(this.bills(), 'payer'));
   protected paidPercentage = computed<number>(() => this.getPaidValuePercentage());
   protected isFormDialogOpen = signal(false);
+  protected isDetailsDialogOpen = signal(false);
   protected isBillSplitFormDialogOpen = signal(false);
   protected selectedBill = signal<iBill | null>(null);
 
@@ -214,6 +216,11 @@ export class BillListComponent {
 
     this.messageService.showMessage('success', 'Conta marcada como paga com sucesso', 'Sucesso');
     await this.fetchBills();
+  }
+
+  protected openDetailsDialog(bill: iBill) {
+    this.selectedBill.set(bill);
+    this.isDetailsDialogOpen.set(true);
   }
 
   protected openFormDialog(bill: iBill | null = null) {
