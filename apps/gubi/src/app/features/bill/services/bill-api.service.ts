@@ -25,19 +25,38 @@ export class BillApiService {
     return { data: data as iBill, error: Utils.handleErrorMessage(error) };
   }
 
-  async bulkCreateBills(bills: iBill[]): Promise<{ data: iBill[]; error?: string }> {
-    const formatedBills = bills.map(bill => {
-      return {
-        space_id: bill.space_id,
-        name: bill.name,
-        value: bill.value,
-        deadline: bill.deadline ? Utils.adjustDateByMonths(bill.deadline, 1) : null,
-        reference_period: Utils.adjustDateByMonths(bill.reference_period, 1)
-      };
-    });
+  async bulkCreateBills(bills: iBill[]): Promise<{ error?: string }> {
+    const formatedBills = bills.map(bill => ({
+      space_id: bill.space_id,
+      name: bill.name,
+      value: bill.value,
+      deadline: bill.deadline ? Utils.adjustDateByMonths(bill.deadline, 1) : null,
+      reference_period: Utils.adjustDateByMonths(bill.reference_period, 1)
+    }));
 
     const { data, error } = await this.supabaseService.client.from('bill').insert(formatedBills).select();
-    return { data: data as iBill[], error: Utils.handleErrorMessage(error) };
+    if (error) return { error: Utils.handleErrorMessage(error) };
+
+    const billsSplit = bills.filter(bill => bill.force_split);
+    if (billsSplit && data) await this.handleBillSplitsAfterBulkCreate(bills, data);
+
+    return { error: Utils.handleErrorMessage(error) };
+  }
+
+  async handleBillSplitsAfterBulkCreate(originalBills: iBill[], createdBills: iBill[]) {
+    const splitsToCreate = originalBills.flatMap(originalBill => {
+      const createdBill = createdBills.find(bill => bill.name === originalBill.name && bill.value === originalBill.value);
+      if (!createdBill || !originalBill.bill_splits) return [];
+
+      return originalBill.bill_splits.map(({ user, ...split }) => ({
+        ...split,
+        bill_id: createdBill.id
+      }));
+    });
+
+    if (splitsToCreate.length > 0) {
+      await this.supabaseService.client.from('bill_split').insert(splitsToCreate);
+    }
   }
 
   async updateBill(bill: iBill): Promise<{ data: iBill; error?: string }> {
