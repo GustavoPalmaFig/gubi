@@ -11,19 +11,28 @@
     {{ isEditMode() ? 'Atualize as informações do método de pagamento.' : 'Adicione um movo método de pagamento para utilizar em suas despesas'}}
   </p>
   <form [formGroup]="paymentMethodForm" (ngSubmit)="handleSubmit()" class="mt-6 space-y-4">
-    <div class="my-6">
+    <div class="flex flex-col">
       <label for="name" class="text-sm font-medium">Nome do Método</label>
       <input id="name" class="w-full mt-2" type="text" pInputText formControlName="name" placeholder="Ex: Cartão de Crédito, Pix, Débito" />
     </div>
-    <div class="my-6 flex items-end">
-      <p-checkbox id="split_by_default" formControlName="split_by_default" [binary]="true" />
-      <label for="split_by_default" class="mx-2 text-sm font-medium">Cartão Compartilhado</label>
-      <i
-        class="pi pi-question-circle"
-        tooltipEvent="hover"
-        [autoHide]="false"
-        pTooltip="No resumo de despesas, todas as despesas pagas com este método não serão contabilizadas para um usuário, mas sim pra todos os membros do espaço em que ele for utilizado."
-      ></i>
+    <div class="flex flex-col">
+      <div class="flex items-center">
+        <p-checkbox id="split_by_default" formControlName="split_by_default" binary />
+        <label for="split_by_default" class="ml-2 text-sm font-medium">Cartão Compartilhado</label>
+        <p-button text severity="secondary" rounded icon="pi pi-question-circle" (onClick)="toggleInfos(showSplitInfo)" />
+      </div>
+      @if(showSplitInfo()) {
+        <p class="text-xs text-gray-500">Este método de pagamento será compartilhado entre todos os membros do espaço ao criar despesas.</p>
+      }
+
+      <div class="flex items-center">
+        <p-checkbox id="is_excluded_from_totals" formControlName="is_excluded_from_totals" binary />
+        <label for="is_excluded_from_totals" class="ml-2 text-sm font-medium">Não impacta no orçamento</label>
+        <p-button text severity="secondary" rounded icon="pi pi-question-circle" (onClick)="toggleInfos(showExcludedFromTotalsInfo)" />
+      </div>
+      @if(showExcludedFromTotalsInfo()) {
+        <p class="text-xs text-gray-500">Todas as despesas pagas com este método não impactam no cálculo do valor total a pagar mensal.</p>
+      }
     </div>
     <div class="flex justify-end">
       <p-button

@@ -37,13 +37,14 @@ export class PaymentMethodApiService {
     return data as iPaymentMethod | null;
   }
 
-  async createPaymentMethod(name: string, split_by_default: boolean): Promise<{ data: iPaymentMethod; error?: string }> {
-    const { data, error } = await this.supabaseService.client.from('payment_method').insert([{ name, split_by_default }]).select().single();
+  async createPaymentMethod(paymentMethod: iPaymentMethod): Promise<{ data: iPaymentMethod; error?: string }> {
+    const { data, error } = await this.supabaseService.client.from('payment_method').insert([paymentMethod]).select().single();
     return { data: data as iPaymentMethod, error: Utils.handleErrorMessage(error) };
   }
 
-  async updatePaymentMethod(paymentMethodId: number, name: string, split_by_default: string): Promise<{ data: iPaymentMethod; error?: string }> {
-    const { data, error } = await this.supabaseService.client.from('payment_method').update({ name, split_by_default }).eq('id', paymentMethodId).select().single();
+  async updatePaymentMethod(paymentMethod: iPaymentMethod, id: number): Promise<{ data: iPaymentMethod; error?: string }> {
+    const { name, split_by_default, is_excluded_from_totals } = paymentMethod;
+    const { data, error } = await this.supabaseService.client.from('payment_method').update({ name, split_by_default, is_excluded_from_totals }).eq('id', id).select().single();
     return { data: data as iPaymentMethod, error: Utils.handleErrorMessage(error) };
   }
 

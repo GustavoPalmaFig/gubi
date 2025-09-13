@@ -6,6 +6,7 @@ export interface iPaymentMethod {
   owner_id: string;
   name: string;
   split_by_default: boolean;
+  is_excluded_from_totals: boolean;
   created_at: Date;
   updated_at: Date;
 

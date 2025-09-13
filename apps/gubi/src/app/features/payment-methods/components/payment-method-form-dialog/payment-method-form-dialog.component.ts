@@ -1,18 +1,17 @@
 import { ButtonModule } from 'primeng/button';
 import { CheckboxModule } from 'primeng/checkbox';
 import { CommonModule } from '@angular/common';
-import { Component, computed, effect, EventEmitter, inject, Input, Output, signal } from '@angular/core';
+import { Component, computed, effect, EventEmitter, inject, Input, Output, signal, WritableSignal } from '@angular/core';
 import { DialogModule } from 'primeng/dialog';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { InputTextModule } from 'primeng/inputtext';
 import { iPaymentMethod } from '@features/payment-methods/interfaces/payment-method';
 import { MessageService } from '@shared/services/message.service';
 import { PaymentMethodApiService } from '@features/payment-methods/services/payment-method-api.service';
-import { Tooltip } from 'primeng/tooltip';
 
 @Component({
   selector: 'app-payment-method-form-dialog',
-  imports: [CommonModule, DialogModule, ButtonModule, InputTextModule, CheckboxModule, Tooltip, ReactiveFormsModule],
+  imports: [CommonModule, DialogModule, ButtonModule, InputTextModule, CheckboxModule, ReactiveFormsModule],
   templateUrl: './payment-method-form-dialog.component.html',
   styleUrl: './payment-method-form-dialog.component.scss'
 })
@@ -26,12 +25,15 @@ export class PaymentMethodFormDialogComponent {
 
   protected isEditMode = computed(() => !!this.selectedMethod);
   protected isLoading = signal(false);
+  protected showSplitInfo = signal(false);
+  protected showExcludedFromTotalsInfo = signal(false);
   protected paymentMethodForm: FormGroup;
 
   constructor() {
     this.paymentMethodForm = new FormGroup({
       name: new FormControl('', [Validators.required]),
-      split_by_default: new FormControl(false)
+      split_by_default: new FormControl(false),
+      is_excluded_from_totals: new FormControl(false)
     });
 
     effect(() => this.initializeForm());
@@ -41,10 +43,7 @@ export class PaymentMethodFormDialogComponent {
     const selectedMethod = this.selectedMethod();
 
     if (this.isDialogOpen() && selectedMethod) {
-      this.paymentMethodForm.patchValue({
-        name: selectedMethod.name,
-        split_by_default: selectedMethod.split_by_default
-      });
+      this.paymentMethodForm.patchValue(selectedMethod);
     } else {
       this.paymentMethodForm.reset();
     }
@@ -59,13 +58,11 @@ export class PaymentMethodFormDialogComponent {
 
   async handleSubmit(): Promise<void> {
     this.isLoading.set(true);
-
-    const { name, split_by_default } = this.paymentMethodForm.value;
-    const paymentMethodId = this.selectedMethod()?.id || null;
+    const paymentMethodId = this.selectedMethod()?.id;
 
     const { data, error } = paymentMethodId
-      ? await this.paymentMethodApiService.updatePaymentMethod(paymentMethodId, name, split_by_default)
-      : await this.paymentMethodApiService.createPaymentMethod(name, split_by_default);
+      ? await this.paymentMethodApiService.updatePaymentMethod(this.paymentMethodForm.value, paymentMethodId)
+      : await this.paymentMethodApiService.createPaymentMethod(this.paymentMethodForm.value);
 
     if (error) {
       this.messageService.showMessage('error', 'Erro', error);
@@ -77,5 +74,9 @@ export class PaymentMethodFormDialogComponent {
 
     this.touchPaymentMethod.emit(data);
     this.close();
+  }
+
+  toggleInfos(info: WritableSignal<boolean>) {
+    info.update(value => !value);
   }
 }
