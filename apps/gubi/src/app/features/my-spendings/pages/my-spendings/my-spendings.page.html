@@ -27,19 +27,21 @@
   </div>
   }
 
-  <div
-    class="sm:col-span-full md:col-span-1 bg-card bg-white flex flex-col rounded-lg border shadow-sm p-4"
-    (click)="isChartDialogOpen.set(true)"
-    (keyup.enter)="isChartDialogOpen.set(true)"
-    tabindex="0"
-    role="button"
-    aria-pressed="false"
-  >
-    <div class="flex items-center justify-between gap-2 text-md text-neutral-600 font-medium leading-none mb-1">
-      <h3>{{ 'Visualizar Gráficos' }}</h3>
-      <i class="pi pi-chart-pie"></i>
+  @if(filteredSpendings().filter(this.expenseGuard).length > 0) {
+    <div
+      class="sm:col-span-full md:col-span-1 bg-card bg-white flex flex-col rounded-lg border shadow-sm p-4"
+      (click)="isChartDialogOpen.set(true)"
+      (keyup.enter)="isChartDialogOpen.set(true)"
+      tabindex="0"
+      role="button"
+      aria-pressed="false"
+    >
+      <div class="flex items-center justify-between gap-2 text-md text-neutral-600 font-medium leading-none mb-1">
+        <h3>{{ 'Visualizar Gráficos' }}</h3>
+        <i class="pi pi-chart-pie"></i>
+      </div>
     </div>
-  </div>
+  }
 
   <div class="col-span-full">
     <app-my-spendings-filters
