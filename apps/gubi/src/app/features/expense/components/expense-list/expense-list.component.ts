@@ -8,7 +8,6 @@ import { iSpace } from '@features/spaces/interfaces/space.interface';
 import { iUser } from '@features/auth/interfaces/user.interface';
 import { MessageService } from '@shared/services/message.service';
 import { Skeleton } from 'primeng/skeleton';
-import { Tooltip } from 'primeng/tooltip';
 import { UserAvatarComponent } from '@shared/components/user-avatar/user-avatar.component';
 import Utils from '@shared/utils/utils';
 import { ExpenseBalanceDialogComponent } from '../expense-balance-dialog/expense-balance-dialog.component';

@@ -5,10 +5,13 @@ import { ConfirmationService } from 'primeng/api';
 import { FormsModule } from '@angular/forms';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { iSpace } from '@features/spaces/interfaces/space.interface';
+import { iUser } from '@features/auth/interfaces/user.interface';
 import { MessageService } from '@shared/services/message.service';
+import { MeterGroupModule } from 'primeng/metergroup';
 import { ProgressBar } from 'primeng/progressbar';
 import { Skeleton } from 'primeng/skeleton';
 import { Tooltip } from 'primeng/tooltip';
+import { UserAvatarComponent } from '@shared/components/user-avatar/user-avatar.component';
 import Utils from '@shared/utils/utils';
 import { BillApiService } from '../../services/bill-api.service';
 import { BillDetailsDialogComponent } from '../bill-details-dialog/bill-details-dialog.component';
@@ -16,9 +19,29 @@ import { BillFormDialogComponent } from '../bill-form-dialog/bill-form-dialog.co
 import { BillSplitDialogComponent } from '../bill-split-dialog/bill-split-dialog.component';
 import { iBill } from '../../interfaces/bill.interface';
 
+interface userValue {
+  user: iUser;
+  value: number;
+  percentage: number;
+  color: string;
+}
+
 @Component({
   selector: 'app-bill-list',
-  imports: [CommonModule, Button, Skeleton, Tooltip, FormsModule, InputNumberModule, BillFormDialogComponent, ProgressBar, BillSplitDialogComponent, BillDetailsDialogComponent],
+  imports: [
+    CommonModule,
+    Button,
+    Skeleton,
+    Tooltip,
+    FormsModule,
+    InputNumberModule,
+    BillFormDialogComponent,
+    ProgressBar,
+    BillSplitDialogComponent,
+    BillDetailsDialogComponent,
+    UserAvatarComponent,
+    MeterGroupModule
+  ],
   templateUrl: './bill-list.component.html',
   styleUrl: './bill-list.component.scss'
 })
@@ -39,6 +62,8 @@ export class BillListComponent {
   protected editValue: number | null = null;
   protected totalValue = computed<number>(() => this.accumulateValue(this.bills(), 'value'));
   protected paidValue = computed<number>(() => this.accumulateValue(this.bills(), 'payer'));
+  protected membersDivision = computed<userValue[]>(() => this.divideValueByMembers(this.bills()));
+  protected divisionMeter = computed(() => this.buildDivisionMeter());
   protected paidPercentage = computed<number>(() => this.getPaidValuePercentage());
   protected isFormDialogOpen = signal(false);
   protected isDetailsDialogOpen = signal(false);
@@ -134,6 +159,55 @@ export class BillListComponent {
     }
 
     return +((currentTotal - previousTotal) / previousTotal);
+  }
+
+  protected divideValueByMembers(bills: iBill[]): userValue[] {
+    const billsWithSplit = bills.filter(bill => bill.force_split);
+    if (billsWithSplit.length === 0) return [];
+
+    const userValues: userValue[] = [];
+    const spaceMembers = this.space().members ?? [];
+
+    bills.forEach(bill => {
+      if (bill.force_split && bill.bill_splits) {
+        bill.bill_splits.forEach(split => {
+          const { user, split_value: value } = split;
+          const existingUserValue = userValues.find(uv => uv.user.id === user.id);
+
+          if (existingUserValue) {
+            existingUserValue.value += value;
+            existingUserValue.percentage = existingUserValue.value / this.totalValue();
+          } else {
+            const percentage = value / this.totalValue();
+            const color = Utils.stringToColor(user.email);
+            userValues.push({ user, value, percentage, color });
+          }
+        });
+      } else {
+        const splitPerUser = (bill.value || 0) / spaceMembers.length;
+
+        spaceMembers.forEach(member => {
+          const existingUserValue = userValues.find(uv => uv.user.id === member.user.id);
+          if (existingUserValue) {
+            existingUserValue.value += splitPerUser;
+            existingUserValue.percentage = existingUserValue.value / this.totalValue();
+          } else {
+            const percentage = splitPerUser / this.totalValue();
+            const color = Utils.stringToColor(member.user.email);
+            userValues.push({ user: member.user, value: splitPerUser, percentage, color });
+          }
+        });
+      }
+    });
+
+    return userValues;
+  }
+
+  protected buildDivisionMeter() {
+    return this.membersDivision().map(division => ({
+      value: division.percentage * 100,
+      color: division.color
+    }));
   }
 
   protected getCardStyle(bill: iBill): string {
