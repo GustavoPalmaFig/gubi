@@ -49,6 +49,7 @@
                     <app-user-avatar [users]="expense()?.payment_method?.owner!"></app-user-avatar>
                     <span class="font-medium">{{ expense()?.payment_method?.name }}</span>
                     <p-tag *ngIf="expense()?.payment_method?.split_by_default" styleClass="!text-xs" severity="info" value="Compartilhado" />
+                    <p-tag *ngIf="expense()?.payment_method?.is_excluded_from_totals" styleClass="!text-xs" severity="secondary" value="Sem fatura" />
                   </div>
                 }
               </div>

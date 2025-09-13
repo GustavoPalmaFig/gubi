@@ -43,6 +43,7 @@
                 <i *ngIf="type === 'member'" [class]="type === 'member' && item.name === 'Compartilhado' ? 'pi pi-users !text-lg' : 'pi pi-user'"></i>
                 <span class="font-semibold">{{ type === 'method' ? item.name : getAbbreviatedName(item.name) }}</span>
                 <p-tag *ngIf="type === 'method' && item.split_by_default" class="ml-4" severity="info" value="Compartilhado" />
+                <p-tag *ngIf="type === 'method' && item.is_excluded_from_totals" class="ml-4" severity="secondary" value="Sem fatura" />
               </div>
               <div class="flex items-baseline gap-1 font-semibold mr-4">
                 <i class="pi pi-shopping-bag"></i>

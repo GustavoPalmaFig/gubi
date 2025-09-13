@@ -71,6 +71,7 @@
               <i class="pi pi-credit-card"></i>
               <span>{{ item.name }}</span>
               <p-tag *ngIf="item.split_by_default" class="ml-4" styleClass="!text-xs" severity="info" value="Compartilhado" />
+              <p-tag *ngIf="item.is_excluded_from_totals" class="ml-4" styleClass="!text-xs" severity="secondary" value="Sem fatura" />
             </div>
           </ng-template>
           <ng-template #selectedItem let-selectedOption>
@@ -78,6 +79,7 @@
               <app-user-avatar [users]="selectedOption.owner"></app-user-avatar>
               <span>{{ selectedOption.name }}</span>
               <p-tag *ngIf="selectedOption.split_by_default" class="ml-4" styleClass="!text-xs" severity="info" value="Compartilhado" />
+              <p-tag *ngIf="selectedOption.split_by_default" class="ml-4" styleClass="!text-xs" severity="secondary" value="Sem fatura" />
             </div>
           </ng-template>
           <ng-template #footer>

@@ -22,16 +22,18 @@
         <p-button text severity="secondary" rounded icon="pi pi-question-circle" (onClick)="toggleInfos(showSplitInfo)" />
       </div>
       @if(showSplitInfo()) {
-        <p class="text-xs text-gray-500">Este método de pagamento será compartilhado entre todos os membros do espaço ao criar despesas.</p>
+      <p class="text-xs text-gray-500">Este método de pagamento será compartilhado entre todos os membros do espaço ao criar despesas.</p>
       }
 
       <div class="flex items-center">
         <p-checkbox id="is_excluded_from_totals" formControlName="is_excluded_from_totals" binary />
-        <label for="is_excluded_from_totals" class="ml-2 text-sm font-medium">Não impacta no orçamento</label>
+        <label for="is_excluded_from_totals" class="ml-2 text-sm font-medium">Não possui fatura</label>
         <p-button text severity="secondary" rounded icon="pi pi-question-circle" (onClick)="toggleInfos(showExcludedFromTotalsInfo)" />
       </div>
       @if(showExcludedFromTotalsInfo()) {
-        <p class="text-xs text-gray-500">Todas as despesas pagas com este método não impactam no cálculo do valor total a pagar mensal.</p>
+      <p class="text-xs text-gray-500">
+        Todas as despesas pagas com este método não impactam no cálculo do valor total a pagar mensal, pois não possuem fatura. Exemplos: Pix, Vale Alimentação, etc
+      </p>
       }
     </div>
     <div class="flex justify-end">
