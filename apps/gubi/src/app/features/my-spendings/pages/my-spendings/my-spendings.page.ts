@@ -159,6 +159,18 @@ export class MySpendingsPage {
     return Object.values(spaceTotals).sort((a, b) => b.total - a.total)[0] || { space: null, total: 0 };
   }
 
+  private calculateTotalToPay(expenses: iExpense[], totalAll: number): number {
+    const totalToPay = expenses.reduce((sum, exp) => {
+      if (exp.payment_method && exp.payment_method.is_excluded_from_totals) {
+        return this.getUserSpending(exp);
+      }
+      return sum;
+    }, 0);
+
+    const result = totalAll - totalToPay;
+    return result < 0 ? 0 : result;
+  }
+
   private populateCards(): iSpendingsCard[] {
     const filteredSpendings = this.filteredSpendings();
     const bills = filteredSpendings.filter(this.billGuard);
@@ -166,14 +178,22 @@ export class MySpendingsPage {
     const totalBills = this.userTotalValue(bills);
     const totalExpenses = this.userTotalValue(expenses);
     const total = totalBills + totalExpenses;
+    const totalToPay = totalBills + this.calculateTotalToPay(expenses, totalExpenses);
     const topSpace = this.spaceWithMostSpendings();
 
-    return [
+    const cards = [
       {
         title: 'Total',
         icon: 'pi pi-dollar',
         content: this.currencyPipe.transform(total, 'BRL') ?? '-',
         details: `${bills.length} contas + ${expenses.length} despesas`,
+        onClick: () => this.scrollToList(0)
+      },
+      {
+        title: 'Total a Pagar',
+        icon: 'pi pi-exclamation-circle',
+        content: this.currencyPipe.transform(totalToPay, 'BRL') ?? '-',
+        details: 'Valor a desembolsar no começo ou final do mês',
         onClick: () => this.scrollToList(0)
       },
       {
@@ -198,6 +218,9 @@ export class MySpendingsPage {
         onClick: () => this.router.navigate(['/spaces', topSpace.space?.id])
       }
     ];
+
+    if (total === totalToPay) return cards.filter((_, idx) => idx !== 1);
+    return cards.slice(0, -1);
   }
 
   protected buildTags() {
