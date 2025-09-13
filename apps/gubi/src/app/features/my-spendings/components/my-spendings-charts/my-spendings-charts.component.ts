@@ -20,6 +20,7 @@ import Utils from '@shared/utils/utils';
 export class MySpendingsChartsComponent {
   spendings = input.required<(iBill | iExpense)[]>();
   private expenseGuard = MySpendingUtils.expenseGuard;
+  protected chart?: Highcharts.Chart;
 
   protected paymentMethods = computed<iPaymentMethod[]>(() => {
     const allMethods = this.spendings()
@@ -141,6 +142,9 @@ export class MySpendingsChartsComponent {
 
   constructor() {
     effect(() => {
+      const chart = this.chart;
+      if (chart) chart.showLoading('Carregando...');
+
       this.chartOptions.series = [
         {
           type: 'pie',
@@ -149,7 +153,13 @@ export class MySpendingsChartsComponent {
         }
       ];
       this.updateFlag = true;
+
+      if (chart) chart.hideLoading();
     });
+  }
+
+  protected onChartInstance(chart: Highcharts.Chart) {
+    this.chart = chart;
   }
 
   getTotalSpentByMethod(methodId: number): number {
