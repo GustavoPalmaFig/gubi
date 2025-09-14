@@ -2,16 +2,7 @@
   <a class="bg-card bg-white flex h-56 flex-col rounded-xl border shadow-sm px-4 pt-2 pb-4 hover:border-gray-200 hover:shadow-md transition-all cursor-pointer" [routerLink]="['/spaces', space().id]">
     <div class="flex items-center justify-between gap-2">
       <h1 class="text-lg font-semibold line-clamp-2">{{ space().name }}</h1>
-      <p-button
-        icon="pi pi-ellipsis-v cursor-pointer"
-        tabindex="0"
-        [rounded]="true"
-        [text]="true"
-        severity="contrast"
-        (click)="menu.toggle($event); spaceService.selectSpace($event, space());"
-        (keydown.enter)="menu.toggle($event); spaceService.selectSpace($event, space());"
-        (keydown.space)="menu.toggle($event); spaceService.selectSpace($event, space());"
-      ></p-button>
+      <app-space-menu [space]="space()"></app-space-menu>
     </div>
 
     <div class="flex flex-col flex-grow justify-center">
@@ -28,5 +19,3 @@
 } @else {
   <p-skeleton styleClass="py-28" />
 }
-
-<p-menu #menu [model]="items" appendTo="body" [popup]="true" />

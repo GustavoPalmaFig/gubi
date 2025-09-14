@@ -1,0 +1,2 @@
+<p-button icon="pi pi-ellipsis-v" text severity="contrast" size="small" rounded styleClass="mt-1" (click)="menu.toggle($event); toggleMenu($event)" />
+<p-menu #menu [model]="items" appendTo="body" [popup]="true" />
