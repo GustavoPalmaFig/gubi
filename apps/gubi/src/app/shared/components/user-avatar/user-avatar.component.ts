@@ -3,11 +3,12 @@ import { AvatarGroup } from 'primeng/avatargroup';
 import { CommonModule } from '@angular/common';
 import { Component, input } from '@angular/core';
 import { iUser } from '@features/auth/interfaces/user.interface';
+import { Tooltip } from 'primeng/tooltip';
 import Utils from '@shared/utils/utils';
 
 @Component({
   selector: 'app-user-avatar',
-  imports: [CommonModule, Avatar, AvatarGroup],
+  imports: [CommonModule, Avatar, AvatarGroup, Tooltip],
   templateUrl: './user-avatar.component.html',
   styleUrl: './user-avatar.component.scss'
 })
