@@ -1,7 +1,7 @@
 import { ButtonModule } from 'primeng/button';
 import { Checkbox } from 'primeng/checkbox';
 import { CommonModule } from '@angular/common';
-import { Component, computed, effect, EventEmitter, inject, Input, input, Output, signal } from '@angular/core';
+import { Component, computed, effect, EventEmitter, inject, Input, input, Output, signal, WritableSignal } from '@angular/core';
 import { DatePickerModule } from 'primeng/datepicker';
 import { DialogModule } from 'primeng/dialog';
 import { ExpenseApiService } from '@features/expense/services/expense-api.service';
@@ -20,7 +20,6 @@ import { Select } from 'primeng/select';
 import { SpaceApiService } from '@features/spaces/services/space-api.service';
 import { Tag } from 'primeng/tag';
 import { TextareaModule } from 'primeng/textarea';
-import { Tooltip } from 'primeng/tooltip';
 import { UserAvatarComponent } from '@shared/components/user-avatar/user-avatar.component';
 import Utils from '@shared/utils/utils';
 
@@ -39,7 +38,6 @@ import Utils from '@shared/utils/utils';
     PaymentMethodFormDialogComponent,
     UserAvatarComponent,
     Checkbox,
-    Tooltip,
     Tag
   ],
   templateUrl: './expense-form-dialog.component.html',
@@ -62,6 +60,7 @@ export class ExpenseFormDialogComponent {
   protected isEditMode = computed(() => !!this.selectedExpense());
   protected isLoading = signal(false);
   protected isPaymentMethodDialogOpen = signal(false);
+  protected showSplitInfo = signal(false);
 
   protected expenseForm!: FormGroup;
   protected paymentMethods: iPaymentMethod[] = [];
@@ -181,5 +180,9 @@ export class ExpenseFormDialogComponent {
   getPaymentOwner(selectedPayment: iPaymentMethod): iUser {
     const selectedGroup = this.groupedPaymentMethods.find(group => group.items.some(item => item.id === selectedPayment.id));
     return selectedGroup?.owner || ({} as iUser);
+  }
+
+  toggleInfos(info: WritableSignal<boolean>) {
+    info.update(value => !value);
   }
 }

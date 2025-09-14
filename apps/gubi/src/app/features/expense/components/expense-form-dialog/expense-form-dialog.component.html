@@ -94,17 +94,17 @@
       <label for="category_id" class="text-sm font-medium">Categoria</label>
       <p-select id="category_id" class="w-full mt-2" [options]="expenseCategories" formControlName="category_id" optionLabel="label" optionValue="value" placeholder="Selecione" />
     </div>
-    <div class="flex items-end gap-2">
-      <p-checkbox id="force_split" formControlName="force_split" binary> </p-checkbox>
-      <label for="force_split" class="text-sm font-medium">Definir divisão personalizada</label>
-      <i class="pi pi-question-circle" [pTooltip]="tooltipContent" tooltipPosition="top">
-        <ng-template #tooltipContent>
-          <div class="flex flex-col items-center text-sm p-2 gap-2">
-            <div>Por padrão, as despesas são divididas igualmente entre todos os membros do espaço.</div>
-            <div>Caso queira dividir o valor de forma personalizada, selecione esta opção.</div>
-          </div>
-        </ng-template>
-      </i>
+    <div class="flex flex-col gap-1">
+      <div class="flex items-center">
+        <p-checkbox id="force_split" formControlName="force_split" binary styleClass="mb-0.5"/>
+        <label for="force_split" class="text-sm font-medium ml-2">Definir divisão personalizada</label>
+        <p-button text severity="secondary" rounded icon="pi pi-question-circle" (onClick)="toggleInfos(showSplitInfo)" />
+      </div>
+      @if(showSplitInfo()) {
+        <p class="text-xs text-gray-500">
+          Por padrão, as despesas são divididas igualmente entre todos os membros do espaço. Caso queira dividir o valor de forma personalizada, selecione esta opção.
+        </p>
+      }
     </div>
     <div class="flex justify-end pt-6">
       <p-button

@@ -2,7 +2,7 @@ import { BillApiService } from '@features/bill/services/bill-api.service';
 import { ButtonModule } from 'primeng/button';
 import { Checkbox } from 'primeng/checkbox';
 import { CommonModule } from '@angular/common';
-import { Component, computed, effect, EventEmitter, inject, Input, input, Output, signal } from '@angular/core';
+import { Component, computed, effect, EventEmitter, inject, Input, input, Output, signal, WritableSignal } from '@angular/core';
 import { DatePickerModule } from 'primeng/datepicker';
 import { DialogModule } from 'primeng/dialog';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -13,12 +13,11 @@ import { iSpace } from '@features/spaces/interfaces/space.interface';
 import { MessageService } from '@shared/services/message.service';
 import { Select } from 'primeng/select';
 import { SpaceApiService } from '@features/spaces/services/space-api.service';
-import { Tooltip } from 'primeng/tooltip';
 import Utils from '@shared/utils/utils';
 
 @Component({
   selector: 'app-bill-form-dialog',
-  imports: [CommonModule, DialogModule, ButtonModule, InputTextModule, InputNumberModule, DatePickerModule, Select, ReactiveFormsModule, Checkbox, Tooltip],
+  imports: [CommonModule, DialogModule, ButtonModule, InputTextModule, InputNumberModule, DatePickerModule, Select, ReactiveFormsModule, Checkbox],
   templateUrl: './bill-form-dialog.component.html',
   styleUrl: './bill-form-dialog.component.scss'
 })
@@ -37,6 +36,7 @@ export class BillFormDialogComponent {
   protected possiblePayers = computed(() => this.space()?.members?.map(m => m.user) || []);
   protected isEditMode = computed(() => !!this.selectedBill());
   protected isLoading = signal(false);
+  protected showSplitInfo = signal(false);
 
   protected billForm!: FormGroup;
 
@@ -106,5 +106,9 @@ export class BillFormDialogComponent {
 
     this.touchBill.emit(data);
     this.close();
+  }
+
+  toggleInfos(info: WritableSignal<boolean>) {
+    info.update(value => !value);
   }
 }
