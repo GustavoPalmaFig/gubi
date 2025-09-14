@@ -4,10 +4,13 @@ import { Component, inject, signal } from '@angular/core';
 import { ExpenseListComponent } from '@features/expense/components/expense-list/expense-list.component';
 import { FormsModule } from '@angular/forms';
 import { iSpace } from '@features/spaces/interfaces/space.interface';
+import { ManageSpaceMembersComponent } from '@features/spaces/components/manage-space-members/manage-space-members.component';
 import { MessageService } from '@shared/services/message.service';
 import { Select } from 'primeng/select';
 import { Skeleton } from 'primeng/skeleton';
 import { SpaceApiService } from '@features/spaces/services/space-api.service';
+import { SpaceFormDialogComponent } from '@features/spaces/components/space-form-dialog/space-form-dialog.component';
+import { SpaceMenuComponent } from '@features/spaces/components/space-menu/space-menu.component';
 import { SpaceService } from '@features/spaces/services/space.service';
 import { TabsModule } from 'primeng/tabs';
 import { UserAvatarComponent } from '@shared/components/user-avatar/user-avatar.component';
@@ -15,7 +18,18 @@ import Utils from '@shared/utils/utils';
 
 @Component({
   selector: 'app-space-details',
-  imports: [BillListComponent, ExpenseListComponent, Select, FormsModule, Skeleton, TabsModule, UserAvatarComponent],
+  imports: [
+    BillListComponent,
+    ExpenseListComponent,
+    Select,
+    FormsModule,
+    Skeleton,
+    TabsModule,
+    UserAvatarComponent,
+    SpaceMenuComponent,
+    SpaceFormDialogComponent,
+    ManageSpaceMembersComponent
+  ],
   templateUrl: './space-details.page.html',
   styleUrl: './space-details.page.scss'
 })

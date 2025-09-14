@@ -1,6 +1,6 @@
 import { ButtonModule } from 'primeng/button';
 import { CommonModule } from '@angular/common';
-import { Component, computed, effect, inject, signal } from '@angular/core';
+import { Component, computed, effect, inject, input, signal } from '@angular/core';
 import { DialogModule } from 'primeng/dialog';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { InputTextModule } from 'primeng/inputtext';
@@ -18,6 +18,8 @@ import { TextareaModule } from 'primeng/textarea';
 export class SpaceFormDialogComponent {
   protected spaceService = inject(SpaceService);
   private messageService = inject(MessageService);
+
+  shouldReload = input<boolean>();
 
   protected isDialogOpen = this.spaceService.isFormDialogOpen;
   protected selectedSpace = this.spaceService.selectedSpace;
@@ -51,6 +53,9 @@ export class SpaceFormDialogComponent {
     this.isLoading.set(false);
     this.spaceService.toggleFormDialog(false);
     this.spaceForm.reset();
+    if (this.shouldReload()) {
+      window.location.reload();
+    }
   }
 
   async handleSubmit(): Promise<void> {

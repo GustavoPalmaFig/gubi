@@ -1,7 +1,7 @@
 import { AutoCompleteCompleteEvent, AutoCompleteModule, AutoCompleteSelectEvent } from 'primeng/autocomplete';
 import { Button } from 'primeng/button';
 import { CommonModule } from '@angular/common';
-import { Component, computed, effect, inject, signal } from '@angular/core';
+import { Component, computed, effect, inject, input, signal } from '@angular/core';
 import { ConfirmationService } from 'primeng/api';
 import { DialogModule } from 'primeng/dialog';
 import { FormsModule } from '@angular/forms';
@@ -25,6 +25,8 @@ export class ManageSpaceMembersComponent {
   protected spaceApiService = inject(SpaceApiService);
   private messageService = inject(MessageService);
   private confirmationService = inject(ConfirmationService);
+
+  shouldReload = input<boolean>();
 
   protected isDialogOpen = this.spaceService.isMembersDialogOpen;
   protected selectedSpace = this.spaceService.selectedSpace;
@@ -87,6 +89,9 @@ export class ManageSpaceMembersComponent {
   close(): void {
     this.resetState();
     this.spaceService.toggleMembersDialog(false);
+    if (this.shouldReload()) {
+      window.location.reload();
+    }
   }
 
   async handleSubmit(): Promise<void> {
