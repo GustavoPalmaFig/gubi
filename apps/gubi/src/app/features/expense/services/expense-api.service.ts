@@ -25,7 +25,9 @@ export class ExpenseApiService {
     const isInstallments = expense.recurring_type === 'installments';
 
     if (isRecurring && isInstallments) {
-      expense = { ...expense, recurring_current_installment: 1 };
+      const totalInstallments = expense.recurring_end_installments || 2;
+      const title = `${expense.title} (1/${totalInstallments})`;
+      expense = { ...expense, title, recurring_current_installment: 1 };
     }
 
     const { data, error } = await this.supabaseService.client.from('expense').insert(expense).select().single();
@@ -113,13 +115,15 @@ export class ExpenseApiService {
       }
 
       const totalInstallments = parentExpense.recurring_end_installments;
+      const mainTitle = parentExpense.title.replace(` (1/${totalInstallments})`, '');
 
       for (let installment = 2; installment <= totalInstallments; installment++) {
         currentDate = Utils.adjustDateByMonths(currentDate, 1);
+        const title = `${mainTitle} (${installment}/${totalInstallments})`;
 
         bulkExpenses.push({
           ...parentExpense,
-          title: `${parentExpense.title} (${installment}/${totalInstallments})`,
+          title,
           reference_period: currentDate,
           recurring_current_installment: installment,
           recurring_parent_id: parentExpense.id
