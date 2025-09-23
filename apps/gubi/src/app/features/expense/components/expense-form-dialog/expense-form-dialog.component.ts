@@ -1,13 +1,15 @@
 import { ButtonModule } from 'primeng/button';
+import { CategoryApiService } from '@features/category/services/category-api.service';
+import { CategoryFormDialogComponent } from '@features/category/components/category-form-dialog/category-form-dialog.component';
 import { Checkbox } from 'primeng/checkbox';
 import { CommonModule } from '@angular/common';
 import { Component, computed, effect, EventEmitter, inject, Input, input, Output, signal, WritableSignal } from '@angular/core';
 import { DatePickerModule } from 'primeng/datepicker';
 import { DialogModule } from 'primeng/dialog';
 import { ExpenseApiService } from '@features/expense/services/expense-api.service';
-import { ExpenseCategory } from '@features/expense/enums/expenseCategory.enum';
 import { ExpenseRecurringType } from '@features/expense/enums/expenseRecurringType.enum';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { iCategory } from '@features/category/interfaces/category.interface';
 import { iExpense, RecurringType } from '@features/expense/interfaces/expense.interface';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { InputTextModule } from 'primeng/inputtext';
@@ -37,6 +39,7 @@ import Utils from '@shared/utils/utils';
     Select,
     ReactiveFormsModule,
     PaymentMethodFormDialogComponent,
+    CategoryFormDialogComponent,
     UserAvatarComponent,
     Checkbox,
     Tag
@@ -49,6 +52,7 @@ export class ExpenseFormDialogComponent {
   protected expenseApiService = inject(ExpenseApiService);
   protected spaceApiService = inject(SpaceApiService);
   protected paymentMethodApiService = inject(PaymentMethodApiService);
+  protected categoryApiService = inject(CategoryApiService);
   protected getAbbreviatedName = Utils.getAbbreviatedName;
 
   @Input() isOpen = signal(false);
@@ -61,12 +65,13 @@ export class ExpenseFormDialogComponent {
   protected isEditMode = computed(() => !!this.selectedExpense());
   protected isLoading = signal(false);
   protected isPaymentMethodDialogOpen = signal(false);
+  protected isCategoryDialogOpen = signal(false);
   protected showSplitInfo = signal(false);
   protected showRecurringInfo = signal(false);
 
   protected expenseForm!: FormGroup;
   protected paymentMethods: iPaymentMethod[] = [];
-  protected expenseCategories: { label: string; value: number }[] = [];
+  protected categories: iCategory[] = [];
   protected expenseRecurringTypes: { label: string; value: string }[] = [
     { label: ExpenseRecurringType.Date, value: 'date' },
     { label: ExpenseRecurringType.Installments, value: 'installments' }
@@ -89,17 +94,49 @@ export class ExpenseFormDialogComponent {
       recurring_end_installments: new FormControl<number | null>(null)
     });
 
+    this.listenToTitle();
     this.listenToIsRecurring();
     this.listenToRecurringType();
 
     effect(() => {
       this.loadPaymentMethods();
-      this.expenseCategories = Utils.enumToArray(ExpenseCategory);
+      this.loadCategories();
     });
 
     effect(() => {
       this.initializeForm();
     });
+  }
+
+  private listenToTitle() {
+    this.expenseForm.get('title')?.valueChanges.subscribe(title => {
+      if (!title || !title.trim()) return;
+
+      const matchedCategory = this.findCategoryByTitle(title);
+
+      if (matchedCategory) {
+        this.expenseForm.get('category_id')?.setValue(matchedCategory.id, { emitEvent: false });
+      }
+    });
+  }
+
+  private findCategoryByTitle(title: string) {
+    const lowerTitle = title.toLowerCase();
+
+    for (const category of this.categories) {
+      if (!category.pattern_matching) continue;
+
+      const patterns = category.pattern_matching
+        .split(',')
+        .map(p => p.trim().toLowerCase())
+        .filter(Boolean);
+
+      if (patterns.some(p => lowerTitle.includes(p))) {
+        return category;
+      }
+    }
+
+    return null;
   }
 
   private listenToIsRecurring() {
@@ -146,6 +183,10 @@ export class ExpenseFormDialogComponent {
 
   private async loadPaymentMethods() {
     this.paymentMethods = await this.paymentMethodApiService.getAvailablePaymentMethods(this.space().id);
+  }
+
+  private async loadCategories() {
+    this.categories = await this.categoryApiService.getCategories();
   }
 
   private initializeForm() {
@@ -203,10 +244,20 @@ export class ExpenseFormDialogComponent {
     this.isPaymentMethodDialogOpen.set(true);
   }
 
+  openCategoryDialog() {
+    this.isCategoryDialogOpen.set(true);
+  }
+
   async handlePaymentMethodCreated(method: iPaymentMethod) {
     await this.loadPaymentMethods();
     this.expenseForm.patchValue({ payment_method_id: method.id });
     this.isPaymentMethodDialogOpen.set(false);
+  }
+
+  async handleCategoryCreated(category: iCategory) {
+    this.categories.push(category);
+    this.expenseForm.patchValue({ category_id: category.id });
+    this.isCategoryDialogOpen.set(false);
   }
 
   get groupedPaymentMethods() {

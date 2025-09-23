@@ -1,6 +1,7 @@
 import { iPaymentMethod } from '@features/payment-methods/interfaces/payment-method';
 import { iSpace } from '@features/spaces/interfaces/space.interface';
 import { iUser } from '@features/auth/interfaces/user.interface';
+import { iCategory } from '../../category/interfaces/category.interface';
 import { iExpenseSplit } from './expense_split.interface';
 
 export type RecurringType = 'date' | 'installments';
@@ -33,4 +34,5 @@ export interface iExpense {
   creator: iUser;
   updated_by_user: iUser;
   payment_method: iPaymentMethod;
+  category: iCategory;
 }

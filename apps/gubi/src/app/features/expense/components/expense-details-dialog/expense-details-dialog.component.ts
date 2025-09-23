@@ -1,7 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, computed, Input, input, signal } from '@angular/core';
 import { Dialog } from 'primeng/dialog';
-import { ExpenseCategory } from '@features/expense/enums/expenseCategory.enum';
 import { iExpense } from '@features/expense/interfaces/expense.interface';
 import { TabsModule } from 'primeng/tabs';
 import { Tag } from 'primeng/tag';
@@ -31,13 +30,13 @@ export class ExpenseDetailsDialogComponent {
     });
   });
 
+  protected categoy = computed(() => {
+    const expense = this.expense();
+    return expense?.category;
+  });
+
   protected close(): void {
     this.isOpen.set(false);
-  }
-
-  get categoryName(): string {
-    const categoryId = this.expense()?.category_id;
-    return categoryId ? ExpenseCategory[categoryId] || 'Outros' : 'Outros';
   }
 
   getSplitPercentage(value: number): string {

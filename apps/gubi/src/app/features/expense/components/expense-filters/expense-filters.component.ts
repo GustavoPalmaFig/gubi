@@ -3,7 +3,6 @@ import { CommonModule } from '@angular/common';
 import { Component, computed, effect, Input, input, signal } from '@angular/core';
 import { DatePickerModule } from 'primeng/datepicker';
 import { Dialog } from 'primeng/dialog';
-import { ExpenseCategory } from '@features/expense/enums/expenseCategory.enum';
 import { FormsModule } from '@angular/forms';
 import { IconFieldModule } from 'primeng/iconfield';
 import { iExpense } from '@features/expense/interfaces/expense.interface';
@@ -64,18 +63,8 @@ export class ExpenseFiltersComponent {
   });
 
   protected categories = computed(() => {
-    const allCategoriesIds = this.filteredExpenses()
-      .map(expense => expense.category_id)
-      .filter(id => id !== undefined && id !== null);
-    const uniqueCategories = Utils.getDistinctValues(allCategoriesIds);
-    if (uniqueCategories.length === 0) {
-      return [{ label: 'Outros', value: 7 }];
-    }
-
-    return uniqueCategories.map(id => ({
-      label: ExpenseCategory[id] || 'Outros',
-      value: id
-    }));
+    const allCategories = this.filteredExpenses().map(expense => expense.category);
+    return allCategories.length > 0 ? Utils.getDistinctValues(allCategories, 'id') : [];
   });
 
   protected sortOptions: SortOption[] = [

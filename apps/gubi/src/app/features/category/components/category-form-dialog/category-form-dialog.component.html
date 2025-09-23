@@ -1,0 +1,52 @@
+<p-dialog
+  header="Criar categoria"
+  [modal]="true"
+  [(visible)]="isDialogOpen"
+  [closeOnEscape]="true"
+  [dismissableMask]="true"
+  (visibleChange)="close()"
+  styleClass="w-full md:w-1/2 lg:w-1/3 mx-4 dialog-with-subtitle"
+>
+  <p class="text-sm text-muted-foreground">Adicione uma nova categoria para utilizar em suas despesas</p>
+  <form [formGroup]="categoryForm" (ngSubmit)="handleSubmit()" class="mt-6 space-y-4">
+    <div class="flex flex-col">
+      <label for="name" class="text-sm font-medium">Nome</label>
+      <div class="flex items-center gap-2">
+        <input id="name" class="w-full mt-2" type="text" pInputText formControlName="name" placeholder="Ex: Mercado, Transporte, Pet" />
+        <p-colorpicker formControlName="color_hex" format="hex" appendTo="body" />
+      </div>
+
+      @if(categoryForm.controls['name'].value) {
+      <div class="mt-2">
+        <div class="inline-flex items-center rounded-full border px-2.5 py-1 text-md font-semibold" [style]="'background-color: ' + categoryForm.controls['color_hex'].value">
+          <span class="text-white">{{ categoryForm.controls['name'].value }}</span>
+        </div>
+      </div>
+      }
+    </div>
+
+    <div class="flex flex-col">
+      <div class="flex items-center">
+        <label for="pattern_matching" class="text-sm font-medium">Palavras-chave</label>
+        <p-button text severity="secondary" rounded icon="pi pi-question-circle" (onClick)="toggleInfos(showPatternInfo)" />
+      </div>
+      <input id="pattern_matching" class="w-full" type="text" pInputText formControlName="pattern_matching" placeholder="Ex: ida, volta" />
+      @if(showPatternInfo()) {
+      <p class="text-xs text-gray-500 mt-2">
+        Você pode definir palavras-chave para que, ao cadastrar uma despesa, a categoria seja sugerida automaticamente.<br />Por exemplo: se a categoria “Transporte” tiver os
+        padrões “ida, volta”, qualquer despesa que contenha uma dessas palavras no título será automaticamente associada à categoria “Transporte”.
+      </p>
+      }
+    </div>
+
+    <div class="flex justify-end">
+      <p-button
+        type="submit"
+        label="{{ isLoading() ? 'Criando...' : 'Criar' }}"
+        [disabled]="isLoading() || categoryForm.invalid"
+        [loading]="isLoading()"
+        severity="contrast"
+      ></p-button>
+    </div>
+  </form>
+</p-dialog>

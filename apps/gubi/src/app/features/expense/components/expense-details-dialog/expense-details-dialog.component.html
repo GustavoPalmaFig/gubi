@@ -19,7 +19,11 @@
           <div class="p-4 space-y-4">
             <div class="flex justify-between items-center">
               <h1 class="text-lg font-medium">Informações Básicas</h1>
-              <div class="inline-flex items-center rounded-full border px-2.5 py-1 text-md font-semibold">{{ categoryName}}</div>
+              @if(categoy()) {
+              <div class="inline-flex items-center rounded-full border px-2.5 py-1 text-md font-semibold" [style]="'background-color: ' + categoy()?.color_hex">
+                <span class="text-white">{{ categoy()?.name }}</span>
+              </div>
+              }
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -45,12 +49,12 @@
                   <p class="text-sm">Método de Pagamento</p>
                 </div>
                 @if(expense()?.payment_method_id) {
-                  <div class="flex items-center gap-2">
-                    <app-user-avatar [users]="expense()?.payment_method?.owner!"></app-user-avatar>
-                    <span class="font-medium">{{ expense()?.payment_method?.name }}</span>
-                    <p-tag *ngIf="expense()?.payment_method?.split_by_default" styleClass="!text-xs" severity="info" value="Compartilhado" />
-                    <p-tag *ngIf="expense()?.payment_method?.is_excluded_from_totals" styleClass="!text-xs" severity="secondary" value="Sem fatura" />
-                  </div>
+                <div class="flex items-center gap-2">
+                  <app-user-avatar [users]="expense()?.payment_method?.owner!"></app-user-avatar>
+                  <span class="font-medium">{{ expense()?.payment_method?.name }}</span>
+                  <p-tag *ngIf="expense()?.payment_method?.split_by_default" styleClass="!text-xs" severity="info" value="Compartilhado" />
+                  <p-tag *ngIf="expense()?.payment_method?.is_excluded_from_totals" styleClass="!text-xs" severity="secondary" value="Sem fatura" />
+                </div>
                 }
               </div>
 
@@ -96,27 +100,26 @@
           <div class="p-4">
             <h3 class="text-lg font-medium mb-4">Divisão da Despesa</h3>
             @if(!expense()?.expense_splits) {
-              <p class="text-md text-gray-500">Nenhuma divisão personalizada foi registrada para esta despesa.</p>
-            }
-            @else {
-              <div class="space-y-3">
-                @for(splitObj of expense()?.expense_splits; track splitObj.user_id) {
-                  <div class="flex items-center justify-between p-2 border rounded-md">
-                    <div class="flex items-center gap-2">
-                      <app-user-avatar [users]="splitObj.user" [size]="'large'"></app-user-avatar>
-                      <span class="font-medium">{{ getAbbreviatedName(splitObj.user.fullname) }}</span>
-                    </div>
-                    <div class="text-right">
-                      <p class="font-medium">{{ splitObj.split_value | currency: 'BRL' }}</p>
-                      <p class="text-xs">{{getSplitPercentage(splitObj.split_value)}}</p>
-                    </div>
-                  </div>
-                }
-                <div class="flex justify-between items-center p-2 border-t pt-3 font-bold">
-                  <span>Total</span>
-                  <span>{{ expense()?.value | currency: 'BRL' }}</span>
+            <p class="text-md text-gray-500">Nenhuma divisão personalizada foi registrada para esta despesa.</p>
+            } @else {
+            <div class="space-y-3">
+              @for(splitObj of expense()?.expense_splits; track splitObj.user_id) {
+              <div class="flex items-center justify-between p-2 border rounded-md">
+                <div class="flex items-center gap-2">
+                  <app-user-avatar [users]="splitObj.user" [size]="'large'"></app-user-avatar>
+                  <span class="font-medium">{{ getAbbreviatedName(splitObj.user.fullname) }}</span>
+                </div>
+                <div class="text-right">
+                  <p class="font-medium">{{ splitObj.split_value | currency: 'BRL' }}</p>
+                  <p class="text-xs">{{getSplitPercentage(splitObj.split_value)}}</p>
                 </div>
               </div>
+              }
+              <div class="flex justify-between items-center p-2 border-t pt-3 font-bold">
+                <span>Total</span>
+                <span>{{ expense()?.value | currency: 'BRL' }}</span>
+              </div>
+            </div>
             }
           </div>
         </div>
