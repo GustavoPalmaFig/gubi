@@ -1,3 +1,4 @@
+import { addMonths, addWeeks } from 'date-fns';
 import { iSpaceMember } from '@features/spaces/interfaces/space_member.interface';
 import { iUser } from '@features/auth/interfaces/user.interface';
 
@@ -14,13 +15,13 @@ export default class Utils {
   }
 
   static adjustDateByMonths(date: Date | string, months: number): Date {
-    const refDate = new Date(date);
-    return new Date(refDate.getUTCFullYear(), refDate.getUTCMonth() + months, refDate.getUTCDate());
+    const refDate = typeof date === 'string' ? new Date(date) : date;
+    return addMonths(refDate, months);
   }
 
   static addOneWeekToDate(date: Date): Date {
     const refDate = new Date(date);
-    return new Date(refDate.getUTCFullYear(), refDate.getUTCMonth(), refDate.getUTCDate() + 7);
+    return addWeeks(refDate, 1);
   }
 
   static formatToDateOnly(date: Date | string): string {
