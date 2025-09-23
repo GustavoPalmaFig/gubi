@@ -37,6 +37,7 @@ export class ExpenseSplitDialogComponent {
   });
 
   protected splitList = signal<iExpenseSplit[]>([]);
+  protected isLoading = signal(false);
 
   constructor() {
     effect(() => {
@@ -69,7 +70,9 @@ export class ExpenseSplitDialogComponent {
   }
 
   async saveSplit(): Promise<void> {
+    this.isLoading.set(true);
     const { error } = await this.expenseApiService.createExpenseSplit(this.expense().id, this.splitList());
+    this.isLoading.set(false);
 
     if (error) {
       this.messageService.showMessage('error', 'Erro', error);

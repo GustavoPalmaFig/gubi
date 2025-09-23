@@ -49,6 +49,6 @@
   }
 
   <div class="w-full mt-6">
-    <p-button styleClass="w-full" label="Salvar" severity="contrast" (click)="saveSplit()"></p-button>
+    <p-button styleClass="w-full" label="Salvar" severity="contrast" (click)="saveSplit()" [disabled]="isLoading()" [loading]="isLoading()"></p-button>
   </div>
 </p-dialog>
