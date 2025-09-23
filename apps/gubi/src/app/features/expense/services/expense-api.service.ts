@@ -21,8 +21,24 @@ export class ExpenseApiService {
   }
 
   async createExpense(expense: iExpense): Promise<{ data: iExpense; error?: string }> {
-    const { data, error } = await this.supabaseService.client.from('expense').insert([expense]).select().single();
-    return { data: data as iExpense, error: Utils.handleErrorMessage(error) };
+    const isRecurring = expense.is_recurring;
+    const isInstallments = expense.recurring_type === 'installments';
+
+    if (isRecurring && isInstallments) {
+      expense = { ...expense, recurring_current_installment: 1 };
+    }
+
+    const { data, error } = await this.supabaseService.client.from('expense').insert(expense).select().single();
+    if (error || !data) return { data: {} as iExpense, error: Utils.handleErrorMessage(error) };
+
+    const parentExpense = data as iExpense;
+    if (isRecurring) {
+      const recurringResponse = await this.createRecurringExpenses(parentExpense);
+      if (recurringResponse.error) {
+        return { data, error: recurringResponse.error };
+      }
+    }
+    return { data: parentExpense, error: Utils.handleErrorMessage(error) };
   }
 
   async updateExpense(expense: iExpense): Promise<{ data: iExpense; error?: string }> {
@@ -36,14 +52,87 @@ export class ExpenseApiService {
   }
 
   async createExpenseSplit(expense_id: number, expense_splits: iExpenseSplit[]): Promise<{ error?: string }> {
-    const split_data = expense_splits.map(({ user, ...split }) => split);
-    await this.supabaseService.client.from('expense_split').delete().eq('expense_id', expense_id);
-    const { error } = await this.supabaseService.client.from('expense_split').insert(split_data);
+    const { data: recurringExpenses } = await this.supabaseService.client.from('expense').select('id').eq('recurring_parent_id', expense_id);
+
+    const expenseIdsToDelete = [expense_id];
+    if (recurringExpenses && recurringExpenses.length > 0) {
+      expenseIdsToDelete.push(...recurringExpenses.map(e => e.id));
+    }
+
+    const splitToInsert: Omit<iExpenseSplit, 'user'>[] = [];
+    for (const { user, ...split } of expense_splits) {
+      splitToInsert.push({ ...split, expense_id });
+    }
+
+    if (recurringExpenses && recurringExpenses.length > 0) {
+      for (const recurringExpense of recurringExpenses) {
+        for (const { user, ...split } of expense_splits) {
+          splitToInsert.push({ ...split, expense_id: recurringExpense.id });
+        }
+      }
+    }
+
+    await this.supabaseService.client.from('expense_split').delete().in('expense_id', expenseIdsToDelete);
+    const { error } = await this.supabaseService.client.from('expense_split').insert(splitToInsert);
     return { error: Utils.handleErrorMessage(error) };
   }
 
   async getTotalExpenseValueFromSpaceAndDate(target_space_id: number, target_reference_period: Date): Promise<number> {
     const { data } = await this.supabaseService.client.rpc('get_total_expense_by_month', { target_space_id, target_reference_period });
     return data ? parseFloat(data.toFixed(2)) : 0;
+  }
+
+  private async createRecurringExpenses(parentExpense: iExpense): Promise<{ error?: string }> {
+    if (!parentExpense.reference_period) {
+      return { error: 'Missing reference_period on parent expense' };
+    }
+
+    const bulkExpenses: iExpense[] = [];
+    let currentDate = new Date(parentExpense.reference_period);
+
+    if (parentExpense.recurring_type === 'date') {
+      if (!parentExpense.recurring_end_date) {
+        return { error: 'recurring_end_date is required for type "date"' };
+      }
+
+      const endDate = new Date(parentExpense.recurring_end_date);
+
+      while (currentDate < endDate) {
+        currentDate = Utils.adjustDateByMonths(currentDate, 1);
+        if (currentDate > endDate) break;
+
+        bulkExpenses.push({
+          ...parentExpense,
+          reference_period: currentDate,
+          recurring_parent_id: parentExpense.id
+        });
+      }
+    } else {
+      if (!parentExpense.recurring_end_installments || parentExpense.recurring_end_installments < 2) {
+        return { error: 'recurring_end_installments must be >= 2 for type "installments"' };
+      }
+
+      const totalInstallments = parentExpense.recurring_end_installments;
+
+      for (let installment = 2; installment <= totalInstallments; installment++) {
+        currentDate = Utils.adjustDateByMonths(currentDate, 1);
+
+        bulkExpenses.push({
+          ...parentExpense,
+          title: `${parentExpense.title} (${installment}/${totalInstallments})`,
+          reference_period: currentDate,
+          recurring_current_installment: installment,
+          recurring_parent_id: parentExpense.id
+        });
+      }
+    }
+
+    const expenses = bulkExpenses.map(expense => {
+      const { id, ...rest } = expense;
+      return rest;
+    });
+
+    const { error } = await this.supabaseService.client.from('expense').insert(expenses);
+    return { error: Utils.handleErrorMessage(error) };
   }
 }

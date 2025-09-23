@@ -96,31 +96,89 @@
     </div>
     <div class="flex flex-col gap-1">
       <div class="flex items-center">
-        <p-checkbox id="force_split" formControlName="force_split" binary styleClass="mb-0.5"/>
+        <p-checkbox id="force_split" formControlName="force_split" binary styleClass="mb-0.5" />
         <label for="force_split" class="text-sm font-medium ml-2">Definir divisão personalizada</label>
         <p-button text severity="secondary" rounded icon="pi pi-question-circle" (onClick)="toggleInfos(showSplitInfo)" />
       </div>
       @if(showSplitInfo()) {
-        <p class="text-xs text-gray-500">
-          Por padrão, as despesas são divididas igualmente entre todos os membros do espaço. Caso queira dividir o valor de forma personalizada, selecione esta opção.
-        </p>
+      <p class="text-xs text-gray-500">
+        Por padrão, as despesas são divididas igualmente entre todos os membros do espaço. Caso queira dividir o valor de forma personalizada, selecione esta opção.
+      </p>
       }
       <div class="flex items-center">
-        <p-checkbox id="force_split" formControlName="force_split" binary styleClass="mb-0.5"/>
-        <label for="force_split" class="text-sm font-medium ml-2">Definir divisão personalizada</label>
-        <p-button text severity="secondary" rounded icon="pi pi-question-circle" (onClick)="toggleInfos(showSplitInfo)" />
+        <p-checkbox id="is_recurring" formControlName="is_recurring" binary styleClass="mb-0.5" [disabled]="isEditMode()" />
+        <label for="is_recurring" class="text-sm font-medium ml-2">Despesa recorrente</label>
+        <p-button text severity="secondary" rounded icon="pi pi-question-circle" (onClick)="toggleInfos(showRecurringInfo)" />
       </div>
-      @if(showSplitInfo()) {
-        <p class="text-xs text-gray-500">
-          Por padrão, as despesas são divididas igualmente entre todos os membros do espaço. Caso queira dividir o valor de forma personalizada, selecione esta opção.
-        </p>
+      @if(showRecurringInfo()) {
+      <p class="text-xs text-gray-500 mb-2">Despesas recorrentes são compromissos fixos que se repetem automaticamente. Ideal para assinaturas, mensalidades, parcelas, etc.</p>
+      } @if(expenseForm.get('is_recurring')?.value) {
+      <div class="rounded-lg border shadow-2xs">
+        <div class="p-4 flex-col space-y-4">
+          <h3 class="font-semibold text-sm">Configurações de Recorrência</h3>
+          <div class="space-y-4">
+            <div>
+              <label for="recurring_type" class="text-sm font-medium">Duração *</label>
+              <p-select
+                id="recurring_type"
+                class="w-full mt-2"
+                [options]="expenseRecurringTypes"
+                formControlName="recurring_type"
+                optionLabel="label"
+                optionValue="value"
+                placeholder="Selecione"
+                [disabled]="isEditMode()"
+              />
+            </div>
+          </div>
+          @if(expenseForm.get('recurring_type')?.value === 'date') {
+          <div>
+            <label for="recurring_end_date" class="text-sm font-medium">Data de término *</label>
+            <p-datepicker
+              id="recurring_end_date"
+              styleClass="w-full mt-2"
+              appendTo="body"
+              formControlName="recurring_end_date"
+              [showIcon]="true"
+              [showButtonBar]="true"
+              dateFormat="dd/mm/yy"
+              placeholder="dd/mm/aaaa"
+              [disabled]="isEditMode()"
+            ></p-datepicker>
+          </div>
+          } @else if(expenseForm.get('recurring_type')?.value === 'installments') {
+          <div>
+            <label for="recurring_end_installments" class="text-sm font-medium">Número de parcelas *</label>
+            <p-inputnumber
+              id="recurring_end_installments"
+              class="w-full mt-2"
+              inputId="locale-brazil"
+              min="2"
+              max="12"
+              locale="pt-BR"
+              formControlName="recurring_end_installments"
+              placeholder="Mínimo 2, Máximo de 12 parcelas"
+              [showButtons]="false"
+              [disabled]="isEditMode()"
+            />
+          </div>
+          }
+          <div class="mt-2 text-sm flex flex-col gap-2 bg-blue-50 p-3 rounded-md">
+            <div class="flex gap-1 items-center">
+              <i class="pi pi-exclamation-circle"></i>
+              <span class="font-bold">Importante</span>
+            </div>
+            <span>As despesas recorrentes para os meses seguintes são geradas automaticamente ao cadastrar a primeira. É possível criar até 12 recorrências de uma vez.</span>
+          </div>
+        </div>
+      </div>
       }
     </div>
     <div class="flex justify-end pt-6">
       <p-button
         type="submit"
         label="{{ isLoading() ? (isEditMode() ? 'Editando Despesa...' : 'Adicionando...') : (isEditMode() ? 'Editar Despesa' : 'Adicionar Despesa') }}"
-        [disabled]="isLoading() || expenseForm.get('title')?.invalid"
+        [disabled]="isLoading() || expenseForm.invalid"
         [loading]="isLoading()"
         severity="contrast"
       ></p-button>

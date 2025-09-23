@@ -6,8 +6,9 @@ import { DatePickerModule } from 'primeng/datepicker';
 import { DialogModule } from 'primeng/dialog';
 import { ExpenseApiService } from '@features/expense/services/expense-api.service';
 import { ExpenseCategory } from '@features/expense/enums/expenseCategory.enum';
+import { ExpenseRecurringType } from '@features/expense/enums/expenseRecurringType.enum';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { iExpense } from '@features/expense/interfaces/expense.interface';
+import { iExpense, RecurringType } from '@features/expense/interfaces/expense.interface';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { InputTextModule } from 'primeng/inputtext';
 import { iPaymentMethod } from '@features/payment-methods/interfaces/payment-method';
@@ -61,10 +62,15 @@ export class ExpenseFormDialogComponent {
   protected isLoading = signal(false);
   protected isPaymentMethodDialogOpen = signal(false);
   protected showSplitInfo = signal(false);
+  protected showRecurringInfo = signal(false);
 
   protected expenseForm!: FormGroup;
   protected paymentMethods: iPaymentMethod[] = [];
   protected expenseCategories: { label: string; value: number }[] = [];
+  protected expenseRecurringTypes: { label: string; value: string }[] = [
+    { label: ExpenseRecurringType.Date, value: 'date' },
+    { label: ExpenseRecurringType.Installments, value: 'installments' }
+  ];
 
   constructor() {
     this.expenseForm = new FormGroup({
@@ -76,8 +82,15 @@ export class ExpenseFormDialogComponent {
       payment_method_id: new FormControl<number | null>(null),
       category_id: new FormControl<number | null>(null),
       reference_period: new FormControl<Date | null>(null),
-      force_split: new FormControl<boolean>(false)
+      force_split: new FormControl<boolean>(false),
+      is_recurring: new FormControl<boolean>(false),
+      recurring_type: new FormControl<RecurringType | null>(null),
+      recurring_end_date: new FormControl<Date | null>(null),
+      recurring_end_installments: new FormControl<number | null>(null)
     });
+
+    this.listenToIsRecurring();
+    this.listenToRecurringType();
 
     effect(() => {
       this.loadPaymentMethods();
@@ -86,6 +99,48 @@ export class ExpenseFormDialogComponent {
 
     effect(() => {
       this.initializeForm();
+    });
+  }
+
+  private listenToIsRecurring() {
+    this.expenseForm.get('is_recurring')?.valueChanges.subscribe(isRecurring => {
+      if (isRecurring) {
+        this.expenseForm.get('recurring_type')?.addValidators(Validators.required);
+      } else {
+        this.expenseForm.patchValue(
+          {
+            recurring_type: null,
+            recurring_end_date: null,
+            recurring_end_installments: null
+          },
+          { emitEvent: false }
+        );
+
+        this.expenseForm.get('recurring_type')?.removeValidators(Validators.required);
+        this.expenseForm.get('recurring_end_date')?.removeValidators(Validators.required);
+        this.expenseForm.get('recurring_end_installments')?.removeValidators(Validators.required);
+      }
+
+      this.expenseForm.updateValueAndValidity();
+    });
+  }
+
+  private listenToRecurringType() {
+    this.expenseForm.get('recurring_type')?.valueChanges.subscribe(recurringType => {
+      if (!recurringType) return;
+
+      if (recurringType == 'date') {
+        this.expenseForm.get('recurring_end_date')?.addValidators(Validators.required);
+        this.expenseForm.get('recurring_end_installments')?.clearValidators();
+        this.expenseForm.get('recurring_end_installments')?.setValue(null, { emitEvent: false });
+      } else {
+        this.expenseForm.get('recurring_end_installments')?.addValidators(Validators.required);
+        this.expenseForm.get('recurring_end_date')?.removeValidators(Validators.required);
+        this.expenseForm.get('recurring_end_date')?.setValue(null, { emitEvent: false });
+      }
+
+      this.expenseForm.get('recurring_end_date')?.updateValueAndValidity();
+      this.expenseForm.get('recurring_end_installments')?.updateValueAndValidity();
     });
   }
 
