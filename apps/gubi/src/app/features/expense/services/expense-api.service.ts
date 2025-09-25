@@ -118,7 +118,8 @@ export class ExpenseApiService {
       const mainTitle = parentExpense.title.replace(` (1/${totalInstallments})`, '');
 
       for (let installment = 2; installment <= totalInstallments; installment++) {
-        currentDate = Utils.adjustDateByMonths(currentDate, 1);
+        const period = new Date(currentDate.getUTCFullYear(), currentDate.getUTCMonth(), 1);
+        currentDate = Utils.adjustDateByMonths(period, 1);
         const title = `${mainTitle} (${installment}/${totalInstallments})`;
 
         bulkExpenses.push({
