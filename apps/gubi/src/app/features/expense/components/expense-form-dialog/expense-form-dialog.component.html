@@ -30,7 +30,19 @@
       />
     </div>
     <div>
-      <label for="date" class="text-sm font-medium">Data</label>
+      <label for="reference_period" class="text-sm font-medium">Período de referência</label>
+      <p-datepicker
+        id="reference_period"
+        styleClass="w-full mt-2"
+        appendTo="body"
+        formControlName="reference_period"
+        [showIcon]="true"
+        dateFormat="MM/yy"
+        view="month"
+      ></p-datepicker>
+    </div>
+    <div>
+      <label for="date" class="text-sm font-medium">Data da compra</label>
       <p-datepicker
         id="date"
         styleClass="w-full mt-2"
@@ -122,13 +134,13 @@
       <p class="text-xs text-gray-500">
         Por padrão, as despesas são divididas igualmente entre todos os membros do espaço. Caso queira dividir o valor de forma personalizada, selecione esta opção.
       </p>
-      }
+      } @if(!isEditMode() || expenseForm.get('is_recurring')?.value) {
       <div class="flex items-center">
         <p-checkbox id="is_recurring" formControlName="is_recurring" binary styleClass="mb-0.5" [disabled]="isEditMode()" />
         <label for="is_recurring" class="text-sm font-medium ml-2">Despesa recorrente</label>
         <p-button text severity="secondary" rounded icon="pi pi-question-circle" (onClick)="toggleInfos(showRecurringInfo)" />
       </div>
-      @if(showRecurringInfo()) {
+      } @if(showRecurringInfo()) {
       <p class="text-xs text-gray-500 mb-2">Despesas recorrentes são compromissos fixos que se repetem automaticamente. Ideal para assinaturas, mensalidades, parcelas, etc.</p>
       } @if(expenseForm.get('is_recurring')?.value) {
       <div class="rounded-lg border shadow-2xs">

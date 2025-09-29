@@ -104,7 +104,11 @@ export class ExpenseFormDialogComponent {
     });
 
     effect(() => {
-      this.initializeForm();
+      if (this.isOpen()) {
+        this.initializeForm();
+      } else {
+        this.resetForm();
+      }
     });
   }
 
@@ -158,7 +162,7 @@ export class ExpenseFormDialogComponent {
         this.expenseForm.get('recurring_end_installments')?.removeValidators(Validators.required);
       }
 
-      this.expenseForm.updateValueAndValidity();
+      this.expenseForm.updateValueAndValidity({ emitEvent: false });
     });
   }
 
@@ -176,8 +180,7 @@ export class ExpenseFormDialogComponent {
         this.expenseForm.get('recurring_end_date')?.setValue(null, { emitEvent: false });
       }
 
-      this.expenseForm.get('recurring_end_date')?.updateValueAndValidity();
-      this.expenseForm.get('recurring_end_installments')?.updateValueAndValidity();
+      this.expenseForm.updateValueAndValidity({ emitEvent: false });
     });
   }
 
@@ -190,28 +193,29 @@ export class ExpenseFormDialogComponent {
   }
 
   private initializeForm() {
-    this.expenseForm.patchValue({
-      space_id: this.space().id,
-      reference_period: this.referencePeriod()
-    });
+    this.expenseForm.patchValue(
+      {
+        space_id: this.space().id,
+        reference_period: this.referencePeriod()
+      },
+      { emitEvent: false }
+    );
 
     const expense = this.selectedExpense();
 
-    if (this.isOpen() && expense && this.expenseForm.untouched) {
+    if (expense && this.expenseForm.untouched) {
       this.patchFormWithExpense(expense);
-    } else if (!this.isOpen()) {
-      this.resetForm();
     }
   }
 
   private patchFormWithExpense(expense: iExpense) {
-    this.expenseForm.addControl('id', new FormControl());
+    this.expenseForm.addControl('id', new FormControl(), { emitEvent: false });
     expense = Utils.formatAllStrToDatePattern(expense);
-    this.expenseForm.patchValue(expense);
+    this.expenseForm.patchValue(expense, { emitEvent: false });
   }
 
   private resetForm() {
-    this.expenseForm.removeControl('id');
+    this.expenseForm.removeControl('id', { emitEvent: false });
     this.expenseForm.reset();
   }
 
