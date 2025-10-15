@@ -160,14 +160,14 @@ export class MySpendingsPage {
   }
 
   private calculateTotalToPay(expenses: iExpense[], totalAll: number): number {
-    const totalToPay = expenses.reduce((sum, exp) => {
+    const totalNoInvoice = expenses.reduce((sum, exp) => {
       if (exp.payment_method && exp.payment_method.is_excluded_from_totals) {
-        return this.getUserSpending(exp);
+        return sum + (exp.value || 0);
       }
       return sum;
     }, 0);
 
-    const result = totalAll - totalToPay;
+    const result = totalAll - totalNoInvoice;
     return result < 0 ? 0 : result;
   }
 
