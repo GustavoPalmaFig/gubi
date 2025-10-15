@@ -23,7 +23,8 @@ import Utils from '@shared/utils/utils';
 interface iSpendingsCard {
   title: string;
   icon: string;
-  content: string;
+  value: string;
+  subValue?: string;
   details: string;
   onClick: () => void;
 }
@@ -178,48 +179,50 @@ export class MySpendingsPage {
     const totalBills = this.userTotalValue(bills);
     const totalExpenses = this.userTotalValue(expenses);
     const total = totalBills + totalExpenses;
-    const totalToPay = totalBills + this.calculateTotalToPay(expenses, totalExpenses);
+    const totalExpensesNoInvoice = this.calculateTotalToPay(expenses, totalExpenses);
+    const totalToPay = totalBills + totalExpensesNoInvoice;
     const topSpace = this.spaceWithMostSpendings();
 
-    const cards = [
+    const cards: iSpendingsCard[] = [
       {
         title: 'Total',
         icon: 'pi pi-dollar',
-        content: this.currencyPipe.transform(total, 'BRL') ?? '-',
+        value: this.currencyPipe.transform(total, 'BRL') ?? '-',
         details: `${bills.length} contas + ${expenses.length} despesas`,
         onClick: () => this.scrollToList(0)
       },
       {
         title: 'Total a Pagar',
         icon: 'pi pi-exclamation-circle',
-        content: this.currencyPipe.transform(totalToPay, 'BRL') ?? '-',
+        value: this.currencyPipe.transform(totalToPay, 'BRL') ?? '-',
+        subValue: totalToPay ? `(${this.currencyPipe.transform(totalBills, 'BRL')} + ${this.currencyPipe.transform(totalExpensesNoInvoice, 'BRL')})` : undefined,
         details: 'Valor a desembolsar no começo ou final do mês',
         onClick: () => this.scrollToList(0)
       },
       {
         title: 'Contas',
         icon: 'pi pi-money-bill',
-        content: this.currencyPipe.transform(totalBills, 'BRL') ?? '-',
+        value: this.currencyPipe.transform(totalBills, 'BRL') ?? '-',
         details: `${bills.length} contas registradas`,
         onClick: () => this.scrollToList(1)
       },
       {
         title: 'Despesas',
         icon: 'pi pi-wallet',
-        content: this.currencyPipe.transform(totalExpenses, 'BRL') ?? '-',
+        value: this.currencyPipe.transform(totalExpenses, 'BRL') ?? '-',
         details: `${expenses.length} despesas registradas`,
         onClick: () => this.scrollToList(2)
       },
       {
         title: 'Espaço com mais gastos',
         icon: 'pi pi-chart-line',
-        content: topSpace.space?.name,
+        value: topSpace.space?.name,
         details: this.currencyPipe.transform(topSpace.total, 'BRL') ?? '-',
         onClick: () => this.router.navigate(['/spaces', topSpace.space?.id])
       }
     ];
 
-    if (total === totalToPay) return cards.filter((_, idx) => idx !== 1);
+    if (total === totalToPay && totalToPay > 0) return cards.filter((_, idx) => idx !== 1);
     return cards.slice(0, -1);
   }
 

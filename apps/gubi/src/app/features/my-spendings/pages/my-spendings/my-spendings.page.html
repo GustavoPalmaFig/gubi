@@ -22,7 +22,12 @@
       <h3>{{ card.title }}</h3>
       <i [ngClass]="card.icon"></i>
     </div>
-    <p class="text-2xl text-neutral-700 font-bold my-2" [ngClass]="{'text-lg' : isNaN(card.content)}">{{ card.content }}</p>
+    <div class="flex items-center gap-2 text-neutral-700 font-bold my-2">
+      <p class="text-2xl" [ngClass]="{'text-lg' : isNaN(card.value)}">{{ card.value }}</p>
+      @if(card.subValue) {
+        <p class="text-sm">{{ card.subValue }}</p>
+      }
+    </div>
     <span class="text-sm text-neutral-500 font-medium leading-none">{{ card.details }}</span>
   </div>
   }
