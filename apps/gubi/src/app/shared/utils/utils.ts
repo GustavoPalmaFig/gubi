@@ -15,8 +15,25 @@ export default class Utils {
   }
 
   static adjustDateByMonths(date: Date | string, months: number): Date {
-    const refDate = typeof date === 'string' ? new Date(date) : date;
+    let refDate = this.toLocalMidnight(date);
+
+    if (typeof date === 'string') {
+      const [year, month, day] = date.split('-').map(Number);
+      refDate = new Date(year, month - 1, day);
+    } else {
+      refDate = this.toLocalMidnight(date);
+    }
+
     return addMonths(refDate, months);
+  }
+
+  static toLocalMidnight(date: Date | string): Date {
+    if (typeof date === 'string') {
+      const [year, month, day] = date.split('-').map(Number);
+      return new Date(year, month - 1, day);
+    } else {
+      return new Date(date.getFullYear(), date.getMonth(), date.getDate());
+    }
   }
 
   static addOneWeekToDate(date: Date): Date {

@@ -90,14 +90,14 @@ export class ExpenseApiService {
     }
 
     const bulkExpenses: iExpense[] = [];
-    let currentDate = new Date(parentExpense.reference_period);
+    let currentDate = Utils.toLocalMidnight(parentExpense.reference_period);
 
     if (parentExpense.recurring_type === 'date') {
       if (!parentExpense.recurring_end_date) {
         return { error: 'recurring_end_date is required for type "date"' };
       }
 
-      const endDate = new Date(parentExpense.recurring_end_date);
+      const endDate = Utils.toLocalMidnight(parentExpense.recurring_end_date);
 
       while (currentDate < endDate) {
         currentDate = Utils.adjustDateByMonths(currentDate, 1);
