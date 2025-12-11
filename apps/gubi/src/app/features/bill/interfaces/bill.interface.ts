@@ -1,5 +1,6 @@
 import { iSpace } from '@features/spaces/interfaces/space.interface';
 import { iUser } from '@features/auth/interfaces/user.interface';
+import { iBillFile } from './bill_file.interface';
 import { iBillSplit } from './bill_split.interface';
 
 export interface iBill {
@@ -20,6 +21,7 @@ export interface iBill {
   space: iSpace;
   bill_splits?: iBillSplit[];
   payer: iUser;
+  bill_files?: iBillFile[];
   creator: iUser;
   updated_by_user: iUser;
 }

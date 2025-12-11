@@ -2,6 +2,7 @@ import { inject, Injectable } from '@angular/core';
 import { SupabaseService } from '@shared/services/supabase/supabase.service';
 import Utils from '@shared/utils/utils';
 import { iBill } from '../interfaces/bill.interface';
+import { iBillFile } from '../interfaces/bill_file.interface';
 import { iBillSplit } from '../interfaces/bill_split.interface';
 
 @Injectable({
@@ -83,6 +84,18 @@ export class BillApiService {
     const split_data = bill_splits.map(({ user, ...split }) => split);
     await this.supabaseService.client.from('bill_split').delete().eq('bill_id', bill_id);
     const { error } = await this.supabaseService.client.from('bill_split').insert(split_data);
+    return { error: Utils.handleErrorMessage(error) };
+  }
+
+  async createBillFile(bill_id: number, filename: string, path: string): Promise<iBillFile> {
+    const { data, error } = await this.supabaseService.client.from('bill_file').insert({ bill_id, filename, path }).select().single();
+
+    if (error) throw new Error(Utils.handleErrorMessage(error));
+    return data as iBillFile;
+  }
+
+  async deleteBillFile(path: string): Promise<{ error?: string }> {
+    const { error } = await this.supabaseService.client.from('bill_file').delete().eq('path', path);
     return { error: Utils.handleErrorMessage(error) };
   }
 }

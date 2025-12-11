@@ -212,4 +212,12 @@ export default class Utils {
     }
     return months;
   }
+
+  static dateToMonthYearString(date: Date | string): string {
+    if (typeof date === 'string') {
+      date = new Date(date);
+    }
+    const monthName = date.toLocaleString('default', { month: 'long' });
+    return `${monthName}-${date.getFullYear()}`;
+  }
 }
