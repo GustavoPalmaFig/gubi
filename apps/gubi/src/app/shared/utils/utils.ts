@@ -217,7 +217,7 @@ export default class Utils {
     if (typeof date === 'string') {
       date = new Date(date);
     }
-    const monthName = date.toLocaleString('default', { month: 'long' });
+    const monthName = date.toLocaleString('en-US', { month: 'long' });
     return `${monthName}-${date.getFullYear()}`;
   }
 }

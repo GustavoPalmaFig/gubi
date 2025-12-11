@@ -51,9 +51,6 @@ export class StorageService {
   }
 
   private generateFilePath(file: File, folder: string): string {
-    const fileName = file.name;
-    // const fileExt = fileName.split('.').pop();
-
-    return `${folder}/${uuidv4()}-${fileName}`;
+    return `${folder}/${uuidv4()}-${file.name}`;
   }
 }

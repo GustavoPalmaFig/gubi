@@ -1,6 +1,6 @@
 import { BillApiService } from '@features/bill/services/bill-api.service';
 import { CommonModule } from '@angular/common';
-import { Component, computed, inject, Input, input, OnInit, signal } from '@angular/core';
+import { Component, computed, effect, inject, Input, input, signal } from '@angular/core';
 import { Dialog } from 'primeng/dialog';
 import { eBucketName } from '@shared/enums/bucketName.enum';
 import { FileSelectEvent, FileUpload } from 'primeng/fileupload';
@@ -19,7 +19,7 @@ import Utils from '@shared/utils/utils';
   templateUrl: './bill-details-dialog.component.html',
   styleUrl: './bill-details-dialog.component.scss'
 })
-export class BillDetailsDialogComponent implements OnInit {
+export class BillDetailsDialogComponent {
   @Input() isOpen = signal(false);
   bill = input.required<iBill | null>();
 
@@ -43,17 +43,23 @@ export class BillDetailsDialogComponent implements OnInit {
 
   protected billFiles = signal<iBillFile[]>([]);
 
-  ngOnInit() {
-    const bill = this.bill();
-    if (bill && bill.bill_files) {
-      this.billFiles.set(
-        bill.bill_files.sort((a, b) => {
-          const aDate = a.created_at.toDateString() || '';
-          const bDate = b.created_at.toDateString() || '';
-          return aDate.localeCompare(bDate);
-        })
-      );
-    }
+  constructor() {
+    effect(() => {
+      const bill = this.bill();
+
+      if (bill) {
+        this.billFiles.set([]);
+        if (bill.bill_files) {
+          this.billFiles.set(
+            bill.bill_files.sort((a, b) => {
+              const aDate = a.created_at.toDateString() || '';
+              const bDate = b.created_at.toDateString() || '';
+              return aDate.localeCompare(bDate);
+            })
+          );
+        }
+      }
+    });
   }
 
   protected close(): void {

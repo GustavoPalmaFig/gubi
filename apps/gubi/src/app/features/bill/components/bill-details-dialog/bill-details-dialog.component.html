@@ -80,7 +80,7 @@
                     <i class="pi pi-trash text-2xs text-red-400 cursor-pointer"></i>
                   </button>
                 </div>
-                } } @if(!billFiles() || (billFiles()?.length ?? 0) < 3) {
+                } } @if(!billFiles() || (billFiles().length ? billFiles().length : 0) < 3) {
                 <div class="flex justify-start pt-2">
                   <p-fileupload
                     mode="basic"
