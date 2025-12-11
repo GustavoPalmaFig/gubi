@@ -1,0 +1,37 @@
+<div class="flex flex-col gap-1">
+  <div class="space-y-2 flex flex-col gap-1">
+    @if(billFiles() && billFiles().length > 0) { @for(file of billFiles(); track file.id) {
+    <div class="flex items-center gap-4">
+      <i class="pi pi-file-pdf"></i>
+      <button
+        class="underline cursor-pointer text-left bg-transparent border-none p-0"
+        (click)="storageService.openSignedUrlInNewTab(billBucket, file.path)"
+        (keydown.enter)="storageService.openSignedUrlInNewTab(billBucket, file.path)"
+      >
+        {{file.filename}}
+      </button>
+      <div class="flex items-center gap-2 ml-auto">
+        <p-button [rounded]="true" [outlined]="true" icon="pi pi-download" (click)="storageService.downloadAndSave(billBucket, file.path, file.filename)" />
+        <p-button [rounded]="true" [outlined]="true" severity="danger" icon="pi pi-trash" (click)="confirmDeleteFile(file.path)" />
+      </div>
+    </div>
+    } } @else {
+    <p class="text-md text-gray-500">Nenhum arquivo anexado a esta conta.</p>
+    }
+  </div>
+  @if(!billFiles() || (billFiles().length ? billFiles().length : 0) < 3) {
+  <div class="flex justify-start pt-4">
+    <p-fileupload
+      mode="basic"
+      chooseIcon="pi pi-upload"
+      maxFileSize="1000000"
+      [auto]="true"
+      (onSelect)="onUploadFile($event)"
+      chooseLabel="Adicionar"
+      invalidFileSizeMessageSummary="{0}: tamanho de arquivo inválido,"
+      invalidFileSizeMessageDetail="o tamanho máximo é {0}."
+      styleClass="text-xs"
+    />
+  </div>
+  }
+</div>
