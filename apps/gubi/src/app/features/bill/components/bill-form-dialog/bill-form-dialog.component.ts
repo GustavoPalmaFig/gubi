@@ -5,7 +5,7 @@ import { CommonModule } from '@angular/common';
 import { Component, computed, effect, EventEmitter, inject, Input, input, Output, signal, WritableSignal } from '@angular/core';
 import { DatePickerModule } from 'primeng/datepicker';
 import { DialogModule } from 'primeng/dialog';
-import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { iBill } from '@features/bill/interfaces/bill.interface';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { InputTextModule } from 'primeng/inputtext';
@@ -17,7 +17,7 @@ import Utils from '@shared/utils/utils';
 
 @Component({
   selector: 'app-bill-form-dialog',
-  imports: [CommonModule, DialogModule, ButtonModule, InputTextModule, InputNumberModule, DatePickerModule, Select, ReactiveFormsModule, Checkbox],
+  imports: [CommonModule, DialogModule, ButtonModule, InputTextModule, InputNumberModule, DatePickerModule, Select, ReactiveFormsModule, Checkbox, FormsModule],
   templateUrl: './bill-form-dialog.component.html',
   styleUrl: './bill-form-dialog.component.scss'
 })
@@ -110,5 +110,13 @@ export class BillFormDialogComponent {
 
   toggleInfos(info: WritableSignal<boolean>) {
     info.update(value => !value);
+  }
+
+  setPaidAt(isPaid: boolean) {
+    if (isPaid) {
+      this.billForm.get('paid_at')?.setValue(new Date());
+    } else {
+      this.billForm.get('paid_at')?.setValue(null);
+    }
   }
 }
