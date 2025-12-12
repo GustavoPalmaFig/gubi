@@ -84,6 +84,14 @@
         }
       </div>
     </div>
+    @if(isEditMode()) {
+    <div class="rounded-lg border shadow-2xs">
+      <div class="p-4 flex-col">
+        <h3 class="font-semibold mb-2">Anexos</h3>
+        <app-bill-file [bill]="selectedBill()!" />
+      </div>
+    </div>
+    }
     <div class="flex justify-end pt-6">
       <p-button
         type="submit"

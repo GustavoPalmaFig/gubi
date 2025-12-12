@@ -14,10 +14,11 @@ import { MessageService } from '@shared/services/message.service';
 import { Select } from 'primeng/select';
 import { SpaceApiService } from '@features/spaces/services/space-api.service';
 import Utils from '@shared/utils/utils';
+import { BillFileComponent } from '../bill-file/bill-file.component';
 
 @Component({
   selector: 'app-bill-form-dialog',
-  imports: [CommonModule, DialogModule, ButtonModule, InputTextModule, InputNumberModule, DatePickerModule, Select, ReactiveFormsModule, Checkbox, FormsModule],
+  imports: [CommonModule, DialogModule, ButtonModule, InputTextModule, InputNumberModule, DatePickerModule, Select, ReactiveFormsModule, Checkbox, FormsModule, BillFileComponent],
   templateUrl: './bill-form-dialog.component.html',
   styleUrl: './bill-form-dialog.component.scss'
 })
