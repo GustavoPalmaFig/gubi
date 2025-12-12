@@ -62,6 +62,7 @@ export class ExpenseFormDialogComponent {
   referencePeriod = input.required<Date>();
   space = input.required<iSpace>();
 
+  protected selectedCategory = signal<iCategory | null>(null);
   protected isEditMode = computed(() => !!this.selectedExpense());
   protected isLoading = signal(false);
   protected isPaymentMethodDialogOpen = signal(false);
@@ -248,7 +249,15 @@ export class ExpenseFormDialogComponent {
     this.isPaymentMethodDialogOpen.set(true);
   }
 
-  openCategoryDialog() {
+  openCategoryDialog(options?: { editMode: boolean }) {
+    this.selectedCategory.set(null);
+    const categoryId = this.expenseForm.get('category_id')?.value;
+    const { editMode = false } = options || {};
+
+    if (editMode) {
+      const category = this.categories.find(cat => cat.id === categoryId) || null;
+      this.selectedCategory.set(category);
+    }
     this.isCategoryDialogOpen.set(true);
   }
 
@@ -259,7 +268,11 @@ export class ExpenseFormDialogComponent {
   }
 
   async handleCategoryCreated(category: iCategory) {
-    this.categories.push(category);
+    if (!this.selectedCategory()) {
+      this.categories.push(category);
+    } else {
+      await this.loadCategories();
+    }
     this.expenseForm.patchValue({ category_id: category.id });
     this.isCategoryDialogOpen.set(false);
   }

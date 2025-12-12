@@ -104,25 +104,30 @@
     </div>
     <div>
       <label for="category_id" class="text-sm font-medium">Categoria</label>
-      <p-select id="category_id" class="w-full mt-2" [options]="categories" formControlName="category_id" optionLabel="name" optionValue="id" placeholder="Selecione">
-        <ng-template #item let-item>
-          <div class="flex items-center gap-2">
-            <span>{{ item.name }}</span>
-            <div class="ml-4 size-2 rounded-full" [style]="'color: ' + item.color_hex"></div>
-          </div>
-        </ng-template>
-        <ng-template #selectedItem let-selectedItem>
-          <div class="flex items-center gap-2">
-            <span>{{ selectedItem.name }}</span>
-            <div class="ml-4 size-2 rounded-full" [style]="'color: ' + selectedItem.color_hex"></div>
-          </div>
-        </ng-template>
-        <ng-template #footer>
-          <div class="p-3">
-            <p-button label="Adicionar categoria" fluid severity="secondary" text size="small" icon="pi pi-plus-circle" (click)="openCategoryDialog()" />
-          </div>
-        </ng-template>
-      </p-select>
+      <div class="flex items-end gap-2">
+        <p-select id="category_id" class="w-full mt-2" [options]="categories" formControlName="category_id" optionLabel="name" optionValue="id" placeholder="Selecione" showClear>
+          <ng-template #item let-item>
+            <div class="flex items-center gap-2">
+              <span>{{ item.name }}</span>
+              <div class="ml-4 size-2 rounded-full" [style]="'color: ' + item.color_hex"></div>
+            </div>
+          </ng-template>
+          <ng-template #selectedItem let-selectedItem>
+            <div class="flex items-center gap-2">
+              <span>{{ selectedItem.name }}</span>
+              <div class="ml-4 size-2 rounded-full" [style]="'color: ' + selectedItem.color_hex"></div>
+            </div>
+          </ng-template>
+          <ng-template #footer>
+            <div class="p-3">
+              <p-button label="Adicionar categoria" fluid severity="secondary" text size="small" icon="pi pi-plus-circle" (click)="openCategoryDialog()" />
+            </div>
+          </ng-template>
+        </p-select>
+        @if(expenseForm.get('category_id')?.value) {
+        <p-button icon="pi pi-pencil" (click)="openCategoryDialog({editMode: true})" />
+        }
+      </div>
     </div>
     <div class="flex flex-col gap-1">
       <div class="flex items-center">
@@ -217,4 +222,4 @@
 </p-dialog>
 
 <app-payment-method-form-dialog [isDialogOpen]="isPaymentMethodDialogOpen" (touchPaymentMethod)="handlePaymentMethodCreated($event)"> </app-payment-method-form-dialog>
-<app-category-form-dialog [isDialogOpen]="isCategoryDialogOpen" (touchCategory)="handleCategoryCreated($event)"> </app-category-form-dialog>
+<app-category-form-dialog [isDialogOpen]="isCategoryDialogOpen" [selectedCategory]="selectedCategory()" (touchCategory)="handleCategoryCreated($event)"> </app-category-form-dialog>

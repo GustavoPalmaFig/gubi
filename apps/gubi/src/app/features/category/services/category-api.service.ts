@@ -20,4 +20,9 @@ export class CategoryApiService {
     const { data, error } = await this.supabaseService.client.from('category').insert([category]).select().single();
     return { data: data as iCategory, error: Utils.handleErrorMessage(error) };
   }
+
+  async updateCategory(category: iCategory): Promise<{ data: iCategory; error?: string }> {
+    const { data, error } = await this.supabaseService.client.from('category').update(category).eq('id', category.id).select().single();
+    return { data: data as iCategory, error: Utils.handleErrorMessage(error) };
+  }
 }

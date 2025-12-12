@@ -42,7 +42,7 @@
     <div class="flex justify-end">
       <p-button
         type="submit"
-        label="{{ isLoading() ? 'Criando...' : 'Criar' }}"
+        label="{{ isLoading() ? (isEditMode() ? 'Editando...' : 'Criando...') : (isEditMode() ? 'Editar' : 'Criar') }}"
         [disabled]="isLoading() || categoryForm.invalid"
         [loading]="isLoading()"
         severity="contrast"
