@@ -10,11 +10,12 @@ import { iBill } from '@features/bill/interfaces/bill.interface';
 import { iBillFile } from '@features/bill/interfaces/bill_file.interface';
 import { MessageService } from '@shared/services/message.service';
 import { StorageService } from '@shared/services/supabase/storage.service';
+import { TooltipModule } from 'primeng/tooltip';
 import Utils from '@shared/utils/utils';
 
 @Component({
   selector: 'app-bill-file',
-  imports: [CommonModule, ButtonModule, FileUpload, HttpClientModule],
+  imports: [CommonModule, ButtonModule, FileUpload, HttpClientModule, TooltipModule],
   templateUrl: './bill-file.component.html',
   styleUrl: './bill-file.component.scss'
 })

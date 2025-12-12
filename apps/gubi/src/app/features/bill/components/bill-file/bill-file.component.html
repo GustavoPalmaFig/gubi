@@ -11,8 +11,14 @@
         {{file.filename}}
       </button>
       <div class="flex items-center gap-2 ml-auto">
-        <p-button [rounded]="true" [outlined]="true" icon="pi pi-download" (click)="storageService.downloadAndSave(billBucket, file.path, file.filename)" />
-        <p-button [rounded]="true" [outlined]="true" severity="danger" icon="pi pi-trash" (click)="confirmDeleteFile(file.path)" />
+        <p-button
+          [rounded]="true"
+          [outlined]="true"
+          icon="pi pi-download"
+          (click)="storageService.downloadAndSave(billBucket, file.path, file.filename)"
+          pTooltip="Baixar arquivo"
+        />
+        <p-button [rounded]="true" [outlined]="true" severity="danger" icon="pi pi-trash" (click)="confirmDeleteFile(file.path)" pTooltip="Baixar arquivo" />
       </div>
     </div>
     } } @else {
