@@ -1,5 +1,6 @@
 import { AuthService } from '@features/auth/services/auth.service';
 import { BillApiService } from '@features/bill/services/bill-api.service';
+import { BillDetailsDialogComponent } from '@features/bill/components/bill-details-dialog/bill-details-dialog.component';
 import { CommonModule, CurrencyPipe } from '@angular/common';
 import { Component, computed, effect, inject, signal, ViewChild } from '@angular/core';
 import { DialogModule } from 'primeng/dialog';
@@ -47,7 +48,8 @@ interface iTypeTag {
     ExpenseDetailsDialogComponent,
     UserAvatarComponent,
     MySpendingsChartsComponent,
-    DialogModule
+    DialogModule,
+    BillDetailsDialogComponent
   ],
   templateUrl: './my-spendings.page.html',
   styleUrl: './my-spendings.page.scss',
@@ -75,6 +77,8 @@ export class MySpendingsPage {
   protected rows = signal(10);
   protected isExpenseDetailsDialogOpen = signal(false);
   protected selectedExpense = signal<iExpense | null>(null);
+  protected isBillDetailsDialogOpen = signal(false);
+  protected selectedBill = signal<iBill | null>(null);
   protected allSpendings = computed<(iBill | iExpense)[]>(() => [...this.bills(), ...this.expenses()]);
   protected filteredSpendings = signal<(iBill | iExpense)[]>(this.allSpendings());
   protected cards = computed<iSpendingsCard[]>(() => this.populateCards());
@@ -275,6 +279,9 @@ export class MySpendingsPage {
     if (this.expenseGuard(item)) {
       this.selectedExpense.set(item);
       this.isExpenseDetailsDialogOpen.set(true);
+      return;
     }
+    this.selectedBill.set(item);
+    this.isBillDetailsDialogOpen.set(true);
   }
 }
