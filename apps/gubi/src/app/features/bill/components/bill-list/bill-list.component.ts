@@ -83,12 +83,10 @@ export class BillListComponent {
     this.bills.set(Array(3).fill({}));
     this.billApiService.getAllBillsFromSpaceAndDate(this.space().id, this.referenceDate()).then(async bills => {
       this.bills.set(bills);
+      this.previousMonthBills.set(await this.getBillsFromPreviousMonth());
 
-      if (bills.length === 0) {
-        this.previousMonthBills.set(await this.getBillsFromPreviousMonth());
-        if (this.previousMonthBills().length > 0) {
-          await this.showCopyTemplateDialog();
-        }
+      if (bills.length === 0 && this.previousMonthBills().length > 0) {
+        await this.showCopyTemplateDialog();
       }
 
       this.isLoading.set(false);
