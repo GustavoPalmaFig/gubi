@@ -2,6 +2,8 @@ import { CommonModule } from '@angular/common';
 import { Component, computed, Input, input, signal } from '@angular/core';
 import { Dialog } from 'primeng/dialog';
 import { iExpense } from '@features/expense/interfaces/expense.interface';
+import { iExpenseSplit } from '@features/expense/interfaces/expense_split.interface';
+import { iSpace } from '@features/spaces/interfaces/space.interface';
 import { TabsModule } from 'primeng/tabs';
 import { Tag } from 'primeng/tag';
 import { UserAvatarComponent } from '@shared/components/user-avatar/user-avatar.component';
@@ -15,15 +17,33 @@ import Utils from '@shared/utils/utils';
 })
 export class ExpenseDetailsDialogComponent {
   @Input() isOpen = signal(false);
+  space = input<iSpace>();
   expense = input.required<iExpense | null>();
 
   protected getAbbreviatedName = Utils.getAbbreviatedName;
 
-  protected expenseSplits = computed(() => {
-    const expense = this.expense();
-    if (!expense || !expense.expense_splits) return null;
+  protected spaceMembers = computed(() => {
+    const space = this.space();
+    return space?.members || [];
+  });
 
-    return expense.expense_splits.sort((a, b) => {
+  protected expenseSplits = computed<iExpenseSplit[]>(() => {
+    const expense = this.expense();
+    const spaceMembers = this.spaceMembers();
+
+    if (!expense) return [];
+
+    const splitValue = (expense.value || 0) / spaceMembers.length;
+
+    return (
+      expense.expense_splits ??
+      spaceMembers.map(member => ({
+        expense_id: expense.id,
+        user_id: member.user?.id || '',
+        split_value: splitValue,
+        user: member.user
+      }))
+    ).sort((a, b) => {
       const aUser = a.user?.fullname || '';
       const bUser = b.user?.fullname || '';
       return aUser.localeCompare(bUser);

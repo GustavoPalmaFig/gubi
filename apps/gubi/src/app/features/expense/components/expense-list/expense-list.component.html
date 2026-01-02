@@ -160,7 +160,7 @@
 }
 
 @defer (when isDetailsDialogOpen()) {
-  <app-expense-details-dialog [isOpen]="isDetailsDialogOpen" [expense]="selectedExpense()"> </app-expense-details-dialog>
+  <app-expense-details-dialog [isOpen]="isDetailsDialogOpen" [expense]="selectedExpense()" [space]="space()"> </app-expense-details-dialog>
 }
 
 @defer (when isExpenseSplitFormDialogOpen()) {
