@@ -1,3 +1,4 @@
+import { AuthService } from '@features/auth/services/auth.service';
 import { BillApiService } from '@features/bill/services/bill-api.service';
 import { ButtonModule } from 'primeng/button';
 import { Checkbox } from 'primeng/checkbox';
@@ -26,6 +27,7 @@ export class BillFormDialogComponent {
   protected messageService = inject(MessageService);
   protected billApiService = inject(BillApiService);
   protected spaceApiService = inject(SpaceApiService);
+  protected authService = inject(AuthService);
 
   @Input() isOpen = signal(false);
   @Output() touchBill = new EventEmitter<iBill>();
@@ -34,6 +36,7 @@ export class BillFormDialogComponent {
   referencePeriod = input.required<Date>();
   space = input.required<iSpace>();
 
+  protected userId = computed(() => this.authService.currentUser()?.id);
   protected possiblePayers = computed(() => this.space()?.members?.map(m => m.user) || []);
   protected isEditMode = computed(() => !!this.selectedBill());
   protected isLoading = signal(false);
@@ -116,8 +119,11 @@ export class BillFormDialogComponent {
   setPaidAt(isPaid: boolean) {
     if (isPaid) {
       this.billForm.get('paid_at')?.setValue(new Date());
+      this.billForm.get('payer_id')?.setValue(this.userId());
+      this.billForm.markAsTouched();
     } else {
       this.billForm.get('paid_at')?.setValue(null);
+      this.billForm.get('payer_id')?.setValue(null);
     }
   }
 }
