@@ -68,12 +68,9 @@
       <p-tabpanel value="1">
         <div class="rounded-lg border bg-card text-card-foreground shadow-sm">
           <div class="p-4">
-            <h3 class="text-lg font-medium mb-4">Divisão da Conta</h3>
-            @if(!bill()?.bill_splits) {
-            <p class="text-md text-gray-500">Nenhuma divisão personalizada foi registrada para esta conta.</p>
-            } @else {
+            <h3 class="text-lg font-medium mb-4">Divisão da Conta {{bill()?.bill_splits ? '(Personalizada)' : ''}}</h3>
             <div class="space-y-3">
-              @for(splitObj of bill()?.bill_splits; track splitObj.user_id) {
+              @for(splitObj of billSplits(); track splitObj.user_id) {
               <div class="flex items-center justify-between p-2 border rounded-md">
                 <div class="flex items-center gap-2">
                   <app-user-avatar [users]="splitObj.user" [size]="'large'"></app-user-avatar>
@@ -90,7 +87,6 @@
                 <span>{{ bill()?.value | currency: 'BRL' }}</span>
               </div>
             </div>
-            }
           </div>
         </div>
       </p-tabpanel>

@@ -141,5 +141,5 @@
 }
 
 @defer (when isDetailsDialogOpen()) {
-  <app-bill-details-dialog [isOpen]="isDetailsDialogOpen" [bill]="selectedBill()"> </app-bill-details-dialog>
+  <app-bill-details-dialog [isOpen]="isDetailsDialogOpen" [bill]="selectedBill()" [space]="space()"></app-bill-details-dialog>
 }

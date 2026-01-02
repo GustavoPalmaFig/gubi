@@ -2,6 +2,8 @@ import { CommonModule } from '@angular/common';
 import { Component, computed, Input, input, signal } from '@angular/core';
 import { Dialog } from 'primeng/dialog';
 import { iBill } from '@features/bill/interfaces/bill.interface';
+import { iBillSplit } from '@features/bill/interfaces/bill_split.interface';
+import { iSpace } from '@features/spaces/interfaces/space.interface';
 import { TabsModule } from 'primeng/tabs';
 import { UserAvatarComponent } from '@shared/components/user-avatar/user-avatar.component';
 import Utils from '@shared/utils/utils';
@@ -15,15 +17,33 @@ import { BillFileComponent } from '../bill-file/bill-file.component';
 })
 export class BillDetailsDialogComponent {
   @Input() isOpen = signal(false);
+  space = input<iSpace>();
   bill = input.required<iBill | null>();
 
   protected getAbbreviatedName = Utils.getAbbreviatedName;
 
-  protected billSplits = computed(() => {
-    const bill = this.bill();
-    if (!bill || !bill.bill_splits) return null;
+  protected spaceMembers = computed(() => {
+    const space = this.space();
+    return space?.members || [];
+  });
 
-    return bill.bill_splits.sort((a, b) => {
+  protected billSplits = computed<iBillSplit[]>(() => {
+    const bill = this.bill();
+    const spaceMembers = this.spaceMembers();
+
+    if (!bill) return [];
+
+    const splitValue = (bill.value || 0) / spaceMembers.length;
+
+    return (
+      bill.bill_splits ??
+      spaceMembers.map(member => ({
+        bill_id: bill.id,
+        user_id: member.user?.id || '',
+        split_value: splitValue,
+        user: member.user
+      }))
+    ).sort((a, b) => {
       const aUser = a.user?.fullname || '';
       const bUser = b.user?.fullname || '';
       return aUser.localeCompare(bUser);
