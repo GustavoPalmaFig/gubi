@@ -1,6 +1,7 @@
 import { AuthService } from '@features/auth/services/auth.service';
 import { BillApiService } from '@features/bill/services/bill-api.service';
 import { BillDetailsDialogComponent } from '@features/bill/components/bill-details-dialog/bill-details-dialog.component';
+import { CheckboxChangeEvent, CheckboxModule } from 'primeng/checkbox';
 import { CommonModule, CurrencyPipe } from '@angular/common';
 import { Component, computed, effect, inject, signal, ViewChild } from '@angular/core';
 import { DialogModule } from 'primeng/dialog';
@@ -49,7 +50,8 @@ interface iTypeTag {
     UserAvatarComponent,
     MySpendingsChartsComponent,
     DialogModule,
-    BillDetailsDialogComponent
+    BillDetailsDialogComponent,
+    CheckboxModule
   ],
   templateUrl: './my-spendings.page.html',
   styleUrl: './my-spendings.page.scss',
@@ -89,11 +91,30 @@ export class MySpendingsPage {
     return this.filteredSpendings().slice(startIndex, endIndex);
   });
   protected isChartDialogOpen = signal(false);
+  protected isCalculatorMode = signal(false);
+  protected selectedSpendings = computed<(iBill | iExpense)[]>(() => this.pagedSpendings().filter(item => item.is_selected));
+  protected totalSelectedValue = computed<number>(() => this.userTotalValue(this.selectedSpendings()));
+  protected rowsPerPageOptions = computed<number[]>(() => {
+    if (this.isCalculatorMode()) {
+      return [this.filteredSpendings().length || 1];
+    }
+
+    const options = new Set([5, 10, 20, 30, this.filteredSpendings().length].sort((a, b) => a - b));
+
+    return Array.from(options);
+  });
 
   constructor() {
     effect(() => {
       const refPeriod = this.referenceDate();
       this.fetchSpendings(refPeriod);
+    });
+
+    effect(() => {
+      if (this.isCalculatorMode()) {
+        this.first.set(0);
+        this.rows.set(this.filteredSpendings().length || 1);
+      }
     });
   }
 
@@ -283,5 +304,13 @@ export class MySpendingsPage {
     }
     this.selectedBill.set(item);
     this.isBillDetailsDialogOpen.set(true);
+  }
+
+  protected toggleSelection(event: CheckboxChangeEvent, item: iBill | iExpense) {
+    event?.originalEvent?.stopPropagation();
+
+    item.is_selected = !item.is_selected;
+
+    this.filteredSpendings.update(list => [...list]);
   }
 }

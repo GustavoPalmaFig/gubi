@@ -45,6 +45,19 @@
     </div>
   </div>
   }
+  <div
+    class="sm:col-span-full md:col-span-1 bg-card bg-white flex flex-col rounded-lg border shadow-sm p-4"
+    (click)="isCalculatorMode.set(!isCalculatorMode())"
+    (keyup.enter)="isCalculatorMode.set(!isCalculatorMode())"
+    tabindex="0"
+    role="button"
+    aria-pressed="false"
+  >
+    <div class="flex items-center justify-between gap-2 text-md text-neutral-600 font-medium leading-none mb-1">
+      <h3>{{ 'Calcular Gastos' }}</h3>
+      <i class="pi pi-calculator"></i>
+    </div>
+  </div>
 
   <div class="col-span-full">
     <app-my-spendings-filters
@@ -68,13 +81,17 @@
   <div class="col-span-full grid gap-4 overflow-x-auto">
     @for(item of pagedSpendings(); track $index + 1) {
     <div
-      class="bg-card bg-white rounded-lg border shadow-sm p-4 h-50 flex flex-col justify-between text-neutral-500 font-semibold cursor-pointer hover:shadow-md transition-shadow"
+      class="bg-card bg-white rounded-lg border shadow-sm p-4 h-50 flex flex-col justify-between text-neutral-500 font-semibold transition-shadow"
+      [ngClass]="{'border-green-600': item.is_selected && isCalculatorMode(), 'cursor-pointer hover:shadow-md': !isCalculatorMode()}"
       tabindex="0"
-      (click)="openDetailsDialog(item);"
-      (keydown.enter)="openDetailsDialog(item)"
-      (keydown.space)="openDetailsDialog(item)"
+      (click)="isCalculatorMode() ? null : openDetailsDialog(item)"
+      (keydown.enter)="isCalculatorMode() ? null : openDetailsDialog(item)"
+      (keydown.space)="isCalculatorMode() ? null : openDetailsDialog(item)"
     >
       <div class="flex flex-col gap-1">
+        @if(isCalculatorMode()) {
+        <p-checkbox binary [ngModel]="item.is_selected" (onChange)="toggleSelection($event, item)" />
+        }
         <div class="flex gap-3 items-center justify-between">
           <h1 class="text-lg text-neutral-800 font-bold line-clamp-1">{{ expenseGuard(item) ? item.title : item.name }}</h1>
           <div class="flex items-center rounded-full border px-2 py-1 text-xs font-semibold border-transparent bg-black text-white leading-none">
@@ -151,15 +168,22 @@
     [rows]="rows()"
     [totalRecords]="filteredSpendings().length"
     [pageLinkSize]="3"
-    [rowsPerPageOptions]="[5, 10, 20, 30, filteredSpendings().length]"
-    [showFirstLastIcon]="true"
-    [alwaysShow]="filteredSpendings().length > 10"
+    [rowsPerPageOptions]="rowsPerPageOptions()"
+    [showFirstLastIcon]="!isCalculatorMode()"
+    [alwaysShow]="!isCalculatorMode() && filteredSpendings().length > 10"
     (onPageChange)="onPageChange($event)"
   />
   }
 </div>
 
-@defer (when isExpenseDetailsDialogOpen()) {
+@if(isCalculatorMode()) {
+<div class="fixed bottom-4 right-4 bg-white flex flex-col rounded-lg border shadow-sm p-4 w-48 h-28">
+  <h1 class="text-xl">Total</h1>
+  <div class="flex items-center gap-2 text-neutral-700 font-bold my-2">
+    <p class="text-2xl">{{ totalSelectedValue() | currency: 'BRL' }}</p>
+  </div>
+</div>
+} @defer (when isExpenseDetailsDialogOpen()) {
 <app-expense-details-dialog [isOpen]="isExpenseDetailsDialogOpen" [expense]="selectedExpense()"> </app-expense-details-dialog>
 } @defer (when isBillDetailsDialogOpen()) {
 <app-bill-details-dialog [isOpen]="isBillDetailsDialogOpen" [bill]="selectedBill()"> </app-bill-details-dialog>

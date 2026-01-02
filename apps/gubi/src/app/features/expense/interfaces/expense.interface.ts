@@ -29,6 +29,8 @@ export interface iExpense {
   updated_at?: Date;
   updated_by?: string;
 
+  is_selected?: boolean;
+
   space: iSpace;
   expense_splits?: iExpenseSplit[];
   creator: iUser;

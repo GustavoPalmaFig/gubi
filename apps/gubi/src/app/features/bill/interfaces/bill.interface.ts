@@ -18,6 +18,8 @@ export interface iBill {
   updated_at?: Date;
   updated_by?: string;
 
+  is_selected?: boolean;
+
   space: iSpace;
   bill_splits?: iBillSplit[];
   payer: iUser;
