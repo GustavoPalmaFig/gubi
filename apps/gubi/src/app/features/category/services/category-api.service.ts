@@ -12,7 +12,7 @@ export class CategoryApiService {
   private supabaseService = inject(SupabaseService);
 
   async getCategories(): Promise<iCategory[]> {
-    const { data } = await this.supabaseService.client.from('category').select('*');
+    const { data } = await this.supabaseService.client.from('category').select('*').order('name', { ascending: true });
     return data as iCategory[];
   }
 
