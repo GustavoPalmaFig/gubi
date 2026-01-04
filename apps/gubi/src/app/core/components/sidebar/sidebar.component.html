@@ -17,16 +17,16 @@
     <div class="flex flex-col h-full pt-40" [ngClass]="{ 'items-center': !isSidebarExpanded() }">
       <div class="flex flex-col gap-3 justify-start">
         @for (item of menuItems; track item.route) {
-          <a [routerLink]="item.route">
-            <p-button
-              [label]="isSidebarExpanded() ? item.label : undefined"
-              [icon]="item.icon"
-              severity="secondary"
-              [styleClass]="(isSidebarExpanded() ? 'w-full !justify-start ' : '') + (isActive(item.route) ? ' brightness-90' : '')"
-              [pTooltip]="!isSidebarExpanded() ? item.label : undefined"
-              tooltipPosition="right"
-            ></p-button>
-          </a>
+        <a [routerLink]="item.route">
+          <p-button
+            [label]="isSidebarExpanded() ? item.label : undefined"
+            [icon]="item.icon"
+            severity="secondary"
+            [styleClass]="(isSidebarExpanded() ? 'w-full !justify-start ' : '') + (isActive(item.route) ? ' brightness-90' : '')"
+            [pTooltip]="!isSidebarExpanded() ? item.label : undefined"
+            tooltipPosition="right"
+          ></p-button>
+        </a>
         }
       </div>
 
@@ -50,6 +50,13 @@
             <span *ngIf="isSidebarExpanded()" class="text-gray-500 font-semibold"> {{ authService.currentUser()?.fullname!.split(' ')[0] }} </span>
           </div>
         </p-button>
+        <p-button
+          [label]="isSidebarExpanded() ? 'Sair' : undefined"
+          [icon]="'pi pi-sign-out'"
+          severity="secondary"
+          [styleClass]="(isSidebarExpanded() ? 'w-full justify-start ' : 'mx-2')"
+          (click)="authService.logout()"
+        ></p-button>
       </div>
     </div>
   </ng-template>
