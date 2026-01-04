@@ -14,7 +14,8 @@ import Utils from '@shared/utils/utils';
 })
 export class UserAvatarComponent {
   public users = input.required<iUser | iUser[] | null>();
-  public size = input<'small' | 'normal' | 'large' | 'extra-large'>();
+  public tooltipEnable = input<boolean>(true);
+  public size = input<'small' | 'normal' | 'large' | 'extra-large' | 'size-24'>();
 
   protected get usersArray(): iUser[] {
     const users = this.users();
@@ -39,6 +40,8 @@ export class UserAvatarComponent {
 
   protected get sizeClass(): string {
     switch (this.size()) {
+      case 'size-24':
+        return '!size-24';
       case 'extra-large':
         return '!size-10';
       case 'large':

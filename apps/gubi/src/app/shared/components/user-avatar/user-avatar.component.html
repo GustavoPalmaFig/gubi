@@ -5,7 +5,7 @@
       [image]="getImage(user)"
       [style]="{ 'background-color': getBackgroundColor(user), color: 'white' }"
       [styleClass]="sizeClass"
-      [pTooltip]="user.fullname"
+      [pTooltip]="tooltipEnable() ? user.fullname : ''"
       shape="circle"
     />
   }
