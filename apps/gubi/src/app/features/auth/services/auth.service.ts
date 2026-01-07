@@ -36,7 +36,7 @@ export class AuthService {
     });
   }
 
-  private async fetchAndStoreUser(userId: string) {
+  public async fetchAndStoreUser(userId: string) {
     const { data } = await this.supabase.from('user').select('*').eq('id', userId).single();
     if (data) this.setUser(data);
   }
