@@ -32,7 +32,8 @@ export class HeaderComponent {
         { label: 'Espaços', styleClass: 'text-md font-medium', visible: this.isActive('/spaces') },
         { label: 'Métodos de Pagamento', styleClass: 'text-md font-medium', visible: this.isActive('/payment-methods') },
         { label: 'Detalhes do Espaço', styleClass: 'text-md font-medium', visible: this.isSpaceDetail() },
-        { label: 'Meus Gastos', styleClass: 'text-md font-medium', visible: this.isActive('/my-spendings') }
+        { label: 'Meus Gastos', styleClass: 'text-md font-medium', visible: this.isActive('/my-spendings') },
+        { label: 'Configurações', styleClass: 'text-md font-medium', visible: this.isActive('/settings') }
       ];
     });
   }
