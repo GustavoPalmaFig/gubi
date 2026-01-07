@@ -7,6 +7,7 @@ import { FormGroup, FormControl, Validators, ReactiveFormsModule } from '@angula
 import { IconField } from 'primeng/iconfield';
 import { InputIcon } from 'primeng/inputicon';
 import { InputTextModule } from 'primeng/inputtext';
+import { LoadingComponent } from '@shared/components/loading/loading.component';
 import { MessageService } from '@shared/services/message.service';
 import { StorageService } from '@shared/services/supabase/storage.service';
 import { UserApiService } from '@features/settings/services/user-api.service';
@@ -14,7 +15,7 @@ import { UserAvatarComponent } from '@shared/components/user-avatar/user-avatar.
 
 @Component({
   selector: 'app-settings',
-  imports: [CommonModule, UserAvatarComponent, ReactiveFormsModule, InputIcon, IconField, InputTextModule, ButtonModule],
+  imports: [CommonModule, UserAvatarComponent, ReactiveFormsModule, InputIcon, IconField, InputTextModule, ButtonModule, LoadingComponent],
   templateUrl: './settings.page.html',
   styleUrl: './settings.page.scss'
 })
