@@ -22,7 +22,7 @@
             [label]="isSidebarExpanded() ? item.label : undefined"
             [icon]="item.icon"
             severity="secondary"
-            [styleClass]="(isSidebarExpanded() ? 'w-full !justify-start ' : '') + (isActive(item.route) ? ' brightness-90' : '')"
+            [styleClass]="(isSidebarExpanded() ? 'w-full !justify-start !text-sm ' : '') + (isActive(item.route) ? ' brightness-90' : '')"
             [pTooltip]="!isSidebarExpanded() ? item.label : undefined"
             tooltipPosition="right"
           ></p-button>
@@ -54,7 +54,7 @@
           [label]="isSidebarExpanded() ? 'Sair' : undefined"
           [icon]="'pi pi-sign-out'"
           severity="secondary"
-          [styleClass]="(isSidebarExpanded() ? 'w-full justify-start ' : 'mx-2')"
+          [styleClass]="(isSidebarExpanded() ? 'w-full justify-start !text-sm ' : 'mx-2')"
           (click)="authService.logout()"
         ></p-button>
       </div>

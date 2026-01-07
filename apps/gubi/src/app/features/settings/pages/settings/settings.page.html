@@ -1,0 +1,44 @@
+<div class="max-w-2xl mx-auto">
+  <div class="flex flex-col gap-1">
+    <h1 class="text-2xl font-bold">Configurações</h1>
+    <p class="text-md text-neutral-500">Configure seu perfil dentro do sistema</p>
+  </div>
+
+  <div class="bg-card bg-white mt-8 max-w-4xl border rounded-xl shadow-sm p-4">
+    <div class="flex flex-col gap-3 mb-4">
+      <div class="flex items-center gap-2">
+        <i class="pi pi-user"></i>
+        <h2 class="text-xl font-semibold">Perfil</h2>
+      </div>
+    </div>
+
+    <div class="flex flex-col mx-auto gap-3">
+      <form [formGroup]="userForm" (ngSubmit)="handleSubmit()">
+        <div class="flex justify-center mb-4">
+          <app-user-avatar [users]="authService.currentUser()" [size]="'size-24'" [tooltipEnable]="false" />
+        </div>
+
+        <div class="flex justify-between items-center gap-3 py-3 border-b">
+          <label for="email" class="text-sm font-medium">Email</label>
+          <p-iconfield class="w-1/2">
+            <input class="w-full" id="email" type="text" pInputText formControlName="email" />
+            <p-inputicon class="pi pi-lock" />
+          </p-iconfield>
+        </div>
+        <div class="flex justify-between items-center gap-3 py-3 border-b">
+          <label for="fullname" class="text-sm font-medium">Nome Completo</label>
+          <input class="w-1/2" id="fullname" type="text" pInputText formControlName="fullname" />
+        </div>
+        <div class="flex justify-end mt-3">
+          <p-button
+            type="submit"
+            [label]="isLoading() ? 'Salvando...' : 'Salvar'"
+            [disabled]="isLoading() || userForm.get('fullname')?.invalid || !userForm.dirty"
+            [loading]="isLoading()"
+            severity="contrast"
+          />
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
