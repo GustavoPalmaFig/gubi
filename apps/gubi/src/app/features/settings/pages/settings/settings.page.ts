@@ -1,12 +1,14 @@
 import { AuthService } from '@features/auth/services/auth.service';
 import { ButtonModule } from 'primeng/button';
 import { CommonModule } from '@angular/common';
-import { Component, effect, inject, signal } from '@angular/core';
+import { Component, effect, inject, signal, ViewChild, ElementRef } from '@angular/core';
+import { eBucketName } from '@shared/enums/bucketName.enum';
 import { FormGroup, FormControl, Validators, ReactiveFormsModule } from '@angular/forms';
 import { IconField } from 'primeng/iconfield';
 import { InputIcon } from 'primeng/inputicon';
 import { InputTextModule } from 'primeng/inputtext';
 import { MessageService } from '@shared/services/message.service';
+import { StorageService } from '@shared/services/supabase/storage.service';
 import { UserApiService } from '@features/settings/services/user-api.service';
 import { UserAvatarComponent } from '@shared/components/user-avatar/user-avatar.component';
 
@@ -20,8 +22,12 @@ export class SettingsPage {
   protected authService = inject(AuthService);
   protected userApiService = inject(UserApiService);
   private messageService = inject(MessageService);
+  private storageService = inject(StorageService);
+
+  @ViewChild('fileInput') fileInput!: ElementRef<HTMLInputElement>;
 
   protected isLoading = signal(false);
+  protected isUploadingAvatar = signal(false);
   protected userForm!: FormGroup;
 
   constructor() {
@@ -38,6 +44,45 @@ export class SettingsPage {
       fullname: new FormControl(user.fullname, [Validators.required]),
       avatar_url: new FormControl(user.avatar_url)
     });
+  }
+
+  triggerFileInput(): void {
+    this.fileInput.nativeElement.click();
+  }
+
+  async handleAvatarUpload(event: Event): Promise<void> {
+    const input = event.target as HTMLInputElement;
+    const file = input.files?.[0];
+
+    if (!file) return;
+
+    const { type, size } = file;
+    if (!type.startsWith('image/')) {
+      this.messageService.showMessage('error', 'Erro', 'Por favor, selecione uma imagem válida');
+      return;
+    }
+
+    if (size > 1024 * 1024) {
+      this.messageService.showMessage('error', 'Erro', 'Por favor, selecione uma imagem com tamanho máximo de 1MB');
+      return;
+    }
+
+    this.isUploadingAvatar.set(true);
+
+    try {
+      const userId = this.authService.currentUser()?.id;
+      if (!userId) return;
+
+      const url = await this.storageService.uploadFile(eBucketName.avatar, userId, file, { returnUrl: true });
+      this.userForm.patchValue({ avatar_url: url });
+      this.userForm.get('avatar_url')?.markAsDirty();
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : String(error);
+      this.messageService.showMessage('error', 'Erro', errorMessage);
+    } finally {
+      this.isUploadingAvatar.set(false);
+      input.value = '';
+    }
   }
 
   async handleSubmit(): Promise<void> {

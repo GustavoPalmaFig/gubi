@@ -15,7 +15,10 @@
     <div class="flex flex-col mx-auto gap-3">
       <form [formGroup]="userForm" (ngSubmit)="handleSubmit()">
         <div class="flex justify-center mb-4">
-          <app-user-avatar [users]="authService.currentUser()" [size]="'size-24'" [tooltipEnable]="false" />
+          <button type="button" (click)="triggerFileInput()" class="cursor-pointer hover:opacity-80 transition-opacity" [disabled]="isUploadingAvatar()">
+            <app-user-avatar [users]="userForm.value" [size]="'size-24'" [tooltipEnable]="false" />
+          </button>
+          <input #fileInput type="file" accept="image/*" class="hidden" (change)="handleAvatarUpload($event)" [disabled]="isUploadingAvatar()" />
         </div>
 
         <div class="flex flex-col md:flex-row justify-between items-left md:items-center gap-3 py-3 border-b">
@@ -33,7 +36,7 @@
           <p-button
             type="submit"
             [label]="isLoading() ? 'Salvando...' : 'Salvar'"
-            [disabled]="isLoading() || userForm.get('fullname')?.invalid || !userForm.dirty"
+            [disabled]="isLoading() || isUploadingAvatar() || userForm.get('fullname')?.invalid || !userForm.dirty"
             [loading]="isLoading()"
             severity="contrast"
           />

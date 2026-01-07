@@ -9,12 +9,17 @@ import { SupabaseService } from './supabase.service';
 export class StorageService {
   private supabase = inject(SupabaseService).client;
 
-  async uploadFile(bucket: eBucketName, folder: string, file: File): Promise<string> {
+  async uploadFile(bucket: eBucketName, folder: string, file: File, options?: { returnUrl: boolean }): Promise<string> {
     const path = this.generateFilePath(file, folder);
-    const { data, error } = await this.supabase.storage.from(bucket).upload(path, file);
+    const { data: uploadData, error } = await this.supabase.storage.from(bucket).upload(path, file);
 
     if (error) throw error.message;
-    return data.path ?? path;
+
+    if (options?.returnUrl) {
+      const publicRes = this.supabase.storage.from(bucket).getPublicUrl(uploadData.path);
+      if (publicRes?.data) return publicRes.data.publicUrl;
+    }
+    return uploadData.path ?? path;
   }
 
   async downloadAndSave(bucket: eBucketName, path: string, filename: string): Promise<void> {
