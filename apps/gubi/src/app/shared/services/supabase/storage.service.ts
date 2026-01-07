@@ -17,13 +17,10 @@ export class StorageService {
     return data.path ?? path;
   }
 
-  //DECIDIR QUAL DOS DOIS USAR
   async downloadAndSave(bucket: eBucketName, path: string, filename: string): Promise<void> {
-    // 1) pega o blob via SDK (autenticado)
     const { data, error } = await this.supabase.storage.from(bucket).download(path);
     if (error) throw error.message;
 
-    // 2) força o download (usando anchor)
     const url = URL.createObjectURL(data);
     const a = document.createElement('a');
     a.href = url;
@@ -31,11 +28,9 @@ export class StorageService {
     document.body.appendChild(a);
     a.click();
     a.remove();
-    // libera memória
     URL.revokeObjectURL(url);
   }
 
-  //DECIDIR QUAL DOS DOIS USAR
   async openSignedUrlInNewTab(bucket: eBucketName, path: string, ttlSeconds = 60) {
     const { data, error } = await this.supabase.storage.from(bucket).createSignedUrl(path, ttlSeconds);
     if (error) throw error;
