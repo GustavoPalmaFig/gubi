@@ -48,4 +48,8 @@ export class HeaderComponent {
   get visibleCrumbItems(): MenuItem[] {
     return this.crumbItems.filter(item => item.visible);
   }
+
+  navigateTo(route: string): void {
+    this.router.navigate([route]);
+  }
 }

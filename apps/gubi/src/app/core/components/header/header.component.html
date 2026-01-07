@@ -1,11 +1,11 @@
 <div class="flex items-center justify-between mx-4 py-2 border-b border-[#64748b]">
   @if(isMobile()) {
-    <a class="cursor-pointer w-8" [routerLink]="'/spaces'" aria-label="Ir para Espaços">
-      <img src="gb_logo.svg" alt="Gubi" class="logo w-full" />
-    </a>
-    <p-button icon="pi pi-bars" [text]="true" aria-label="Abrir menu" severity="secondary" (click)="openMobileSidebar()"></p-button>
+  <a class="cursor-pointer w-8" [routerLink]="'/spaces'" aria-label="Ir para Espaços">
+    <img src="gb_logo.svg" alt="Gubi" class="logo w-full" />
+  </a>
+  <p-button icon="pi pi-bars" [text]="true" aria-label="Abrir menu" severity="secondary" (click)="openMobileSidebar()"></p-button>
   } @else {
-    <p-breadcrumb class="max-w-full transparent-breadcrumb" [model]="visibleCrumbItems" [home]="home" aria-label="Navegação" />
+  <p-breadcrumb class="max-w-full transparent-breadcrumb" [model]="visibleCrumbItems" [home]="home" aria-label="Navegação" />
   <div
     class="cursor-pointer hover:bg-opacity-45 transition-colors duration-200"
     tabindex="0"
@@ -30,7 +30,18 @@
   </ng-template>
   <ng-template #end>
     <div class="border-t border-gray-300 w-full py-1">
-      <p-button label="Sair" icon="pi pi-sign-out" styleClass="w-full !justify-start" text severity="secondary" aria-label="Sair do Gubi" (click)="authService.logout()"></p-button>
+      <p-button
+        label="Configurações"
+        icon="pi pi-cog"
+        styleClass="w-full !justify-start !text-sm"
+        text
+        severity="secondary"
+        aria-label="Sair do Gubi"
+        (click)="navigateTo('/settings')"
+      />
+    </div>
+    <div class="border-t border-gray-300 w-full py-1">
+      <p-button label="Sair" icon="pi pi-sign-out" styleClass="w-full !justify-start !text-sm" text severity="secondary" aria-label="Sair do Gubi" (click)="authService.logout()" />
     </div>
   </ng-template>
 </p-menu>

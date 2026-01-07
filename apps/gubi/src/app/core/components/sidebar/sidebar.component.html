@@ -71,7 +71,18 @@
   </ng-template>
   <ng-template #end>
     <div class="border-t border-gray-300 w-full py-1">
-      <p-button label="Sair" icon="pi pi-sign-out" styleClass="w-full !justify-start" text severity="secondary" aria-label="Sair do Gubi" (click)="authService.logout()"></p-button>
+      <p-button
+        label="Configurações"
+        icon="pi pi-cog"
+        styleClass="w-full !justify-start !text-sm"
+        text
+        severity="secondary"
+        aria-label="Sair do Gubi"
+        (click)="navigateTo('/settings')"
+      />
+    </div>
+    <div class="border-t border-gray-300 w-full py-1">
+      <p-button label="Sair" icon="pi pi-sign-out" styleClass="w-full !justify-start !text-sm" text severity="secondary" aria-label="Sair do Gubi" (click)="authService.logout()" />
     </div>
   </ng-template>
 </p-menu>
