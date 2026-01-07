@@ -18,16 +18,16 @@
           <app-user-avatar [users]="authService.currentUser()" [size]="'size-24'" [tooltipEnable]="false" />
         </div>
 
-        <div class="flex justify-between items-center gap-3 py-3 border-b">
+        <div class="flex flex-col md:flex-row justify-between items-left md:items-center gap-3 py-3 border-b">
           <label for="email" class="text-sm font-medium">Email</label>
-          <p-iconfield class="w-1/2">
+          <p-iconfield class="w-full md:w-1/2">
             <input class="w-full" id="email" type="text" pInputText formControlName="email" />
             <p-inputicon class="pi pi-lock" />
           </p-iconfield>
         </div>
-        <div class="flex justify-between items-center gap-3 py-3 border-b">
+        <div class="flex flex-col md:flex-row justify-between items-left md:items-center gap-3 py-3 border-b">
           <label for="fullname" class="text-sm font-medium">Nome Completo</label>
-          <input class="w-1/2" id="fullname" type="text" pInputText formControlName="fullname" />
+          <input class="w-full md:w-1/2" id="fullname" type="text" pInputText formControlName="fullname" />
         </div>
         <div class="flex justify-end mt-3">
           <p-button
