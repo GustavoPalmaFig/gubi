@@ -185,16 +185,15 @@ export class MySpendingsPage {
     return Object.values(spaceTotals).sort((a, b) => b.total - a.total)[0] || { space: null, total: 0 };
   }
 
-  private calculateTotalToPay(expenses: iExpense[], totalAll: number): number {
+  private calculateTotalToPay(expenses: iExpense[]): number {
     const totalNoInvoice = expenses.reduce((sum, exp) => {
       if (exp.payment_method && exp.payment_method.is_excluded_from_totals) {
-        return sum + (exp.value || 0);
+        return sum;
       }
-      return sum;
+      return sum + this.getUserSpending(exp);
     }, 0);
 
-    const result = totalAll - totalNoInvoice;
-    return result < 0 ? 0 : result;
+    return totalNoInvoice || 0;
   }
 
   private populateCards(): iSpendingsCard[] {
@@ -204,7 +203,7 @@ export class MySpendingsPage {
     const totalBills = this.userTotalValue(bills);
     const totalExpenses = this.userTotalValue(expenses);
     const total = totalBills + totalExpenses;
-    const totalExpensesNoInvoice = this.calculateTotalToPay(expenses, totalExpenses);
+    const totalExpensesNoInvoice = this.calculateTotalToPay(expenses);
     const totalToPay = totalBills + totalExpensesNoInvoice;
     const topSpace = this.spaceWithMostSpendings();
 
