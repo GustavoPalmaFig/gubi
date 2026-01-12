@@ -32,8 +32,6 @@ export class AuthService {
       } else if (!userId && hasUser) {
         this.clearUser();
         this.router.navigate(['auth/login']);
-      } else if (userId && hasUser) {
-        await this.fetchAndStoreUser(userId);
       }
     });
   }
