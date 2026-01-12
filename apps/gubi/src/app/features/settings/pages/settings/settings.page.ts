@@ -63,8 +63,8 @@ export class SettingsPage {
       return;
     }
 
-    if (size > 1024 * 1024) {
-      this.messageService.showMessage('error', 'Erro', 'Por favor, selecione uma imagem com tamanho máximo de 1MB');
+    if (size > 5 * 1024 * 1024) {
+      this.messageService.showMessage('error', 'Erro', 'Imagem muito grande. Máx: 5MB');
       return;
     }
 
