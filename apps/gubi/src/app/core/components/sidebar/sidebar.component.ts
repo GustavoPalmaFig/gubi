@@ -41,7 +41,8 @@ export class SidebarComponent {
   }
 
   protected menuItems: MenuItem[] = [
-    { label: 'Espaços', icon: 'pi pi-home', route: '/spaces' },
+    { label: 'Início', icon: 'pi pi-home', route: '/home' },
+    { label: 'Espaços', icon: 'pi pi-building', route: '/spaces' },
     { label: 'Pagamentos', icon: 'pi pi-credit-card', route: '/payment-methods' },
     { label: 'Meus Gastos', icon: 'pi pi-dollar', route: '/my-spendings' },
     { label: 'Configurações', icon: 'pi pi-cog', route: '/settings' }

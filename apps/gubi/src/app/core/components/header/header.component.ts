@@ -20,7 +20,7 @@ export class HeaderComponent {
   protected layoutService = inject(LayoutService);
   protected router = inject(Router);
 
-  protected home: MenuItem = { icon: 'pi pi-home', label: 'Página Inicial', routerLink: '/spaces' };
+  protected home: MenuItem = { icon: 'pi pi-home', label: 'Página Inicial', routerLink: '/home' };
   protected crumbItems: MenuItem[] = [];
 
   protected isMobile = this.layoutService.isMobile;
@@ -46,8 +46,9 @@ export class HeaderComponent {
     return /^\/spaces\/\d+/.test(this.router.url);
   }
 
-  get visibleCrumbItems(): MenuItem[] {
-    return this.crumbItems.filter(item => item.visible);
+  get visibleCrumbItems(): MenuItem[] | undefined {
+    const crumbs = this.crumbItems.filter(item => item.visible);
+    return crumbs.length > 0 ? crumbs : undefined;
   }
 
   navigateTo(route: string): void {

@@ -21,8 +21,12 @@ export const appRoutes: Route[] = [
     children: [
       {
         path: '',
-        redirectTo: 'spaces',
+        redirectTo: 'home',
         pathMatch: 'full'
+      },
+      {
+        path: 'home',
+        loadComponent: () => import('./features/home/pages/home/home.page').then(m => m.HomePage)
       },
       {
         path: 'spaces',
