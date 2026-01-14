@@ -1,6 +1,9 @@
-<div class="flex flex-col gap-1">
-  <h1 class="text-2xl font-bold">Visão Geral</h1>
-  <p class="text-md text-neutral-500">Acesse as últimas informações cadastradas nos seus espaços</p>
+<div class="flex items-end justify-between">
+  <div class="flex flex-col gap-1">
+    <h1 class="text-2xl font-bold">Visão Geral</h1>
+    <p class="text-md text-neutral-500">Acesse as últimas informações cadastradas nos seus espaços</p>
+  </div>
+  <ng-container *ngTemplateOutlet="accessSpaces"></ng-container>
 </div>
 
 <div class="mt-8">
@@ -104,6 +107,11 @@
       Parece que não há atividades recentes nos seus espaços.<br />
       Crie despesas ou contas para ver as atualizações aqui.
     </p>
+    <ng-container *ngTemplateOutlet="accessSpaces"></ng-container>
   </div>
   }
 </div>
+
+<ng-template #accessSpaces>
+  <p-button label="Espaços" icon="pi pi-building" severity="contrast" (click)="navigateToSpaces()"></p-button>
+</ng-template>

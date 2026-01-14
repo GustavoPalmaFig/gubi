@@ -9,6 +9,7 @@ import { iExpense } from '@features/expense/interfaces/expense.interface';
 import { iSpace } from '@features/spaces/interfaces/space.interface';
 import { LayoutService } from '@core/services/layout.service';
 import { LoadingComponent } from '@shared/components/loading/loading.component';
+import { Router } from '@angular/router';
 import { SpaceApiService } from '@features/spaces/services/space-api.service';
 import { Timeline } from 'primeng/timeline';
 import { UserAvatarComponent } from '@shared/components/user-avatar/user-avatar.component';
@@ -27,6 +28,7 @@ export class HomePage {
   protected spaceApiService = inject(SpaceApiService);
   protected authService = inject(AuthService);
   protected layoutService = inject(LayoutService);
+  protected router = inject(Router);
 
   protected billGuard = MySpendingUtils.billGuard;
   protected expenseGuard = MySpendingUtils.expenseGuard;
@@ -92,5 +94,9 @@ export class HomePage {
       this.currentPage.update(page => page + 1);
       this.fetchSpendings();
     }
+  }
+
+  protected navigateToSpaces(): void {
+    this.router.navigate(['/spaces']);
   }
 }
