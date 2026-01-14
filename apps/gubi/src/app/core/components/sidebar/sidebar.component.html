@@ -17,15 +17,14 @@
     <div class="flex flex-col h-full pt-40" [ngClass]="{ 'items-center': !isSidebarExpanded() }">
       <div class="flex flex-col gap-3 justify-start">
         @for (item of menuItems; track item.route) {
-        <a [routerLink]="item.route">
-          <p-button
-            [label]="isSidebarExpanded() ? item.label : undefined"
-            [icon]="item.icon"
-            severity="secondary"
-            [styleClass]="(isSidebarExpanded() ? 'w-full !justify-start !text-sm ' : '') + (isActive(item.route) ? ' brightness-90' : '')"
-            [pTooltip]="!isSidebarExpanded() ? item.label : undefined"
-            tooltipPosition="right"
-          ></p-button>
+        <a
+          [routerLink]="item.route"
+          class="flex items-center px-4 py-3 text-sm font-medium rounded-lg transition-colors text-neutral-700"
+          [ngClass]="{ 'bg-[#3d3935]/10 border-l-4 border-[#3d3935]': isActive(item.route), 'hover:bg-gray-100': !isActive(item.route) }"
+          [pTooltip]="!isSidebarExpanded() ? item.label : undefined"
+        >
+          <em [class]="item.icon" [ngClass]="{ 'text-gray-500': !isActive(item.route) }"></em>
+          <span *ngIf="isSidebarExpanded()" class="ml-3 text-sm font-medium whitespace-nowrap"> {{ item.label }} </span>
         </a>
         }
       </div>
