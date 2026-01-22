@@ -16,13 +16,6 @@ export class BillApiService {
     return data as iBill[];
   }
 
-  async getAllBillsPaginated(page_number: number, page_size: number): Promise<{ bills: iBill[]; totalCount: number; totalPages?: number }> {
-    const { data } = await this.supabaseService.client.rpc('get_all_bills_with_details_paginated', { page_number, page_size });
-    const total = data?.[0]?.total_count ?? 0;
-    const totalPages = Math.ceil(total / 20);
-    return { bills: data as iBill[], totalCount: total, totalPages };
-  }
-
   async getBillById(billId: number): Promise<iBill | null> {
     const { data } = await this.supabaseService.client.from('bill').select('*').eq('id', billId).single();
     return data as iBill | null;

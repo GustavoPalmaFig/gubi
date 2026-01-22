@@ -15,13 +15,6 @@ export class ExpenseApiService {
     return data as iExpense[];
   }
 
-  async getAllExpensesPaginated(page_number: number, page_size: number): Promise<{ expenses: iExpense[]; totalCount: number; totalPages?: number }> {
-    const { data } = await this.supabaseService.client.rpc('get_all_expenses_with_details_paginated', { page_number, page_size });
-    const total = data?.[0]?.total_count ?? 0;
-    const totalPages = Math.ceil(total / 20);
-    return { expenses: data as iExpense[], totalCount: total, totalPages };
-  }
-
   async getExpenseById(expenseId: number): Promise<iExpense | null> {
     const { data } = await this.supabaseService.client.from('expense').select('*').eq('id', expenseId).single();
     return data as iExpense | null;

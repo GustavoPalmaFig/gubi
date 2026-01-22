@@ -1,9 +1,7 @@
 import { AuthService } from '@features/auth/services/auth.service';
-import { BillApiService } from '@features/bill/services/bill-api.service';
 import { Button } from 'primeng/button';
 import { CommonModule } from '@angular/common';
 import { Component, effect, inject, signal } from '@angular/core';
-import { ExpenseApiService } from '@features/expense/services/expense-api.service';
 import { iBill } from '@features/bill/interfaces/bill.interface';
 import { iExpense } from '@features/expense/interfaces/expense.interface';
 import { iSpace } from '@features/spaces/interfaces/space.interface';
@@ -11,6 +9,7 @@ import { LayoutService } from '@core/services/layout.service';
 import { LoadingComponent } from '@shared/components/loading/loading.component';
 import { Router } from '@angular/router';
 import { SpaceApiService } from '@features/spaces/services/space-api.service';
+import { SpendingApiService } from '@features/my-spendings/services/spending-api.service';
 import { Timeline } from 'primeng/timeline';
 import { UserAvatarComponent } from '@shared/components/user-avatar/user-avatar.component';
 import MySpendingUtils from '@features/my-spendings/utils/utils';
@@ -23,8 +22,7 @@ import Utils from '@shared/utils/utils';
   styleUrl: './home.page.scss'
 })
 export class HomePage {
-  protected billApiService = inject(BillApiService);
-  protected expenseApiService = inject(ExpenseApiService);
+  protected spendingApiService = inject(SpendingApiService);
   protected spaceApiService = inject(SpaceApiService);
   protected authService = inject(AuthService);
   protected layoutService = inject(LayoutService);
@@ -51,14 +49,9 @@ export class HomePage {
   private async fetchSpendings() {
     this.isLoading.set(true);
     const spaces = await this.spaceApiService.getUserSpaces();
-    const [billsPaginated, expensesPaginated] = await Promise.all([
-      this.billApiService.getAllBillsPaginated(this.currentPage(), 5),
-      this.expenseApiService.getAllExpensesPaginated(this.currentPage(), 5)
-    ]);
-    const { bills } = billsPaginated;
-    const { expenses } = expensesPaginated;
-    this.totalPages.set(Math.max(billsPaginated.totalPages || 1, expensesPaginated.totalPages || 1));
-    this.allSpendings.update(spendings => [...(spendings || []), ...bills, ...expenses].sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime()));
+    const spendingsPaginated = await this.spendingApiService.getAllSpendingsPaginated(this.currentPage(), 5);
+    this.totalPages.set(Math.max(spendingsPaginated.totalPages || 1));
+    this.allSpendings.update(spendings => [...(spendings || []), ...spendingsPaginated.spendings]);
     this.populateSpaces(this.allSpendings(), spaces);
     this.isLoading.set(false);
   }
@@ -81,7 +74,7 @@ export class HomePage {
 
     let userValue = value && members?.length ? value / members.length : 0;
 
-    if (splits) {
+    if (splits && splits.length) {
       const userSplit = splits.find(split => split.user_id === this.userId);
       userValue = userSplit ? userSplit.split_value : 0;
     }
