@@ -16,7 +16,37 @@
   <ng-template #content>
     <div class="flex flex-col h-full pt-40" [ngClass]="{ 'items-center': !isSidebarExpanded() }">
       <div class="flex flex-col gap-3 justify-start">
-        @for (item of menuItems; track item.route) {
+        @for (item of menuItems; track item.route) { @if(item.subMenu) {
+        <div>
+          <a
+            [routerLink]="item.route"
+            class="flex items-center px-4 py-3 text-sm font-medium rounded-lg transition-colors text-neutral-700 duration-150 p-ripple"
+            [ngClass]="isActive(item.route) && !hasActiveSubMenu(item) ? 'bg-[#3d3935]/10 border-l-4 border-[#3d3935]': 'hover:bg-gray-100'"
+            [pTooltip]="!isSidebarExpanded() ? item.label : undefined"
+          >
+            <em [class]="item.icon" [ngClass]="{ 'text-gray-500': !isActive(item.route) }"></em>
+            <span *ngIf="isSidebarExpanded()" class="ml-3 text-sm font-medium whitespace-nowrap"> {{ item.label }} </span>
+            <button *ngIf="isSidebarExpanded()" class="ml-auto" (click)="item.isExpanded = !item.isExpanded; $event.preventDefault(); $event.stopPropagation();">
+              <em [ngClass]="item.isExpanded ? 'pi pi-chevron-up' : 'pi pi-chevron-down'"></em>
+            </button>
+          </a>
+          @if(isSidebarExpanded() && item.isExpanded) {
+          <div class="flex flex-col gap-1 mt-1 pl-4">
+            @for (subItem of item.subMenu; track subItem.route){
+            <a
+              [routerLink]="subItem.route"
+              class="flex items-center px-4 py-3 text-sm font-medium rounded-lg transition-colors text-neutral-700 duration-150 p-ripple"
+              [ngClass]="{ 'bg-[#3d3935]/10 border-l-4 border-[#3d3935]': isActive(subItem.route), 'hover:bg-gray-100': !isActive(subItem.route) }"
+              [pTooltip]="!isSidebarExpanded() ? subItem.label : undefined"
+            >
+              <app-user-avatar [users]="getusersFromMembers(subItem.spaceObj?.members)" />
+              <span *ngIf="isSidebarExpanded()" class="ml-3 text-sm font-medium whitespace-nowrap"> {{ subItem.label }} </span>
+            </a>
+            }
+          </div>
+          }
+        </div>
+        } @else {
         <a
           [routerLink]="item.route"
           class="flex items-center px-4 py-3 text-sm font-medium rounded-lg transition-colors text-neutral-700"
@@ -26,7 +56,7 @@
           <em [class]="item.icon" [ngClass]="{ 'text-gray-500': !isActive(item.route) }"></em>
           <span *ngIf="isSidebarExpanded()" class="ml-3 text-sm font-medium whitespace-nowrap"> {{ item.label }} </span>
         </a>
-        }
+        } }
       </div>
 
       <div class="mt-auto overflow-x-hidden">
