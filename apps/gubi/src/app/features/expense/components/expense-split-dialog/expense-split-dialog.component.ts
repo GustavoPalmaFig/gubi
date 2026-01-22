@@ -95,6 +95,6 @@ export class ExpenseSplitDialogComponent {
       return 'Desconhecido';
     }
     const [firstName, lastNameInitial] = fullName.split(' ');
-    return `${firstName} ${lastNameInitial[0]}.`;
+    return `${firstName} ${lastNameInitial && lastNameInitial[0]}.`;
   }
 }
