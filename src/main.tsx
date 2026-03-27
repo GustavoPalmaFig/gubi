@@ -1,6 +1,7 @@
 import './index.css';
 import { createAsyncStoragePersister } from '@tanstack/query-async-storage-persister';
 import { createRoot } from 'react-dom/client';
+import { MantineProvider } from '@mantine/core';
 import { PersistQueryClientProvider } from '@tanstack/react-query-persist-client';
 import { QueryClient } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
@@ -34,12 +35,14 @@ const root = createRoot(rootEl);
 
 root.render(
   <StrictMode>
-    <PersistQueryClientProvider
-      client={queryClient}
-      persistOptions={{ persister, maxAge: 1000 * 60 * 60 * 24 }}
-    >
-      <RouterProvider router={router} />
-      {import.meta.env.DEV && <ReactQueryDevtools initialIsOpen={false} />}
-    </PersistQueryClientProvider>
+    <MantineProvider>
+      <PersistQueryClientProvider
+        client={queryClient}
+        persistOptions={{ persister, maxAge: 1000 * 60 * 60 * 24 }}
+      >
+        <RouterProvider router={router} />
+        {import.meta.env.DEV && <ReactQueryDevtools initialIsOpen={false} />}
+      </PersistQueryClientProvider>
+    </MantineProvider>
   </StrictMode>
 );
