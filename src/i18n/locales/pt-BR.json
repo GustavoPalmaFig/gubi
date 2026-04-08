@@ -1,3 +1,53 @@
 {
-  "common": {}
+  "common": {},
+  "auth": {
+    "layout": {
+      "title": "Seus gastos em um só lugar.",
+      "description": "Gerencie suas contas e despesas com amigos e familiares sem complicações.",
+      "items": {
+        "first": "Crie espaços para a família, amigos e colegas",
+        "second": "Gerencie suas despesas, contas e saldos com facilidade",
+        "third": "Consulte relatórios e dashboards detalhados"
+      },
+      "examples": {
+        "apartment": "Apartamento",
+        "apartment_description": "Despesas mensais",
+        "trip": "Viagem Montevidéu",
+        "trip_description": "Gastos compartilhados"
+      },
+      "footer": "© 2026 Gubi. Todos os direitos reservados."
+    },
+    "register": {
+      "title": "Crie sua conta",
+      "description": "Comece a gerenciar suas despesas agora mesmo",
+      "full_name": "Nome completo",
+      "full_name_placeholder": "Seu nome completo",
+      "email": "E-mail",
+      "email_placeholder": "exemplo@email.com",
+      "password": "Senha",
+      "password_placeholder": "********",
+      "confirm_password": "Confirme a senha",
+      "confirm_password_placeholder": "********",
+      "submit": "Criar conta",
+      "already_have_account": "Já possui uma conta? <a href='/login'><u>Fazer login</u></a>"
+    },
+    "login": {
+      "title": "Olá novamente!",
+      "description": "Acesse sua conta para continuar",
+      "continue_with_provider": "ou continue com",
+      "email": "E-mail",
+      "email_placeholder": "exemplo@email.com",
+      "email_required": "E-mail é obrigatório",
+      "password": "Senha",
+      "password_placeholder": "********",
+      "submit": "Entrar",
+      "no_account": "Não possui uma conta? <0>Criar conta</0>"
+    },
+    "error": {
+      "email_invalid": "E-mail inválido",
+      "email_already_taken": "Este e-mail já está cadastrado",
+      "password_confirmation_failed": "As senhas não coincidem",
+      "invalid_credentials": "E-mail ou senha inválidos, tente novamente."
+    }
+  }
 }
