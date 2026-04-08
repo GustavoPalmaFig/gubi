@@ -1,3 +1,4 @@
+import './i18n';
 import './index.css';
 import { createAsyncStoragePersister } from '@tanstack/query-async-storage-persister';
 import { createRoot } from 'react-dom/client';
@@ -8,6 +9,7 @@ import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { RouterProvider } from 'react-router-dom';
 import { StrictMode } from 'react';
 import localforage from 'localforage';
+import { mantineTheme } from './theme/mantine-theme';
 import { router } from './routes/AppRouter';
 
 const queryClient = new QueryClient({
@@ -35,7 +37,7 @@ const root = createRoot(rootEl);
 
 root.render(
   <StrictMode>
-    <MantineProvider>
+    <MantineProvider theme={mantineTheme}>
       <PersistQueryClientProvider
         client={queryClient}
         persistOptions={{ persister, maxAge: 1000 * 60 * 60 * 24 }}

@@ -28,12 +28,12 @@
 
 :root {
   --background: #f9f9f9;
-  --foreground: #262626;
-  --muted-foreground: #737373;
+  --foreground: #334155;
+  --muted-foreground: #a7a7a7;
   --card: #ffffff;
   --muted: #f3f4f6;
-  --primary: #3d3935;
-  --primary-foreground: rgba(#3d3935, 0.1);
+  --primary: #57b497;
+  --primary-foreground: #f4fbf9;
   --secondary: #475569;
   --secondary-foreground: #f1f5f9;
 
