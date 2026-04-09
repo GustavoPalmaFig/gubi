@@ -5,13 +5,28 @@ import {
   IconReport,
   IconUsers
 } from '@tabler/icons-react';
-import { Outlet } from 'react-router-dom';
+import { Loader } from '@mantine/core';
+import { Navigate, Outlet } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import LogoIcon from '@/assets/logo/gubi-logo-icon.svg?react';
 import LogoName from '@/assets/logo/gubi-logo-name.svg?react';
+import { useAuth } from '../hooks/useAuth';
 
 export function AuthLayout() {
+  const { isAuthenticated, isLoading } = useAuth();
   const { t } = useTranslation('translation', { keyPrefix: 'auth.layout' });
+
+  if (isLoading) {
+    return (
+      <div className="flex h-screen items-center justify-center">
+        <Loader type="dots" />
+      </div>
+    );
+  }
+
+  if (isAuthenticated) {
+    return <Navigate to="/" replace />;
+  }
 
   const items = [
     { Icon: IconUsers, title: t('items.first') },
