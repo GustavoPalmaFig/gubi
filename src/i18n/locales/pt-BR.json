@@ -4,6 +4,11 @@
     "title": "Erro",
     "unexpected": "Erro inesperado"
   },
+  "notFound": {
+    "title": "404",
+    "description": "Oops! Página não encontrada",
+    "link": "Retornar para a <0>página inicial</0>"
+  },
   "auth": {
     "layout": {
       "title": "Seus gastos em um só lugar.",
