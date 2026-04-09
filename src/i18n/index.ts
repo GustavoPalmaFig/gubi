@@ -1,10 +1,8 @@
 import { initReactI18next } from 'react-i18next';
+import { localeOptions } from '@/constants/localeOptions';
 import i18n from 'i18next';
 import LanguageDetector from 'i18next-browser-languagedetector';
 import ptBR from './locales/pt-BR.json';
-
-export const SUPPORTED_LOCALES = ['pt-BR'] as const;
-export type SupportedLocale = (typeof SUPPORTED_LOCALES)[number];
 
 const I18N_STORAGE_KEY = 'i18nextLng';
 
@@ -19,7 +17,7 @@ void i18n
   .use(initReactI18next)
   .init({
     fallbackLng: 'pt-BR',
-    supportedLngs: SUPPORTED_LOCALES,
+    supportedLngs: localeOptions,
     resources: {
       'pt-BR': { translation: ptBR }
     },

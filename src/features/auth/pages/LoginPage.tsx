@@ -1,5 +1,5 @@
-import { AuthApiError } from '@supabase/supabase-js';
 import { Button, PasswordInput, Stack, Text, TextInput, Title } from '@mantine/core';
+import { getSupabaseErrorMessage } from '@/utils/errorGuard';
 import { IconLock, IconMail } from '@tabler/icons-react';
 import { Link } from 'react-router-dom';
 import { Trans, useTranslation } from 'react-i18next';
@@ -33,9 +33,7 @@ export default function LoginPage() {
     try {
       await simpleLogin(data.email, data.password);
     } catch (error: unknown) {
-      if (error instanceof AuthApiError) {
-        console.error(t(`error.${error.code}`));
-      }
+      console.log(getSupabaseErrorMessage(error));
     }
   };
 

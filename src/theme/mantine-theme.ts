@@ -68,6 +68,11 @@ export const mantineTheme = createTheme({
       classNames: {
         label: 'mb-1'
       }
+    },
+    Select: {
+      classNames: {
+        label: 'mb-1 text-base'
+      }
     }
   }
 });

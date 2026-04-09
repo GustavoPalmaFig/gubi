@@ -7,7 +7,7 @@ import { fetchUserById, isEmailTaken } from '../services/auth.service';
 import type { User } from '../types/user';
 
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const { t } = useTranslation('auth');
+  const { t } = useTranslation('translation', { keyPrefix: 'auth' });
 
   const [user, setUser] = useState<User | null>(null);
   const [supabaseUser, setSupabaseUser] = useState<SupabaseUser | null>(null);
@@ -57,7 +57,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     };
   }, []);
 
-  const register = async (user: User, password: string) => {
+  const register = async (user: Omit<User, 'id'>, password: string) => {
     const { email, full_name, locale, currency } = user;
 
     if (await isEmailTaken(email)) {

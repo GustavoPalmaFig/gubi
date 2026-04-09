@@ -7,7 +7,8 @@ import {
 } from '@tabler/icons-react';
 import { Outlet } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import Logo from '@/assets/logo/gubi-logo-name.svg?react';
+import LogoIcon from '@/assets/logo/gubi-logo-icon.svg?react';
+import LogoName from '@/assets/logo/gubi-logo-name.svg?react';
 
 export function AuthLayout() {
   const { t } = useTranslation('translation', { keyPrefix: 'auth.layout' });
@@ -20,10 +21,10 @@ export function AuthLayout() {
 
   return (
     <div className="flex min-h-screen w-full flex-col md:flex-row">
-      <section className="via-primary/90 from-primary to-primary-foreground hidden w-1/2 flex-col items-start bg-linear-to-br p-16 md:flex">
-        <Logo className="h-10 w-auto text-white" />
+      <section className="via-primary/90 from-primary to-primary-foreground hidden w-1/2 flex-col items-start gap-12 bg-linear-to-br p-16 md:flex">
+        <LogoName className="h-10 w-auto text-white" />
 
-        <div className="flex h-5/6 w-full flex-col justify-center gap-10 lg:w-3/5">
+        <div className="mt-20 flex w-full flex-col justify-center gap-10 lg:w-3/5">
           <h1 className="text-4xl font-bold text-white">{t('title')}</h1>
 
           <div className="flex flex-col gap-16">
@@ -71,7 +72,9 @@ export function AuthLayout() {
         <div className="text-primary-foreground/70 mt-auto text-sm font-medium">{t('footer')}</div>
       </section>
 
-      <div className="mx-auto w-full max-w-xl p-16 md:w-1/2">
+      <div className="mx-auto flex w-full max-w-xl flex-col gap-12 p-16 md:w-1/2">
+        <LogoName className="text-primary h-10 md:hidden" />
+        <LogoIcon className="text-primary hidden h-10 md:flex" />
         <Outlet />
       </div>
     </div>

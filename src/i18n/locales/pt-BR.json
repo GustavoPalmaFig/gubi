@@ -1,5 +1,8 @@
 {
   "common": {},
+  "error": {
+    "unexpected": "Erro inesperado"
+  },
   "auth": {
     "layout": {
       "title": "Seus gastos em um só lugar.",
@@ -24,12 +27,14 @@
       "full_name_placeholder": "Seu nome completo",
       "email": "E-mail",
       "email_placeholder": "exemplo@email.com",
+      "locale": "Idioma",
+      "currency": "Moeda",
       "password": "Senha",
       "password_placeholder": "********",
       "confirm_password": "Confirme a senha",
       "confirm_password_placeholder": "********",
       "submit": "Criar conta",
-      "already_have_account": "Já possui uma conta? <a href='/login'><u>Fazer login</u></a>"
+      "already_have_account": "Já possui uma conta? <0>Fazer login</0>"
     },
     "login": {
       "title": "Olá novamente!",
