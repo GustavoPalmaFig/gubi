@@ -1,10 +1,10 @@
 import { Button, PasswordInput, Select, Stack, Text, TextInput, Title } from '@mantine/core';
 import { Controller, useForm } from 'react-hook-form';
 import { currencyOptions, currencyOptionSelect } from '@/constants/currencyOptions';
-import { getSupabaseErrorMessage } from '@/utils/errorGuard';
 import { IconCoins, IconLanguage, IconLock, IconMail, IconUser } from '@tabler/icons-react';
 import { Link } from 'react-router-dom';
 import { localeOptions, localeOptionsSelect } from '@/constants/localeOptions';
+import { showErrorNotification } from '@/utils/errors';
 import { Trans, useTranslation } from 'react-i18next';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -57,7 +57,7 @@ export default function RegisterPage() {
         data.password
       );
     } catch (error: unknown) {
-      console.log(getSupabaseErrorMessage(error));
+      showErrorNotification(error);
     }
   };
 

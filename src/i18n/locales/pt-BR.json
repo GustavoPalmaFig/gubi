@@ -1,6 +1,7 @@
 {
   "common": {},
   "error": {
+    "title": "Erro",
     "unexpected": "Erro inesperado"
   },
   "auth": {

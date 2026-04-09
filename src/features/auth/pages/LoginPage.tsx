@@ -1,7 +1,7 @@
 import { Button, PasswordInput, Stack, Text, TextInput, Title } from '@mantine/core';
-import { getSupabaseErrorMessage } from '@/utils/errorGuard';
 import { IconLock, IconMail } from '@tabler/icons-react';
 import { Link } from 'react-router-dom';
+import { showErrorNotification } from '@/utils/errors';
 import { Trans, useTranslation } from 'react-i18next';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
@@ -33,7 +33,7 @@ export default function LoginPage() {
     try {
       await simpleLogin(data.email, data.password);
     } catch (error: unknown) {
-      console.log(getSupabaseErrorMessage(error));
+      showErrorNotification(error);
     }
   };
 

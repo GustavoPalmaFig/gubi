@@ -1,8 +1,10 @@
 import './i18n';
 import './index.css';
+import '@mantine/notifications/styles.css';
 import { createAsyncStoragePersister } from '@tanstack/query-async-storage-persister';
 import { createRoot } from 'react-dom/client';
 import { MantineProvider } from '@mantine/core';
+import { Notifications } from '@mantine/notifications';
 import { PersistQueryClientProvider } from '@tanstack/react-query-persist-client';
 import { QueryClient } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
@@ -43,6 +45,7 @@ root.render(
         client={queryClient}
         persistOptions={{ persister, maxAge: 1000 * 60 * 60 * 24 }}
       >
+        <Notifications position="top-right" />
         <AuthProvider>
           <RouterProvider router={router} />
         </AuthProvider>

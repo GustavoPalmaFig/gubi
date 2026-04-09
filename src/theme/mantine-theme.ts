@@ -73,6 +73,12 @@ export const mantineTheme = createTheme({
       classNames: {
         label: 'mb-1 text-base'
       }
+    },
+    Notification: {
+      classNames: {
+        title: 'text-foreground font-semibold',
+        description: 'text-foreground'
+      }
     }
   }
 });

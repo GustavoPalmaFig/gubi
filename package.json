@@ -25,6 +25,7 @@
     "@mantine/core": "^8.3.18",
     "@mantine/dates": "^8.3.18",
     "@mantine/hooks": "^8.3.18",
+    "@mantine/notifications": "^9.0.1",
     "@supabase/supabase-js": "^2.102.1",
     "@tabler/icons-react": "^3.41.1",
     "@tanstack/query-async-storage-persister": "^5.95.2",
