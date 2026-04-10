@@ -1,61 +1,64 @@
 import { supabase } from '@/services/supabase.service';
 import { useEffect, useRef, useState, type ReactNode } from 'react';
+import { useQueryClient } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
 import type { Provider, User as SupabaseUser } from '@supabase/supabase-js';
 import { AuthContext } from './AuthContext';
-import { fetchUserById, isEmailTaken } from '../services/auth.service';
+import { isEmailTaken } from '../services/auth.service';
+import { useCurrentUserQuery } from '../hooks/useCurrentUserQuery';
 import type { User } from '../types/user';
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const { t } = useTranslation('translation', { keyPrefix: 'auth' });
+  const queryClient = useQueryClient();
 
-  const [user, setUser] = useState<User | null>(null);
   const [supabaseUser, setSupabaseUser] = useState<SupabaseUser | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isSessionLoading, setIsSessionLoading] = useState(true);
 
   const isInitialized = useRef(false);
 
-  const handleUserLoad = async (supabaseUser: SupabaseUser | null) => {
-    setSupabaseUser(supabaseUser);
-
-    try {
-      if (supabaseUser) {
-        const dbUser = await fetchUserById(supabaseUser.id);
-        setUser(dbUser);
-      } else {
-        setUser(null);
-      }
-    } catch {
-      setUser(null);
-    }
-  };
+  const { data: user, isLoading: isUserLoading } = useCurrentUserQuery(supabaseUser);
+  const isLoading = isSessionLoading || (!!supabaseUser && isUserLoading);
 
   useEffect(() => {
     const init = async () => {
-      setIsLoading(true);
-      const { data } = await supabase.auth.getUser();
-      await handleUserLoad(data.user ?? null);
+      try {
+        const { data, error } = await supabase.auth.getUser();
 
-      isInitialized.current = true;
-      setIsLoading(false);
+        if (error) {
+          throw error;
+        }
+
+        setSupabaseUser(data.user ?? null);
+      } catch {
+        setSupabaseUser(null);
+      } finally {
+        isInitialized.current = true;
+        setIsSessionLoading(false);
+      }
     };
 
-    init();
+    void init();
   }, []);
 
   useEffect(() => {
-    const { data: listener } = supabase.auth.onAuthStateChange(async (_event, session) => {
-      if (!isInitialized.current) return;
+    const { data: listener } = supabase.auth.onAuthStateChange((_event, session) => {
+      setTimeout(() => {
+        if (!isInitialized.current) return;
 
-      setIsLoading(true);
-      await handleUserLoad(session?.user ?? null);
-      setIsLoading(false);
+        const nextUser = session?.user ?? null;
+        setSupabaseUser(nextUser);
+
+        if (!nextUser) {
+          void queryClient.removeQueries({ queryKey: ['auth-user'] });
+        }
+      }, 0);
     });
 
     return () => {
       listener.subscription.unsubscribe();
     };
-  }, []);
+  }, [queryClient]);
 
   const register = async (user: Omit<User, 'id'>, password: string) => {
     const { email, full_name, locale, currency } = user;
@@ -98,13 +101,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const logout = async () => {
     const { error } = await supabase.auth.signOut();
     if (error) throw error;
+
+    queryClient.removeQueries({ queryKey: ['auth-user'] });
   };
 
   return (
     <AuthContext
       value={{
         isAuthenticated: !!supabaseUser && !!user,
-        user,
+        user: user ?? null,
         supabaseUser,
         isLoading,
         register,
