@@ -68,5 +68,48 @@
     "reports": "Relatórios",
     "settings": "Configurações",
     "logout": "Sair"
+  },
+  "paymentMethod": {
+    "title": "Métodos de Pagamento",
+    "description": "Gerencie suas formas de pagamento cadastradas",
+    "add": "Adicionar Método",
+    "add_description": "Cartão de crédito, pix, dinheiro...",
+    "card": {
+      "default": "Padrão",
+      "affects_balance": "Afeta saldo",
+      "does_not_affect_balance": "Não afeta saldo",
+      "last_expense": "Último uso",
+      "no_expense": "Nenhuma despesa",
+      "actions": "Ações",
+      "edit": "Editar",
+      "delete": "Excluir",
+      "delete_success": "Método de pagamento excluído",
+      "delete_success_description": "O método de pagamento foi excluído com sucesso."
+    },
+    "form": {
+      "createTitle": "Adicionar método de pagamento",
+      "editTitle": "Editar método de pagamento",
+      "createSubTitle": "Preencha os dados do método de pagamento",
+      "editSubTitle": "Atualize os dados do método de pagamento",
+      "name": "Nome",
+      "name_placeholder": "Ex.: Nubank, Carteira, Pix pessoal",
+      "type": "Tipo",
+      "type_placeholder": "Selecione o tipo",
+      "affects_balance_label": "Afeta saldo",
+      "affects_balance_description": "Todas as despesas pagas com este método não impactam no cálculo do valor total a pagar mensal, pois não possuem fatura. Exemplos: Pix, Vale Alimentação, etc",
+      "save": "Salvar",
+      "create_success": "Método de pagamento criado",
+      "create_success_description": "O método de pagamento foi criado com sucesso.",
+      "update_success": "Método de pagamento atualizado",
+      "update_success_description": "O método de pagamento foi atualizado com sucesso."
+    },
+    "paymentMethodType": {
+      "credit_card": "Cartão de crédito",
+      "debit_card": "Cartão de débito",
+      "pix": "Pix",
+      "cash": "Dinheiro",
+      "cash_transaction": "Transferência bancária",
+      "other": "Outro"
+    }
   }
 }

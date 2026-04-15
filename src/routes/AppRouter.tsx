@@ -2,6 +2,7 @@ import { AppLayout } from '@/components/layout/AppLayout';
 import { AuthLayout } from '@/features/auth/components/AuthLayout';
 import { createBrowserRouter } from 'react-router-dom';
 import { NotFound } from '@/components/layout/NotFound';
+import { PaymentMethodPage } from '@/features/payment-methods/pages/PaymentMethodPage';
 import { ProtectedRoute } from '@/features/auth/components/ProtectedRoute';
 import Home from '@/features/home/pages/Home';
 import LoginPage from '@/features/auth/pages/LoginPage';
@@ -23,7 +24,10 @@ export const router = createBrowserRouter([
         children: [
           {
             element: <AppLayout />,
-            children: [{ index: true, element: <Home /> }]
+            children: [
+              { index: true, element: <Home /> },
+              { path: 'payment-methods', element: <PaymentMethodPage /> }
+            ]
           }
         ]
       },
