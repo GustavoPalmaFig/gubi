@@ -42,13 +42,27 @@ export const mantineTheme = createTheme({
     card: generateColorScale('card'),
     muted: generateColorScale('muted'),
     border: generateColorScale('border'),
-    gray: generateColorScale('muted-foreground')
+    gray: generateColorScale('gray'),
+    blue: generateColorScale('blue'),
+    green: generateColorScale('green'),
+    cyan: generateColorScale('cyan'),
+    orange: generateColorScale('orange'),
+    red: generateColorScale('red'),
+    yellow: generateColorScale('yellow')
   },
   components: {
     Button: {
       defaultProps: {
         size: 'md',
         radius: 'md'
+      },
+      classNames: {
+        root: 'font-medium'
+      }
+    },
+    ActionIcon: {
+      classNames: {
+        root: 'border-2'
       }
     },
     TextInput: {
@@ -57,7 +71,8 @@ export const mantineTheme = createTheme({
         radius: 'md'
       },
       classNames: {
-        label: 'mb-1'
+        label: 'mb-1',
+        input: 'text-foreground'
       }
     },
     PasswordInput: {
@@ -66,18 +81,44 @@ export const mantineTheme = createTheme({
         radius: 'md'
       },
       classNames: {
-        label: 'mb-1'
+        label: 'mb-1',
+        input: 'text-foreground'
       }
     },
     Select: {
+      defaultProps: {
+        size: 'md',
+        radius: 'md'
+      },
       classNames: {
-        label: 'mb-1 text-base'
+        label: 'mb-1 text-base',
+        input: 'text-foreground'
+      }
+    },
+    Checkbox: {
+      defaultProps: {
+        size: 'sm',
+        radius: 'sm'
+      },
+      classNames: {
+        label: 'text-foreground text-base'
       }
     },
     Notification: {
       classNames: {
         title: 'text-foreground font-semibold',
         description: 'text-foreground'
+      }
+    },
+    Modal: {
+      defaultProps: {
+        radius: '12px',
+        padding: 'lg'
+      }
+    },
+    Text: {
+      classNames: {
+        root: 'text-foreground'
       }
     }
   }
