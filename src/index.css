@@ -2,6 +2,7 @@
 
 @theme {
   --color-background: var(--background);
+  --color-background-secondary: var(--background-secondary);
   --color-foreground: var(--foreground);
   --color-muted-foreground: var(--muted-foreground);
 
@@ -27,7 +28,8 @@
 }
 
 :root {
-  --background: #f9f9f9;
+  --background: #f7f6f4;
+  --background-secondary: #fafafa;
   --foreground: #334155;
   --muted-foreground: #a7a7a7;
   --card: #ffffff;

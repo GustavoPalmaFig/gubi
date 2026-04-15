@@ -60,5 +60,13 @@
       "password_confirmation_failed": "As senhas não coincidem",
       "invalid_credentials": "E-mail ou senha inválidos, tente novamente."
     }
+  },
+  "navigation": {
+    "home": "Início",
+    "spaces": "Espaços",
+    "payment_methods": "Métodos de Pagamento",
+    "reports": "Relatórios",
+    "settings": "Configurações",
+    "logout": "Sair"
   }
 }

@@ -1,4 +1,4 @@
-import { AppLayout } from '@/components/AppLayout';
+import { AppLayout } from '@/components/layout/AppLayout';
 import { AuthLayout } from '@/features/auth/components/AuthLayout';
 import { createBrowserRouter } from 'react-router-dom';
 import { NotFound } from '@/components/layout/NotFound';
