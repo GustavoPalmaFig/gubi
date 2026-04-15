@@ -1,6 +1,6 @@
 import './i18n';
-import './lib/dayjs';
 import './index.css';
+import './lib/dayjs';
 import '@mantine/notifications/styles.css';
 import { createAsyncStoragePersister } from '@tanstack/query-async-storage-persister';
 import { createRoot } from 'react-dom/client';
@@ -46,7 +46,7 @@ root.render(
         client={queryClient}
         persistOptions={{ persister, maxAge: 1000 * 60 * 60 * 24 }}
       >
-        <Notifications position="top-right" />
+        <Notifications position="bottom-right" />
         <AuthProvider>
           <RouterProvider router={router} />
         </AuthProvider>

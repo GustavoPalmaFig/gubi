@@ -12,25 +12,36 @@ interface NotificationProps {
 
 const iconMap = {
   positive: IconCheck,
-  negative: IconAlertCircle,
-  warning: IconAlertTriangle,
+  negative: IconAlertTriangle,
+  warning: IconAlertCircle,
   info: IconInfoCircle
 };
 
 export function showNotification({ title, message, type }: NotificationProps) {
   const Icon = iconMap[type];
+  const cssColor = `var(--${type})`;
 
   return notifications.show({
     title,
     message,
-    color: type,
-    icon: createElement(Icon, { size: 18 }),
+    icon: createElement(Icon, { size: 20 }),
+    autoClose: 500000,
     withBorder: true,
-    autoClose: 5000,
     styles: {
       root: {
-        backgroundColor: `color-mix(in srgb, var(--${type}) 10%, var(--background))`,
-        outline: `1px solid color-mix(in srgb, var(--${type}) 75%, transparent)`
+        backgroundColor: 'var(--card)',
+        boxShadow: '0 1px 3px 0 rgba(0,0,0,.08), 0 1px 2px -1px rgba(0,0,0,.06)',
+        padding: '20px',
+        alignItems: 'start',
+        borderLeftColor: cssColor,
+        borderLeftWidth: '4px'
+      },
+      icon: {
+        backgroundColor: `color-mix(in srgb, ${cssColor} 12%, white)`,
+        color: cssColor
+      },
+      description: {
+        color: 'var(--muted-foreground)'
       }
     }
   });

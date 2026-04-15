@@ -57,9 +57,11 @@
 
   --positive: #10b981;
   --positive-foreground: #e1f1f2;
+  --negative: #ed0000;
   --negative-foreground: #fecaca;
+  --warning: #ea580c;
   --warning-foreground: #fefce8;
-  --info: #eff6ff;
+  --info: #2563eb;
   --info-foreground: #eff6ff;
 
   --border-default: #d1d5db;
