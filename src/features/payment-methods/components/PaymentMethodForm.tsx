@@ -154,7 +154,7 @@ export function PaymentMethodForm({ paymentMethod, finish }: PaymentMethodFormPr
             <IconQuestionMark size={16} stroke={3} />
           </ActionIcon>
 
-          <Collapse in={affectsBalanceExpanded}>
+          <Collapse expanded={affectsBalanceExpanded}>
             <Text size="xs" className="text-muted-foreground font-light">
               {t('form.affects_balance_description')}
             </Text>

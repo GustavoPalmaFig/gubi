@@ -16,7 +16,7 @@ export function PaymentMethodCard({ paymentMethod, onEdit }: PaymentMethodCardPr
 
   return (
     <Card radius="lg" padding="lg" shadow="md" h={220}>
-      <Stack gap="md" justify="space-between">
+      <Stack gap="md" justify="space-between" h="100%">
         <Group align="start" justify="space-between">
           <PaymentMethodTypeIcon type={paymentMethod.type} />
           <Group>
@@ -32,9 +32,11 @@ export function PaymentMethodCard({ paymentMethod, onEdit }: PaymentMethodCardPr
 
         <Stack gap="0">
           <Text className="text-foreground font-semibold">{paymentMethod.name}</Text>
-          <Text className="text-muted-foreground text-sm">
-            {t(`paymentMethodType.${paymentMethod.type}`)}
-          </Text>
+          {paymentMethod.type && (
+            <Text className="text-muted-foreground text-sm">
+              {t(`paymentMethodType.${paymentMethod.type}`)}
+            </Text>
+          )}
         </Stack>
 
         <Divider />

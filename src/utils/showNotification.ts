@@ -25,7 +25,7 @@ export function showNotification({ title, message, type }: NotificationProps) {
     title,
     message,
     icon: createElement(Icon, { size: 20 }),
-    autoClose: 500000,
+    autoClose: 5000,
     withBorder: true,
     styles: {
       root: {

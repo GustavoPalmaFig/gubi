@@ -1,5 +1,8 @@
 {
-  "common": {},
+  "common": {
+    "confirm": "Confirmar",
+    "cancel": "Cancelar"
+  },
   "error": {
     "title": "Erro",
     "unexpected": "Erro inesperado"
@@ -84,7 +87,11 @@
       "edit": "Editar",
       "delete": "Excluir",
       "delete_success": "Método de pagamento excluído",
-      "delete_success_description": "O método de pagamento foi excluído com sucesso."
+      "delete_success_description": "O método de pagamento foi excluído com sucesso.",
+      "delete_confirmation_title": "Excluir método de pagamento",
+      "delete_confirmation": "Tem certeza que deseja excluir este método de pagamento? Esta ação não pode ser desfeita.",
+      "cancel": "Cancelar",
+      "confirm": "Confirmar"
     },
     "form": {
       "createTitle": "Adicionar método de pagamento",
