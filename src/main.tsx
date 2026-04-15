@@ -1,4 +1,5 @@
 import './i18n';
+import './lib/dayjs';
 import './index.css';
 import '@mantine/notifications/styles.css';
 import { createAsyncStoragePersister } from '@tanstack/query-async-storage-persister';
