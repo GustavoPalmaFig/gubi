@@ -5,6 +5,7 @@ import { NotFound } from '@/components/layout/NotFound';
 import { PaymentMethodPage } from '@/features/payment-methods/pages/PaymentMethodPage';
 import { ProtectedRoute } from '@/features/auth/components/ProtectedRoute';
 import Home from '@/features/home/pages/Home';
+import { SpacesPage } from '@/features/spaces/pages/SpacesPage';
 import LoginPage from '@/features/auth/pages/LoginPage';
 import RegisterPage from '@/features/auth/pages/RegisterPages';
 
@@ -26,6 +27,7 @@ export const router = createBrowserRouter([
             element: <AppLayout />,
             children: [
               { index: true, element: <Home /> },
+              { path: 'spaces', element: <SpacesPage /> },
               { path: 'payment-methods', element: <PaymentMethodPage /> }
             ]
           }

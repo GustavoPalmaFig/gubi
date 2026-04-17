@@ -72,6 +72,11 @@
     "settings": "Configurações",
     "logout": "Sair"
   },
+  "spaces": {
+    "title": "Espaços",
+    "description": "Gerencie os seus espaços compartilhados",
+    "create": "Criar espaço"
+  },
   "paymentMethod": {
     "title": "Métodos de Pagamento",
     "description": "Gerencie suas formas de pagamento cadastradas",
