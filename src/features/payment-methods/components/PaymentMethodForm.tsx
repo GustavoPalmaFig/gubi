@@ -10,7 +10,7 @@ import {
   TextInput
 } from '@mantine/core';
 import { Controller, useForm } from 'react-hook-form';
-import { IconCards, IconQuestionMark, IconWallet } from '@tabler/icons-react';
+import { IconQuestionMark } from '@tabler/icons-react';
 import { showErrorNotification } from '@/utils/errors';
 import { showNotification } from '@/utils/showNotification';
 import { useDisclosure } from '@mantine/hooks';
@@ -22,6 +22,7 @@ import {
   useCreatePaymentMethodMutation,
   useUpdatePaymentMethodMutation
 } from '../hooks/usePaymentMethod';
+import { PaymentMethodTypeIcon } from './PaymentMethodTypeIcon';
 import { paymentMethodTypeOptions } from '../constants/paymentMethodTypeOptions';
 import type { PaymentMethodFormData } from '../types/paymentMethodFormData';
 
@@ -63,7 +64,7 @@ export function PaymentMethodForm({ paymentMethod, finish }: PaymentMethodFormPr
     formState: { errors, isSubmitting, isValid }
   } = useForm<PaymentMethodFormValues>({
     resolver: zodResolver(paymentMethodFormSchema),
-    mode: 'onBlur',
+    mode: 'onChange',
     defaultValues: {
       name: '',
       affects_balance: false,
@@ -107,11 +108,10 @@ export function PaymentMethodForm({ paymentMethod, finish }: PaymentMethodFormPr
 
   return (
     <form onSubmit={handleSubmit(handleSubmitPaymentMethod)}>
-      <Stack gap="md">
+      <Stack gap="lg">
         <TextInput
           label={t('form.name')}
           placeholder={t('form.name_placeholder')}
-          leftSection={<IconWallet size={18} />}
           error={errors.name?.message}
           {...register('name')}
         />
@@ -120,19 +120,22 @@ export function PaymentMethodForm({ paymentMethod, finish }: PaymentMethodFormPr
           name="type"
           control={control}
           render={({ field }) => (
-            <Select
-              clearable
-              label={t('form.type')}
-              placeholder={t('form.type_placeholder')}
-              leftSection={<IconCards size={18} />}
-              data={paymentMethodTypeSelectOptions}
-              value={field.value}
-              onChange={value => field.onChange(value)}
-            />
+            <Group align="end" gap="sm" w="100%" className="flex-1">
+              <Select
+                clearable
+                label={t('form.type')}
+                placeholder={t('form.type_placeholder')}
+                data={paymentMethodTypeSelectOptions}
+                value={field.value}
+                onChange={value => field.onChange(value)}
+                className="flex-1"
+              />
+              <PaymentMethodTypeIcon type={field.value} />
+            </Group>
           )}
         />
 
-        <Group gap="xs">
+        <Group gap="xs" className="mt-1">
           <Controller
             name="affects_balance"
             control={control}

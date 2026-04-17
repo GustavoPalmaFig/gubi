@@ -23,6 +23,23 @@ export const mantineTheme = createTheme({
   primaryColor: 'primary',
   primaryShade: 5,
 
+  fontSizes: {
+    xs: '0.75rem',
+    sm: '0.875rem',
+    md: '1rem',
+    lg: '1.125rem',
+    xl: '1.25rem',
+    '2xl': '1.5rem',
+    '3xl': '1.875rem'
+  },
+
+  fontWeights: {
+    regular: '400',
+    medium: '500',
+    semibold: '600',
+    bold: '700'
+  },
+
   colors: {
     primary: generateColorScale('primary'),
     primaryForeground: generateColorScale('primary-foreground'),
@@ -55,9 +72,6 @@ export const mantineTheme = createTheme({
       defaultProps: {
         size: 'md',
         radius: 'md'
-      },
-      classNames: {
-        root: 'font-medium'
       }
     },
     ActionIcon: {
@@ -71,8 +85,7 @@ export const mantineTheme = createTheme({
         radius: 'md'
       },
       classNames: {
-        label: 'mb-1',
-        input: 'text-foreground'
+        label: 'mb-1'
       }
     },
     PasswordInput: {
@@ -81,8 +94,7 @@ export const mantineTheme = createTheme({
         radius: 'md'
       },
       classNames: {
-        label: 'mb-1',
-        input: 'text-foreground'
+        label: 'mb-1'
       }
     },
     Select: {
@@ -91,8 +103,7 @@ export const mantineTheme = createTheme({
         radius: 'md'
       },
       classNames: {
-        label: 'mb-1 text-base',
-        input: 'text-foreground'
+        label: 'mb-1 text-base'
       }
     },
     Checkbox: {
@@ -101,7 +112,7 @@ export const mantineTheme = createTheme({
         radius: 'sm'
       },
       classNames: {
-        label: 'text-foreground text-base'
+        label: 'text-base'
       }
     },
     Notification: {
@@ -114,11 +125,6 @@ export const mantineTheme = createTheme({
       defaultProps: {
         radius: '12px',
         padding: 'lg'
-      }
-    },
-    Text: {
-      classNames: {
-        root: 'text-foreground'
       }
     }
   }

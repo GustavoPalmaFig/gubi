@@ -30,7 +30,7 @@ export function AppNavBar({ isExpanded }: AppNavBarProps) {
   ];
 
   return (
-    <AppShell.Navbar className="bg-background-secondary text-sm font-medium">
+    <AppShell.Navbar className="bg-background-secondary text-sm">
       <AppShell.Section grow my="xl" component={ScrollArea} px="md">
         {items.map(item => (
           <NavLink
@@ -58,7 +58,7 @@ export function AppNavBar({ isExpanded }: AppNavBarProps) {
           <AppAvatar />
           {isExpanded && (
             <div className="flex flex-col truncate">
-              <span className="text-foreground">{user?.full_name}</span>
+              <span>{user?.full_name}</span>
               <span className="text-muted-foreground text-xs">{user?.email}</span>
             </div>
           )}

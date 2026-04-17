@@ -21,7 +21,7 @@ export function PaymentMethodCard({ paymentMethod, onEdit }: PaymentMethodCardPr
           <PaymentMethodTypeIcon type={paymentMethod.type} />
           <Group>
             {paymentMethod.is_default_for_any_space && (
-              <Badge variant="light" color="cyan" radius="md" size="xs" className="py-3">
+              <Badge variant="light" color="cyan" radius="md" size="sm" className="py-3">
                 {t('card.default')}
               </Badge>
             )}
@@ -31,7 +31,7 @@ export function PaymentMethodCard({ paymentMethod, onEdit }: PaymentMethodCardPr
         </Group>
 
         <Stack gap="0">
-          <Text className="text-foreground font-semibold">{paymentMethod.name}</Text>
+          <Text className="font-semibold">{paymentMethod.name}</Text>
           {paymentMethod.type && (
             <Text className="text-muted-foreground text-sm">
               {t(`paymentMethodType.${paymentMethod.type}`)}
@@ -44,7 +44,7 @@ export function PaymentMethodCard({ paymentMethod, onEdit }: PaymentMethodCardPr
         <Group align="end" justify="space-between">
           <Stack gap="0">
             <Text className="text-gray text-sm">{t('card.last_expense')}</Text>
-            <Text className="text-foreground text-xs">
+            <Text className="text-xs">
               {paymentMethod.last_expense_at
                 ? dayjs(paymentMethod.last_expense_at).fromNow()
                 : t('card.no_expense')}
@@ -55,7 +55,7 @@ export function PaymentMethodCard({ paymentMethod, onEdit }: PaymentMethodCardPr
             variant="light"
             color={paymentMethod.affects_balance ? 'positive' : 'gray'}
             radius="md"
-            size="xs"
+            size="sm"
             className="py-3"
           >
             {paymentMethod.affects_balance

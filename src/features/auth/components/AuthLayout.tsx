@@ -57,7 +57,7 @@ export function AuthLayout() {
               ))}
             </div>
 
-            <div className="text-foreground relative">
+            <div className="relative">
               <div className="absolute top-0 left-0 flex w-60 -rotate-4 transform items-center gap-4 rounded-lg bg-white px-4 py-3 shadow transition-transform hover:rotate-0">
                 <div className="flex size-10 items-center justify-center rounded-full bg-blue-300/20 text-blue-300">
                   <IconHome2Filled size={20} color="currentColor" />

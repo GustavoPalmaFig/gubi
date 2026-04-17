@@ -38,8 +38,8 @@ export function PaymentMethodMenu({ paymentMethod, onEdit }: PaymentMethodMenuPr
     <>
       <Menu shadow="md" width={150} position="bottom-end">
         <Menu.Target>
-          <ActionIcon variant="light" color="gray" radius="md" size="md">
-            <IconDotsVertical size={18} />
+          <ActionIcon variant="subtle" color="muted" radius="lg" size="md">
+            <IconDotsVertical size={18} color="gray" />
           </ActionIcon>
         </Menu.Target>
         <Menu.Dropdown className="py-2">

@@ -9,32 +9,32 @@ const paymentMethodIconToneClassMap: Record<
   PaymentMethodIconTone,
   {
     iconClassName: string;
-    backgroundClassName: string;
+    containerClassName: string;
   }
 > = {
   blue: {
     iconClassName: 'text-blue',
-    backgroundClassName: 'bg-blue/15'
+    containerClassName: 'bg-blue/15 border-blue/15'
   },
   cyan: {
     iconClassName: 'text-cyan',
-    backgroundClassName: 'bg-cyan/15'
+    containerClassName: 'bg-cyan/15 border-cyan/15'
   },
   green: {
     iconClassName: 'text-green',
-    backgroundClassName: 'bg-green/15'
+    containerClassName: 'bg-green/15 border-green/15'
   },
   yellow: {
     iconClassName: 'text-yellow',
-    backgroundClassName: 'bg-yellow/15'
+    containerClassName: 'bg-yellow/15 border-yellow/15'
   },
   orange: {
     iconClassName: 'text-orange',
-    backgroundClassName: 'bg-orange/15'
+    containerClassName: 'bg-orange/15 border-orange/15'
   },
   gray: {
     iconClassName: 'text-gray',
-    backgroundClassName: 'bg-gray/15'
+    containerClassName: 'bg-gray/15 border-gray/15'
   }
 };
 
@@ -43,12 +43,10 @@ export function PaymentMethodTypeIcon({ type }: { type: PaymentMethodType | null
     ? paymentMethodTypeIconsMap[type]
     : { IconComponent: IconWallet, tone: 'gray' as const };
 
-  const { iconClassName, backgroundClassName } = paymentMethodIconToneClassMap[tone];
+  const { iconClassName, containerClassName } = paymentMethodIconToneClassMap[tone];
 
   return (
-    <div
-      className={`border-border-light flex items-center justify-center rounded-md border p-3 ${backgroundClassName}`}
-    >
+    <div className={`flex items-center justify-center rounded-md border p-3 ${containerClassName}`}>
       <IconComponent size={20} className={`shrink-0 ${iconClassName}`} />
     </div>
   );

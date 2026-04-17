@@ -72,7 +72,7 @@ export function PaymentMethodPage() {
                   <IconPlus size={18} stroke={3} />
                 </div>
                 <Stack gap="0">
-                  <Text className="text-foreground">{t('add')}</Text>
+                  <Text>{t('add')}</Text>
                   <Text className="text-muted-foreground text-sm">{t('add_description')}</Text>
                 </Stack>
               </Stack>

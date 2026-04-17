@@ -13,7 +13,7 @@ export function AppModal({ children, title, subTitle, ...props }: AppModalProps)
       {...props}
       title={
         <Stack gap={2}>
-          <Text className="text-foreground text-lg font-semibold">{title}</Text>
+          <Text className="text-lg font-semibold">{title}</Text>
           {subTitle && <Text className="text-muted-foreground text-sm">{subTitle}</Text>}
         </Stack>
       }

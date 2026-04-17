@@ -66,6 +66,8 @@
 
   --border-default: #d1d5db;
   --border-light: #e5e7eb;
+
+  --mantine-color-text: var(--foreground);
 }
 
 body {
