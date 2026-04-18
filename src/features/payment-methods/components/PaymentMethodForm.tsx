@@ -24,18 +24,10 @@ import {
 } from '../hooks/usePaymentMethod';
 import { PaymentMethodTypeIcon } from './PaymentMethodTypeIcon';
 import { paymentMethodTypeOptions } from '../constants/paymentMethodTypeOptions';
-import type { PaymentMethodFormData } from '../types/paymentMethodFormData';
-
-const paymentMethodFormSchema = z.object({
-  name: z.string().trim().min(1, 'Nome é obrigatório'),
-  affects_balance: z.boolean(),
-  type: z.enum(paymentMethodTypeOptions).nullable()
-});
-
-type PaymentMethodFormValues = z.infer<typeof paymentMethodFormSchema>;
+import type { PaymentMethod } from '../types/paymentMethod';
 
 interface PaymentMethodFormProps {
-  paymentMethod?: PaymentMethodFormData;
+  paymentMethod?: PaymentMethod;
   finish: () => void;
 }
 
@@ -48,6 +40,14 @@ export function PaymentMethodForm({ paymentMethod, finish }: PaymentMethodFormPr
   const [affectsBalanceExpanded, { toggle: toggleAffectsBalanceExpanded }] = useDisclosure(false);
 
   const { t } = useTranslation('translation', { keyPrefix: 'paymentMethod' });
+
+  const paymentMethodFormSchema = z.object({
+    name: z.string().trim().min(1, t('form.name_required_message')),
+    affects_balance: z.boolean(),
+    type: z.enum(paymentMethodTypeOptions).nullable()
+  });
+
+  type PaymentMethodFormValues = z.infer<typeof paymentMethodFormSchema>;
 
   const paymentMethodTypeSelectOptions = paymentMethodTypeOptions.map(type => ({
     value: type,
@@ -81,7 +81,7 @@ export function PaymentMethodForm({ paymentMethod, finish }: PaymentMethodFormPr
   }, [paymentMethod, reset]);
 
   const handleSubmitPaymentMethod = (data: PaymentMethodFormValues) => {
-    const payload: PaymentMethodFormData = {
+    const payload: PaymentMethod = {
       id: paymentMethod?.id,
       ...data
     };
@@ -113,6 +113,7 @@ export function PaymentMethodForm({ paymentMethod, finish }: PaymentMethodFormPr
           label={t('form.name')}
           placeholder={t('form.name_placeholder')}
           error={errors.name?.message}
+          withAsterisk
           {...register('name')}
         />
 

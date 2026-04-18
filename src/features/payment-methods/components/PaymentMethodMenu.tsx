@@ -6,12 +6,12 @@ import { showNotification } from '@/utils/showNotification';
 import { useDisclosure } from '@mantine/hooks';
 import { useTranslation } from 'react-i18next';
 import { useDeletePaymentMethodMutation } from '../hooks/usePaymentMethod';
+import type { PaymentMethod } from '../types/paymentMethod';
 import type { PaymentMethodCard } from '../types/paymentMethodOverview/paymentMethodCard';
-import type { PaymentMethodFormData } from '../types/paymentMethodFormData';
 
 interface PaymentMethodMenuProps {
   paymentMethod: PaymentMethodCard;
-  onEdit: (paymentMethod: PaymentMethodFormData) => void;
+  onEdit: (paymentMethod: PaymentMethod) => void;
 }
 
 export function PaymentMethodMenu({ paymentMethod, onEdit }: PaymentMethodMenuProps) {
@@ -22,7 +22,7 @@ export function PaymentMethodMenu({ paymentMethod, onEdit }: PaymentMethodMenuPr
 
   const handleConfirm = async () => {
     try {
-      await deletePaymentMethod(paymentMethod.id);
+      await deletePaymentMethod(paymentMethod.id!);
       showNotification({
         title: t('card.delete_success'),
         message: t('card.delete_success_description'),

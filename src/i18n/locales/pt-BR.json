@@ -105,6 +105,7 @@
       "editSubTitle": "Atualize os dados do método de pagamento",
       "name": "Nome",
       "name_placeholder": "Ex.: Nubank, Carteira, Pix pessoal",
+      "name_required_message": "Nome é obrigatório",
       "type": "Tipo",
       "type_placeholder": "Selecione o tipo",
       "affects_balance_label": "Afeta saldo",

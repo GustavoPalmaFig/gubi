@@ -3,15 +3,29 @@ import {
   createPaymentMethod,
   fetchPaymentMethodOverview,
   deletePaymentMethod,
-  updatePaymentMethod
+  updatePaymentMethod,
+  fetchPaymentMethodsWithOwner
 } from '../services/paymenMethod.service';
 
-const paymentMethodOverviewQueryKey = ['payment-method-overview'];
+export const paymentMethodRootQueryKey = ['payment-method'];
+
+const paymentMethodKeys = {
+  root: paymentMethodRootQueryKey,
+  overview: [...paymentMethodRootQueryKey, 'overview'],
+  withOwner: [...paymentMethodRootQueryKey, 'with-owner']
+};
 
 export function usePaymentMethodOverview() {
   return useQuery({
-    queryKey: paymentMethodOverviewQueryKey,
+    queryKey: paymentMethodKeys.overview,
     queryFn: fetchPaymentMethodOverview
+  });
+}
+
+export function usePaymentMethodsWithOwner() {
+  return useQuery({
+    queryKey: paymentMethodKeys.withOwner,
+    queryFn: fetchPaymentMethodsWithOwner
   });
 }
 
@@ -21,7 +35,7 @@ function usePaymentMethodOverviewMutation<T>(mutateFn: (payload: T) => Promise<v
   return useMutation({
     mutationFn: mutateFn,
     onSuccess: async () => {
-      await queryClient.invalidateQueries({ queryKey: paymentMethodOverviewQueryKey });
+      await queryClient.invalidateQueries({ queryKey: paymentMethodKeys.root });
     }
   });
 }

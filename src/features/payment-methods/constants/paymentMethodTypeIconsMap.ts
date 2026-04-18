@@ -7,7 +7,7 @@ import {
   IconWallet,
   type Icon
 } from '@tabler/icons-react';
-import type { PaymentMethodType } from '../types/PaymentMethodType';
+import type { PaymentMethodType } from '../types/paymentMethodType';
 
 export type PaymentMethodIconTone = 'blue' | 'cyan' | 'green' | 'yellow' | 'orange' | 'gray';
 

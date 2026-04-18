@@ -3,7 +3,7 @@ import {
   paymentMethodTypeIconsMap,
   type PaymentMethodIconTone
 } from '../constants/paymentMethodTypeIconsMap';
-import type { PaymentMethodType } from '../types/PaymentMethodType';
+import type { PaymentMethodType } from '../types/paymentMethodType';
 
 const paymentMethodIconToneClassMap: Record<
   PaymentMethodIconTone,
