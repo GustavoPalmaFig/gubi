@@ -8,7 +8,7 @@ import { useTranslation } from 'react-i18next';
 import { PaymentMethodCard } from '../components/PaymentMethodCard';
 import { PaymentMethodForm } from '../components/PaymentMethodForm';
 import { usePaymentMethodOverview } from '../hooks/usePaymentMethod';
-import type { PaymentMethodFormData } from '../types/paymentMethodFormData';
+import type { PaymentMethod } from '../types/paymentMethod';
 
 const SKELETON_CARDS = Array.from({ length: 3 }, (_, index) => index);
 
@@ -17,7 +17,7 @@ export function PaymentMethodPage() {
 
   const [opened, { open, close }] = useDisclosure(false);
 
-  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<PaymentMethodFormData>();
+  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<PaymentMethod>();
 
   const { t } = useTranslation('translation', { keyPrefix: 'paymentMethod' });
 
@@ -26,7 +26,7 @@ export function PaymentMethodPage() {
     open();
   };
 
-  const handleEditPaymentMethod = (paymentMethod: PaymentMethodFormData) => {
+  const handleEditPaymentMethod = (paymentMethod: PaymentMethod) => {
     setSelectedPaymentMethod(paymentMethod);
     open();
   };

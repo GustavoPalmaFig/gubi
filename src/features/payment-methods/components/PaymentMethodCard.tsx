@@ -3,12 +3,12 @@ import { useTranslation } from 'react-i18next';
 import dayjs from 'dayjs';
 import { PaymentMethodMenu } from './PaymentMethodMenu';
 import { PaymentMethodTypeIcon } from './PaymentMethodTypeIcon';
+import type { PaymentMethod } from '../types/paymentMethod';
 import type { PaymentMethodCard } from '../types/paymentMethodOverview/paymentMethodCard';
-import type { PaymentMethodFormData } from '../types/paymentMethodFormData';
 
 interface PaymentMethodCardProps {
   paymentMethod: PaymentMethodCard;
-  onEdit: (paymentMethod: PaymentMethodFormData) => void;
+  onEdit: (paymentMethod: PaymentMethod) => void;
 }
 
 export function PaymentMethodCard({ paymentMethod, onEdit }: PaymentMethodCardProps) {

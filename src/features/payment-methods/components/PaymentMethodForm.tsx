@@ -24,7 +24,7 @@ import {
 } from '../hooks/usePaymentMethod';
 import { PaymentMethodTypeIcon } from './PaymentMethodTypeIcon';
 import { paymentMethodTypeOptions } from '../constants/paymentMethodTypeOptions';
-import type { PaymentMethodFormData } from '../types/paymentMethodFormData';
+import type { PaymentMethod } from '../types/paymentMethod';
 
 const paymentMethodFormSchema = z.object({
   name: z.string().trim().min(1, 'Nome é obrigatório'),
@@ -35,7 +35,7 @@ const paymentMethodFormSchema = z.object({
 type PaymentMethodFormValues = z.infer<typeof paymentMethodFormSchema>;
 
 interface PaymentMethodFormProps {
-  paymentMethod?: PaymentMethodFormData;
+  paymentMethod?: PaymentMethod;
   finish: () => void;
 }
 
@@ -81,7 +81,7 @@ export function PaymentMethodForm({ paymentMethod, finish }: PaymentMethodFormPr
   }, [paymentMethod, reset]);
 
   const handleSubmitPaymentMethod = (data: PaymentMethodFormValues) => {
-    const payload: PaymentMethodFormData = {
+    const payload: PaymentMethod = {
       id: paymentMethod?.id,
       ...data
     };
@@ -113,6 +113,7 @@ export function PaymentMethodForm({ paymentMethod, finish }: PaymentMethodFormPr
           label={t('form.name')}
           placeholder={t('form.name_placeholder')}
           error={errors.name?.message}
+          withAsterisk
           {...register('name')}
         />
 
