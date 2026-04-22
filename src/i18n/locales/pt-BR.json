@@ -1,7 +1,8 @@
 {
   "common": {
     "confirm": "Confirmar",
-    "cancel": "Cancelar"
+    "cancel": "Cancelar",
+    "nothing_found": "Nenhum resultado encontrado"
   },
   "error": {
     "title": "Erro",
@@ -72,16 +73,12 @@
     "settings": "Configurações",
     "logout": "Sair"
   },
-  "spaces": {
-    "title": "Espaços",
-    "description": "Gerencie os seus espaços compartilhados",
-    "create": "Criar espaço"
-  },
   "paymentMethod": {
     "title": "Métodos de Pagamento",
     "description": "Gerencie suas formas de pagamento cadastradas",
     "add": "Adicionar Método",
     "add_description": "Cartão de crédito, pix, dinheiro...",
+    "add_payment_method": "Adicionar método",
     "card": {
       "default": "Padrão",
       "affects_balance": "Afeta saldo",
@@ -123,6 +120,41 @@
       "cash": "Dinheiro",
       "cash_transaction": "Transferência bancária",
       "other": "Outro"
+    }
+  },
+  "spaces": {
+    "title": "Espaços",
+    "description": "Gerencie os seus espaços compartilhados",
+    "create": "Criar espaço",
+    "form": {
+      "create_title": "Criar espaço",
+      "create_description": "Configure os dados principais, convide membros e defina a divisão padrão do grupo.",
+      "edit_title": "Editar espaço",
+      "edit_description": "Atualize as informações do espaço e ajuste as configurações do grupo.",
+      "cancel": "Cancelar",
+      "save": "Salvar",
+      "space_data_title": "Dados do Espaço",
+      "name": "Nome",
+      "name_placeholder": "Ex: Apartamento, Viagem Montevidéu",
+      "name_required_message": "Nome é obrigatório",
+      "description": "Descrição (Opcional)",
+      "description_placeholder": "Ex: Gerenciar contas e despesas de casa",
+      "icon_title": "Ícone",
+      "settings_title": "Configurações",
+      "available_modules_label": "Módulos habilitados",
+      "bill_tab_title": "Habilitar aba de contas",
+      "expense_tab_title": "Habilitar aba de despesas",
+      "default_payment_method": "Método de Pagamento Padrão",
+      "default_payment_method_placeholder": "Selecione um método (opcional)",
+      "create_success": "Espaço criado",
+      "create_success_description": "O espaço foi criado com sucesso.",
+      "update_success": "Espaço atualizado",
+      "update_success_description": "O espaço foi atualizado com sucesso."
+    },
+    "roles": {
+      "owner": "Dono",
+      "admin": "Admin",
+      "member": "Membro"
     }
   }
 }

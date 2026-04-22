@@ -38,7 +38,7 @@ export function AppLayout() {
 
   return (
     <AppShell
-      header={{ height: 60 }}
+      header={{ height: 50 }}
       navbar={{
         width: { base: '100%', sm: navbarWidth },
         breakpoint: 'sm',
@@ -47,7 +47,7 @@ export function AppLayout() {
           desktop: false
         }
       }}
-      padding="md"
+      padding="xl"
     >
       <AppHeader
         mobileOpened={mobileOpened}

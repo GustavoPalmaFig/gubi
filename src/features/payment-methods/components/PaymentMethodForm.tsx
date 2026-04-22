@@ -28,7 +28,7 @@ import type { PaymentMethod } from '../types/paymentMethod';
 
 interface PaymentMethodFormProps {
   paymentMethod?: PaymentMethod;
-  finish: () => void;
+  finish: (paymentMethod?: PaymentMethod) => void;
 }
 
 export function PaymentMethodForm({ paymentMethod, finish }: PaymentMethodFormProps) {
@@ -89,7 +89,7 @@ export function PaymentMethodForm({ paymentMethod, finish }: PaymentMethodFormPr
     const mutate = isEditing ? updatePaymentMethod : createPaymentMethod;
 
     mutate(payload, {
-      onSuccess: () => {
+      onSuccess: (data: void | PaymentMethod) => {
         showNotification({
           title: isEditing ? t('form.update_success') : t('form.create_success'),
           message: isEditing
@@ -98,7 +98,7 @@ export function PaymentMethodForm({ paymentMethod, finish }: PaymentMethodFormPr
           type: 'positive'
         });
         reset();
-        finish();
+        finish(data ?? undefined);
       },
       onError: (error: unknown) => {
         showErrorNotification(error);
@@ -107,7 +107,12 @@ export function PaymentMethodForm({ paymentMethod, finish }: PaymentMethodFormPr
   };
 
   return (
-    <form onSubmit={handleSubmit(handleSubmitPaymentMethod)}>
+    <form
+      onSubmit={e => {
+        e.stopPropagation();
+        handleSubmit(handleSubmitPaymentMethod)(e);
+      }}
+    >
       <Stack gap="lg">
         <TextInput
           label={t('form.name')}

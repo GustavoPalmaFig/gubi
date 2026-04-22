@@ -1,3 +1,4 @@
+import { cn } from '@/lib/utils';
 import { IconWallet } from '@tabler/icons-react';
 import {
   paymentMethodTypeIconsMap,
@@ -38,16 +39,35 @@ const paymentMethodIconToneClassMap: Record<
   }
 };
 
-export function PaymentMethodTypeIcon({ type }: { type: PaymentMethodType | null }) {
+export function PaymentMethodTypeIcon({
+  type,
+  size = 20,
+  containerClassName = '',
+  iconClassName = ''
+}: {
+  type: PaymentMethodType | null;
+  size?: number;
+  containerClassName?: string;
+  iconClassName?: string;
+}) {
   const { IconComponent, tone } = type
     ? paymentMethodTypeIconsMap[type]
     : { IconComponent: IconWallet, tone: 'gray' as const };
 
-  const { iconClassName, containerClassName } = paymentMethodIconToneClassMap[tone];
+  const defaultClasses = paymentMethodIconToneClassMap[tone];
 
   return (
-    <div className={`flex items-center justify-center rounded-md border p-3 ${containerClassName}`}>
-      <IconComponent size={20} className={`shrink-0 ${iconClassName}`} />
+    <div
+      className={cn(
+        `flex items-center justify-center rounded-md border p-3`,
+        containerClassName,
+        defaultClasses.containerClassName
+      )}
+    >
+      <IconComponent
+        size={size}
+        className={cn(`shrink-0`, iconClassName, defaultClasses.iconClassName)}
+      />
     </div>
   );
 }

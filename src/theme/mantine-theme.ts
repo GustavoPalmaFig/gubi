@@ -79,6 +79,16 @@ export const mantineTheme = createTheme({
         root: 'border-2'
       }
     },
+    InputBase: {
+      defaultProps: {
+        size: 'md',
+        radius: 'md'
+      },
+      classNames: {
+        label: 'mb-1',
+        input: 'text-sm bg-background'
+      }
+    },
     TextInput: {
       defaultProps: {
         size: 'md',
@@ -117,7 +127,8 @@ export const mantineTheme = createTheme({
       classNames: {
         label: 'mb-1 text-base',
         input: 'text-sm bg-background',
-        option: 'text-sm'
+        option: 'text-sm',
+        section: 'bg-background'
       }
     },
     Checkbox: {

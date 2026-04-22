@@ -3,10 +3,16 @@ import type { PaymentMethod } from '../types/paymentMethod';
 import type { PaymentMethodOverview } from '../types/paymentMethodOverview';
 import type { PaymentMethodWithOwner } from '../types/paymentMethodWithOwner';
 
-export const createPaymentMethod = async (paymentMethod: PaymentMethod): Promise<void> => {
-  const { error } = await supabase.from('payment_method').insert(paymentMethod);
+export const createPaymentMethod = async (paymentMethod: PaymentMethod): Promise<PaymentMethod> => {
+  const { data, error } = await supabase
+    .from('payment_method')
+    .insert(paymentMethod)
+    .select()
+    .single();
 
   if (error) throw error;
+
+  return data;
 };
 
 export const updatePaymentMethod = async (paymentMethod: PaymentMethod): Promise<void> => {

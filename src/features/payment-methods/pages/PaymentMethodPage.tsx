@@ -1,4 +1,3 @@
-import { AppModal } from '@/components/shared/AppModal';
 import { Button, SimpleGrid, Skeleton, Stack, Text } from '@mantine/core';
 import { IconPlus } from '@tabler/icons-react';
 import { PageFrame } from '@/components/layout/PageFrame';
@@ -6,7 +5,7 @@ import { useDisclosure } from '@mantine/hooks';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { PaymentMethodCard } from '../components/PaymentMethodCard';
-import { PaymentMethodForm } from '../components/PaymentMethodForm';
+import { PaymentMethodFormModal } from '../components/PaymentMethodFormModal';
 import { usePaymentMethodOverview } from '../hooks/usePaymentMethod';
 import type { PaymentMethod } from '../types/paymentMethod';
 
@@ -81,14 +80,12 @@ export function PaymentMethodPage() {
         )}
       </SimpleGrid>
 
-      <AppModal
+      <PaymentMethodFormModal
         opened={opened}
         onClose={handleCloseModal}
-        title={selectedPaymentMethod ? t('form.editTitle') : t('form.createTitle')}
-        subTitle={selectedPaymentMethod ? t('form.editSubTitle') : t('form.createSubTitle')}
-      >
-        <PaymentMethodForm finish={handleCloseModal} paymentMethod={selectedPaymentMethod} />
-      </AppModal>
+        paymentMethod={selectedPaymentMethod}
+        isEditing={!!selectedPaymentMethod}
+      />
     </PageFrame>
   );
 }

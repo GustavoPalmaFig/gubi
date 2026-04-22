@@ -4,10 +4,11 @@ import { createBrowserRouter } from 'react-router-dom';
 import { NotFound } from '@/components/layout/NotFound';
 import { PaymentMethodPage } from '@/features/payment-methods/pages/PaymentMethodPage';
 import { ProtectedRoute } from '@/features/auth/components/ProtectedRoute';
-import Home from '@/features/home/pages/Home';
 import { SpacesPage } from '@/features/spaces/pages/SpacesPage';
+import Home from '@/features/home/pages/Home';
 import LoginPage from '@/features/auth/pages/LoginPage';
 import RegisterPage from '@/features/auth/pages/RegisterPages';
+import SpaceFormPage from '@/features/spaces/pages/SpaceFormPage';
 
 export const router = createBrowserRouter([
   {
@@ -28,6 +29,8 @@ export const router = createBrowserRouter([
             children: [
               { index: true, element: <Home /> },
               { path: 'spaces', element: <SpacesPage /> },
+              { path: 'spaces/new', element: <SpaceFormPage /> },
+              { path: 'spaces/:spaceId/edit', element: <SpaceFormPage /> },
               { path: 'payment-methods', element: <PaymentMethodPage /> }
             ]
           }

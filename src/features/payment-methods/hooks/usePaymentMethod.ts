@@ -29,7 +29,7 @@ export function usePaymentMethodsWithOwner() {
   });
 }
 
-function usePaymentMethodOverviewMutation<T>(mutateFn: (payload: T) => Promise<void>) {
+function usePaymentMethodOverviewMutation<T>(mutateFn: (payload: T) => Promise<void | T>) {
   const queryClient = useQueryClient();
 
   return useMutation({
