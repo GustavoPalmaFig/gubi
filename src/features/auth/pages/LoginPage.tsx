@@ -51,6 +51,9 @@ export default function LoginPage() {
             placeholder={t('login.email_placeholder')}
             leftSection={<IconMail size={18} />}
             {...register('email')}
+            classNames={{
+              input: 'bg-white'
+            }}
           />
 
           <PasswordInput
@@ -58,6 +61,9 @@ export default function LoginPage() {
             placeholder={t('login.password_placeholder')}
             leftSection={<IconLock size={18} />}
             {...register('password')}
+            classNames={{
+              input: 'bg-white'
+            }}
           />
         </Stack>
 

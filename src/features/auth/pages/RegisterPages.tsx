@@ -75,6 +75,9 @@ export default function RegisterPage() {
             placeholder={t('register.full_name_placeholder')}
             leftSection={<IconUser size={18} />}
             {...register('full_name')}
+            classNames={{
+              input: 'bg-white'
+            }}
           />
 
           <TextInput
@@ -82,6 +85,9 @@ export default function RegisterPage() {
             placeholder={t('register.email_placeholder')}
             leftSection={<IconMail size={18} />}
             {...register('email')}
+            classNames={{
+              input: 'bg-white'
+            }}
           />
 
           <Controller
@@ -94,6 +100,9 @@ export default function RegisterPage() {
                 data={[...localeOptionsSelect]}
                 value={field.value}
                 onChange={v => field.onChange(v ?? field.value)}
+                classNames={{
+                  input: 'bg-white'
+                }}
               />
             )}
           />
@@ -108,6 +117,9 @@ export default function RegisterPage() {
                 data={[...currencyOptionSelect]}
                 value={field.value}
                 onChange={v => field.onChange(v ?? field.value)}
+                classNames={{
+                  input: 'bg-white'
+                }}
               />
             )}
           />
@@ -117,6 +129,9 @@ export default function RegisterPage() {
             placeholder={t('register.password_placeholder')}
             leftSection={<IconLock size={18} />}
             {...register('password')}
+            classNames={{
+              input: 'bg-white'
+            }}
           />
 
           <PasswordInput
@@ -124,6 +139,9 @@ export default function RegisterPage() {
             placeholder={t('register.confirm_password_placeholder')}
             leftSection={<IconLock size={18} />}
             {...register('confirmPassword')}
+            classNames={{
+              input: 'bg-white'
+            }}
           />
         </Stack>
 

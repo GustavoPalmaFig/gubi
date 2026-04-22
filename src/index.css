@@ -68,6 +68,7 @@
   --border-light: #e5e7eb;
 
   --mantine-color-text: var(--foreground);
+  --mantine-font-size-md: 0.875rem;
 }
 
 body {

@@ -85,7 +85,18 @@ export const mantineTheme = createTheme({
         radius: 'md'
       },
       classNames: {
-        label: 'mb-1'
+        label: 'mb-1',
+        input: 'text-sm bg-background'
+      }
+    },
+    Textarea: {
+      defaultProps: {
+        size: 'md',
+        radius: 'md'
+      },
+      classNames: {
+        label: 'mb-1',
+        input: 'text-sm bg-background'
       }
     },
     PasswordInput: {
@@ -94,7 +105,8 @@ export const mantineTheme = createTheme({
         radius: 'md'
       },
       classNames: {
-        label: 'mb-1'
+        label: 'mb-1',
+        input: 'text-sm bg-background'
       }
     },
     Select: {
@@ -103,13 +115,23 @@ export const mantineTheme = createTheme({
         radius: 'md'
       },
       classNames: {
-        label: 'mb-1 text-base'
+        label: 'mb-1 text-base',
+        input: 'text-sm bg-background',
+        option: 'text-sm'
       }
     },
     Checkbox: {
       defaultProps: {
         size: 'sm',
         radius: 'sm'
+      },
+      classNames: {
+        label: 'text-base'
+      }
+    },
+    Switch: {
+      defaultProps: {
+        size: 'sm'
       },
       classNames: {
         label: 'text-base'
