@@ -1,0 +1,22 @@
+export const spaceIconOptions = [
+  'home',
+  'building',
+  'wallet',
+  'credit-card',
+  'pig-money',
+  'tools-kitchen-2',
+  'pizza',
+  'coffee',
+  'plane',
+  'beach',
+  'map',
+  'car',
+  'gas-station',
+  'users',
+  'user-heart',
+  'party-popper',
+  'cake',
+  'calendar-event',
+  'star',
+  'tag'
+] as const;
