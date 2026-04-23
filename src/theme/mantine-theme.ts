@@ -99,6 +99,16 @@ export const mantineTheme = createTheme({
         input: 'text-sm bg-background'
       }
     },
+    NumberInput: {
+      defaultProps: {
+        size: 'md',
+        radius: 'md'
+      },
+      classNames: {
+        label: 'mb-1',
+        input: 'text-sm bg-background'
+      }
+    },
     Textarea: {
       defaultProps: {
         size: 'md',

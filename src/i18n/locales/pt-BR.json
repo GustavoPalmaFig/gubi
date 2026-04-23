@@ -133,28 +133,53 @@
       "edit_description": "Atualize as informações do espaço e ajuste as configurações do grupo.",
       "cancel": "Cancelar",
       "save": "Salvar",
-      "space_data_title": "Dados do Espaço",
-      "name": "Nome",
-      "name_placeholder": "Ex: Apartamento, Viagem Montevidéu",
-      "name_required_message": "Nome é obrigatório",
-      "description": "Descrição (Opcional)",
-      "description_placeholder": "Ex: Gerenciar contas e despesas de casa",
-      "icon_title": "Ícone",
-      "settings_title": "Configurações",
-      "available_modules_label": "Módulos habilitados",
-      "bill_tab_title": "Habilitar aba de contas",
-      "expense_tab_title": "Habilitar aba de despesas",
-      "default_payment_method": "Método de Pagamento Padrão",
-      "default_payment_method_placeholder": "Selecione um método (opcional)",
       "create_success": "Espaço criado",
       "create_success_description": "O espaço foi criado com sucesso.",
       "update_success": "Espaço atualizado",
-      "update_success_description": "O espaço foi atualizado com sucesso."
+      "update_success_description": "O espaço foi atualizado com sucesso.",
+      "dataSection": {
+        "title": "Dados do Espaço",
+        "name": "Nome",
+        "name_placeholder": "Ex: Apartamento, Viagem Montevidéu",
+        "name_required_message": "Nome é obrigatório",
+        "description": "Descrição (Opcional)",
+        "description_placeholder": "Ex: Gerenciar contas e despesas de casa",
+        "icon_title": "Ícone"
+      },
+      "settingsSection": {
+        "title": "Configurações",
+        "available_modules_label": "Módulos habilitados",
+        "bill_tab_title": "Habilitar contas",
+        "expense_tab_title": "Habilitar despesas",
+        "default_payment_method": "Método de Pagamento Padrão",
+        "default_payment_method_placeholder": "Selecione um método (opcional)"
+      }
     },
-    "roles": {
-      "owner": "Dono",
-      "admin": "Admin",
-      "member": "Membro"
+    "membersForm": {
+      "title": "Gestão de Membros",
+      "subTitle": "Adicione pessoas, defina papéis e a porcentagem de divisão padrão",
+      "search_users": "Buscar usuários por nome ou e-mail",
+      "available_users": "Usuários disponíveis",
+      "nothing_found": "Nenhum usuário encontrado",
+      "invite": "Convidar",
+      "user": "Usuário",
+      "you": "Você",
+      "role": "Papel",
+      "status": "Status",
+      "default_split_percentage": "Divisão padrão",
+      "actions": "Ações",
+      "remove_member_confirmation_title": "Remover membro",
+      "remove_member_confirmation": "Tem certeza que deseja remover este membro do espaço? Esta ação não poderá ser desfeita após salvar as alterações.",
+      "statuses": {
+        "pending": "Pendente",
+        "active": "Ativo",
+        "declined": "Recusado"
+      },
+      "roles": {
+        "owner": "Criador",
+        "admin": "Admin",
+        "member": "Membro"
+      }
     }
   }
 }

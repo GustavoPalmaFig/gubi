@@ -54,7 +54,12 @@ export function AppNavBar({ isExpanded }: AppNavBarProps) {
       <Divider mx="md" />
 
       <AppShell.Section p="md" my="md" className="flex flex-col gap-4">
-        <AppAvatar user={user} showName={isExpanded} showEmail={isExpanded} />
+        <AppAvatar
+          user={user}
+          showName={isExpanded}
+          showEmail={isExpanded}
+          className={cn(isExpanded ? 'justify-start' : 'justify-center')}
+        />
         <Button
           leftSection={<IconLogout size={20} />}
           classNames={{

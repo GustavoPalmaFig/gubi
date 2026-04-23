@@ -14,7 +14,6 @@ import { cn } from '@/lib/utils';
 import { IconCirclePlus } from '@tabler/icons-react';
 import { PaymentMethodTypeIcon } from '@/features/payment-methods/components/PaymentMethodTypeIcon';
 import { useDisclosure } from '@mantine/hooks';
-import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import type { PaymentMethodWithOwner } from '@/features/payment-methods/types/paymentMethodWithOwner';
 import type { User } from '@/features/auth/types/user';
@@ -75,18 +74,13 @@ export function PaymentMethodSelect({
   const combobox = useCombobox({
     onDropdownClose: () => combobox.resetSelectedOption()
   });
-
   const [openedModal, { open: openModal, close: closeModal }] = useDisclosure(false);
 
   const { t } = useTranslation('translation', { keyPrefix: 'common' });
   const { t: tPaymentMethod } = useTranslation('translation', { keyPrefix: 'paymentMethod' });
 
-  const [selectedPaymentMethodId, setSelectedPaymentMethodId] = useState<number | null>(value);
-
   const selectedPaymentMethod =
-    selectedPaymentMethodId !== null
-      ? (data.find(paymentMethod => paymentMethod.id === selectedPaymentMethodId) ?? null)
-      : null;
+    value === null ? null : (data.find(paymentMethod => value == paymentMethod.id) ?? null);
 
   const groupedPaymentMethods = Object.values(
     data.reduce<Record<string, GroupedPaymentMethods>>((acc, pm) => {
@@ -111,7 +105,6 @@ export function PaymentMethodSelect({
     }
 
     onChange(selectedOption.id);
-    setSelectedPaymentMethodId(selectedOption.id);
     combobox.closeDropdown();
   };
 
@@ -123,7 +116,6 @@ export function PaymentMethodSelect({
     }
 
     onChange(paymentMethod.id);
-    setSelectedPaymentMethodId(paymentMethod.id);
   };
 
   return (
@@ -149,7 +141,7 @@ export function PaymentMethodSelect({
               )
             }
             rightSection={
-              clearable && selectedPaymentMethodId !== null ? (
+              clearable && value !== null ? (
                 <CloseButton
                   size="sm"
                   onMouseDown={event => event.preventDefault()}
@@ -160,7 +152,7 @@ export function PaymentMethodSelect({
                 <Combobox.Chevron />
               )
             }
-            rightSectionPointerEvents={selectedPaymentMethodId === null ? 'none' : 'all'}
+            rightSectionPointerEvents={value === null ? 'none' : 'all'}
             onClick={() => combobox.toggleDropdown()}
           >
             {selectedPaymentMethod ? (
@@ -196,9 +188,7 @@ export function PaymentMethodSelect({
                       value={getPaymentMethodValue(item)}
                       key={item.id}
                       active={item === selectedPaymentMethod}
-                      className={cn(
-                        item.id === selectedPaymentMethodId && 'bg-primary/10 rounded-md'
-                      )}
+                      className={cn(value == item.id && 'bg-primary/10 rounded-md')}
                     >
                       <PaymentMethodOption paymentMethod={item} />
                     </Combobox.Option>
