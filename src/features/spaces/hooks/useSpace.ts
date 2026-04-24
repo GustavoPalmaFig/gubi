@@ -1,12 +1,12 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import {
   createSpace,
+  deleteSpace,
   fetchSpaceFormById,
   fetchSpaceOverview,
   searchUsersForSpace,
   updateSpace
 } from '../services/space.service';
-import type { Space } from '../types/space';
 
 const spaceKeys = {
   root: ['space'] as const,
@@ -43,7 +43,7 @@ export function useSearchUsersForSpaceQuery(query: string, spaceId: number | nul
   });
 }
 
-function useSpaceMutation(mutateFn: (payload: Space) => Promise<void | number>) {
+function useSpaceMutation<T>(mutateFn: (payload: T) => Promise<void | T | number>) {
   const queryClient = useQueryClient();
 
   return useMutation({
@@ -60,4 +60,8 @@ export function useCreateSpaceMutation() {
 
 export function useUpdateSpaceMutation() {
   return useSpaceMutation(updateSpace);
+}
+
+export function useDeleteSpaceMutation() {
+  return useSpaceMutation(deleteSpace);
 }

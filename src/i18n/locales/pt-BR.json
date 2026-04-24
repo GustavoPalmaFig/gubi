@@ -126,6 +126,17 @@
     "title": "Espaços",
     "description": "Gerencie os seus espaços compartilhados",
     "create": "Criar espaço",
+    "no_spaces": "Nenhum espaço encontrado",
+    "created_at": "Criado em {{date}}",
+    "month_spent": "Gastos de {{month}}",
+    "menu": {
+      "delete_success": "Espaço excluído",
+      "delete_success_description": "O espaço foi excluído com sucesso.",
+      "delete_confirmation_title": "Excluir espaço",
+      "delete_confirmation": "Tem certeza que deseja excluir este espaço? Esta ação não pode ser desfeita.",
+      "edit": "Editar",
+      "delete": "Excluir"
+    },
     "form": {
       "create_title": "Criar espaço",
       "create_description": "Configure os dados principais, convide membros e defina a divisão padrão do grupo.",

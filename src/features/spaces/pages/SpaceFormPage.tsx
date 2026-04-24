@@ -127,6 +127,7 @@ export default function SpaceFormPage() {
     });
   };
 
+  const watchedDescription = useWatch({ control, name: 'description' });
   const watchedIcon = useWatch({ control, name: 'icon' });
   const watchedColor = useWatch({ control, name: 'color' });
   const watchedMembers = useWatch({ control, name: 'members' });
@@ -158,8 +159,13 @@ export default function SpaceFormPage() {
               <Textarea
                 label={t('dataSection.description')}
                 placeholder={t('dataSection.description_placeholder')}
-                resize="vertical"
                 rows={3}
+                maxLength={255}
+                rightSection={
+                  <Text size="xs" className="mt-auto mr-2">
+                    {watchedDescription?.length ?? 0}/{255}
+                  </Text>
+                }
                 {...register('description')}
               />
 
