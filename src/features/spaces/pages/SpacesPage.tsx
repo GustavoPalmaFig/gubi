@@ -1,12 +1,12 @@
-import { Button, Center, SimpleGrid, Skeleton, Text } from '@mantine/core';
+import { Button, SimpleGrid } from '@mantine/core';
 import { IconPlus } from '@tabler/icons-react';
 import { Link, useNavigate } from 'react-router-dom';
 import { PageFrame } from '@/components/layout/PageFrame';
 import { useTranslation } from 'react-i18next';
+import AddCardButton from '@/components/shared/AddCardButton';
+import Skeletons from '@/components/shared/Skeletons';
 import { useSpaceOverviewData } from '../hooks/useSpace';
 import SpaceCard from '../components/SpaceCard';
-
-const SKELETON_CARDS = Array.from({ length: 3 }, (_, index) => index);
 
 export function SpacesPage() {
   const { data: spaces, isLoading: isLoadingSpaces } = useSpaceOverviewData();
@@ -14,8 +14,6 @@ export function SpacesPage() {
   const navigate = useNavigate();
 
   const { t } = useTranslation('translation', { keyPrefix: 'spaces' });
-
-  if (spaces?.length === 0) return null;
 
   return (
     <PageFrame
@@ -29,21 +27,24 @@ export function SpacesPage() {
     >
       <SimpleGrid cols={{ base: 1, sm: 2, lg: 3 }} spacing="lg">
         {isLoadingSpaces ? (
-          SKELETON_CARDS.map(index => (
-            <div key={index}>
-              <Skeleton height={250} radius="lg" />
-            </div>
-          ))
-        ) : spaces && spaces.length > 0 ? (
-          spaces.map(space => (
-            <Link key={space.id} to={`/spaces/${space.id}`}>
-              <SpaceCard space={space} />
-            </Link>
-          ))
+          <Skeletons />
         ) : (
-          <Center>
-            <Text>{t('no_spaces')}</Text>
-          </Center>
+          <>
+            {spaces &&
+              spaces.length > 0 &&
+              spaces.map(space => (
+                <Link key={space.id} to={`/spaces/${space.id}`}>
+                  <SpaceCard space={space} />
+                </Link>
+              ))}
+
+            <AddCardButton
+              title={t('add')}
+              description={t('add_description')}
+              show={!isLoadingSpaces}
+              onClick={() => navigate('/spaces/new')}
+            />
+          </>
         )}
       </SimpleGrid>
     </PageFrame>

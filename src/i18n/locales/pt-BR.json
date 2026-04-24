@@ -78,7 +78,6 @@
     "description": "Gerencie suas formas de pagamento cadastradas",
     "add": "Adicionar Método",
     "add_description": "Cartão de crédito, pix, dinheiro...",
-    "add_payment_method": "Adicionar método",
     "card": {
       "default": "Padrão",
       "affects_balance": "Afeta saldo",
@@ -129,6 +128,8 @@
     "no_spaces": "Nenhum espaço encontrado",
     "created_at": "Criado em {{date}}",
     "month_spent": "Gastos de {{month}}",
+    "add": "Adicionar Espaço",
+    "add_description": "Crie um novo Espaço para gerenciar suas contas e despesas",
     "menu": {
       "delete_success": "Espaço excluído",
       "delete_success_description": "O espaço foi excluído com sucesso.",
