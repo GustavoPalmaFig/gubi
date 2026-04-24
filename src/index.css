@@ -36,8 +36,8 @@
 }
 
 :root {
-  --background: #f7f6f4;
-  --background-secondary: #fafafa;
+  --background: #f9f9f9;
+  --background-secondary: #fff;
   --foreground: #334155;
   --muted-foreground: #a7a7a7;
   --card: #ffffff;
