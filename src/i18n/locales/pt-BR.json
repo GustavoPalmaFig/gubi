@@ -193,6 +193,19 @@
         "admin": "Admin",
         "member": "Membro"
       }
+    },
+    "tabs": {
+      "bills": {
+        "title": "Contas",
+        "add_bill": "Adicionar conta"
+      },
+      "expenses": {
+        "title": "Despesas",
+        "add_expense": "Adicionar despesa"
+      },
+      "members": {
+        "title": "Membros"
+      }
     }
   }
 }

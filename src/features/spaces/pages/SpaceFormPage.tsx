@@ -40,15 +40,15 @@ import SpaceIcon from '../components/SpaceIcon';
 import type { Space } from '../types/space';
 
 export default function SpaceFormPage() {
-  const { spaceId } = useParams();
-  const isEditing = !!spaceId;
+  const { id } = useParams();
+  const isEditing = !!id;
   const { user: currentUser } = useAuth();
   const location = useLocation();
   const membersSectionRef = useRef<HTMLDivElement | null>(null);
 
   const navigate = useNavigate();
 
-  const { data: space, isLoading: isLoadingSpace } = useSpaceFormData(Number(spaceId));
+  const { data: space, isLoading: isLoadingSpace } = useSpaceFormData(Number(id));
   const { data: paymentMethods = [], isLoading: isLoadingPaymentMethods } =
     usePaymentMethodsWithOwner();
   const { mutate: createSpace, isPending: isCreatingSpace } = useCreateSpaceMutation();
@@ -134,7 +134,7 @@ export default function SpaceFormPage() {
           type: 'positive'
         });
         reset();
-        navigate(`/spaces/${spaceId}/edit`);
+        navigate(`/spaces/${spaceId}`);
       },
       onError: (error: unknown) => {
         showErrorNotification(error);
