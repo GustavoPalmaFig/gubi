@@ -136,6 +136,7 @@
       "delete_confirmation_title": "Excluir espaço",
       "delete_confirmation": "Tem certeza que deseja excluir este espaço? Esta ação não pode ser desfeita.",
       "edit": "Editar",
+      "manage_members": "Gerenciar membros",
       "delete": "Excluir"
     },
     "form": {

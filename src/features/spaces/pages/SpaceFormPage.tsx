@@ -22,8 +22,8 @@ import { PaymentMethodSelect } from '@/features/payment-methods/components/share
 import { showErrorNotification } from '@/utils/errors';
 import { showNotification } from '@/utils/showNotification';
 import { useAuth } from '@/features/auth/hooks/useAuth';
-import { useEffect } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useEffect, useRef } from 'react';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { usePaymentMethodsWithOwner } from '@/features/payment-methods/hooks/usePaymentMethod';
 import { useTranslation } from 'react-i18next';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -43,6 +43,8 @@ export default function SpaceFormPage() {
   const { spaceId } = useParams();
   const isEditing = !!spaceId;
   const { user: currentUser } = useAuth();
+  const location = useLocation();
+  const membersSectionRef = useRef<HTMLDivElement | null>(null);
 
   const navigate = useNavigate();
 
@@ -101,6 +103,19 @@ export default function SpaceFormPage() {
       members: getInitialSpaceMembers(space?.members, currentUser)
     });
   }, [space, reset, currentUser]);
+
+  useEffect(() => {
+    if (location.hash !== '#members' || isLoadingSpace || isLoadingPaymentMethods) {
+      return;
+    }
+
+    requestAnimationFrame(() => {
+      membersSectionRef.current?.scrollIntoView({
+        behavior: 'smooth',
+        block: 'start'
+      });
+    });
+  }, [location.hash, isLoadingSpace, isLoadingPaymentMethods]);
 
   const handleSubmitSpace = (data: SpaceFormValues) => {
     const payload: Space = {
@@ -278,17 +293,19 @@ export default function SpaceFormPage() {
             </Stack>
           </Card>
 
-          <MembersForm
-            spaceId={space?.id}
-            members={watchedMembers}
-            onChange={members =>
-              setValue('members', members, {
-                shouldDirty: true,
-                shouldTouch: true,
-                shouldValidate: true
-              })
-            }
-          />
+          <div id="members" ref={membersSectionRef}>
+            <MembersForm
+              spaceId={space?.id}
+              members={watchedMembers}
+              onChange={members =>
+                setValue('members', members, {
+                  shouldDirty: true,
+                  shouldTouch: true,
+                  shouldValidate: true
+                })
+              }
+            />
+          </div>
 
           <Group justify="end" mt="lg">
             <Button
