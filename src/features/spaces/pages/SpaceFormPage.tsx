@@ -28,9 +28,13 @@ import { usePaymentMethodsWithOwner } from '@/features/payment-methods/hooks/use
 import { useTranslation } from 'react-i18next';
 import { zodResolver } from '@hookform/resolvers/zod';
 import z from 'zod';
+import {
+  useCreateSpaceMutation,
+  useSpaceFormData,
+  useUpdateSpaceMutation
+} from '../hooks/useSpace';
 import { getInitialSpaceMembers } from '../utils/spaceMemberDraft';
 import { spaceIconOptions } from '../constants/spaceIconOptions';
-import { useCreateSpaceMutation, useSpaceData, useUpdateSpaceMutation } from '../hooks/useSpace';
 import MembersForm from '../components/MembersForm';
 import SpaceIcon from '../components/SpaceIcon';
 import type { Space } from '../types/space';
@@ -42,7 +46,7 @@ export default function SpaceFormPage() {
 
   const navigate = useNavigate();
 
-  const { data: space, isLoading: isLoadingSpace } = useSpaceData(Number(spaceId));
+  const { data: space, isLoading: isLoadingSpace } = useSpaceFormData(Number(spaceId));
   const { data: paymentMethods = [], isLoading: isLoadingPaymentMethods } =
     usePaymentMethodsWithOwner();
   const { mutate: createSpace, isPending: isCreatingSpace } = useCreateSpaceMutation();

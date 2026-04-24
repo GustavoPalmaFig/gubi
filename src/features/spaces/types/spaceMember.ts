@@ -2,7 +2,7 @@ import type { User } from '@/features/auth/types/user';
 import type { SpaceMemberRole } from './spaceMemberRole';
 import type { SpaceMemberStatus } from './spaceMemberStatus';
 
-export type SpaceMember = {
+export interface SpaceMember {
   user_id: string;
   role: SpaceMemberRole;
   status: SpaceMemberStatus;
@@ -12,4 +12,4 @@ export type SpaceMember = {
   default_split_percentage: number | null;
 
   user: User;
-};
+}

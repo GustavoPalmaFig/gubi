@@ -1,6 +1,7 @@
 import { supabase } from '@/services/supabase.service';
 import type { User } from '@/features/auth/types/user';
 import type { Space } from '../types/space';
+import type { SpaceOverview } from '../types/spaceOverview';
 
 export const createSpace = async (p_space: Space): Promise<number> => {
   const { data, error } = await supabase.rpc('create_space', { p_space });
@@ -46,6 +47,14 @@ export const searchUsersForSpace = async (
     query,
     p_space_id: spaceId
   });
+
+  if (error) throw error;
+
+  return data;
+};
+
+export const fetchSpaceOverview = async (): Promise<SpaceOverview[]> => {
+  const { data, error } = await supabase.rpc('get_spaces_overview');
 
   if (error) throw error;
 

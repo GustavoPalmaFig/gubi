@@ -2,7 +2,7 @@ import type { PaymentMethodWithOwner } from '@/features/payment-methods/types/pa
 import type { SpaceIcon } from './spaceIcon';
 import type { SpaceMember } from './spaceMember';
 
-export type Space = {
+export interface Space {
   id?: number;
   name: string;
   description: string | null;
@@ -14,4 +14,4 @@ export type Space = {
   color: string;
 
   members: SpaceMember[];
-};
+}
