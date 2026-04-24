@@ -1,7 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import {
   createSpace,
-  fetchSpaceById,
+  fetchSpaceFormById,
   searchUsersForSpace,
   updateSpace
 } from '../services/space.service';
@@ -22,7 +22,7 @@ const spaceKeys = {
 export function useSpaceData(id: number) {
   return useQuery({
     queryKey: spaceKeys.id(id),
-    queryFn: () => fetchSpaceById(id),
+    queryFn: () => fetchSpaceFormById(id),
     enabled: !!id
   });
 }

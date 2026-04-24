@@ -30,8 +30,8 @@ export const fetchSpaces = async (): Promise<Space[]> => {
   return data;
 };
 
-export const fetchSpaceById = async (id: number): Promise<Space> => {
-  const { data, error } = await supabase.rpc('get_space_details', { p_space_id: id });
+export const fetchSpaceFormById = async (id: number): Promise<Space> => {
+  const { data, error } = await supabase.rpc('get_space_form', { p_space_id: id });
 
   if (error) throw error;
 
