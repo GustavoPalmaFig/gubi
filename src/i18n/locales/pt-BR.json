@@ -25,6 +25,9 @@
     },
     "numberInput": {
       "placeholder": "Digite um valor"
+    },
+    "select": {
+      "placeholder": "Selecione um usuário"
     }
   },
   "auth": {
