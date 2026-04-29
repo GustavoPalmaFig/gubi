@@ -224,5 +224,35 @@
         "title": "Membros"
       }
     }
+  },
+  "bills": {
+    "form": {
+      "createTitle": "Criar conta",
+      "createDescription": "Preencha os dados da conta, configure a divisao e registre arquivos relacionados.",
+      "editTitle": "Editar conta",
+      "editDescription": "Atualize os dados da conta, a divisao entre membros e os arquivos vinculados.",
+      "save": "Salvar",
+      "createSuccess": "Conta criada",
+      "createSuccessDescription": "A conta foi criada com sucesso.",
+      "updateSuccess": "Conta atualizada",
+      "updateSuccessDescription": "A conta foi atualizada com sucesso.",
+      "dataSection": {
+        "sectionTitle": "Dados da Conta",
+        "title": "Titulo",
+        "titlePlaceholder": "Ex.: Fatura de energia",
+        "titleRequiredMessage": "Titulo e obrigatorio",
+        "referencePeriod": "Periodo de referencia",
+        "referencePeriodRequiredMessage": "Periodo de referencia e obrigatorio",
+        "value": "Valor",
+        "valuePlaceholder": "0,00",
+        "valueRequiredMessage": "Valor deve ser maior que zero",
+        "deadline": "Vencimento",
+        "payer": "Responsavel pelo pagamento",
+        "payerPlaceholder": "Selecione um membro",
+        "paidAt": "Pago em"
+      },
+      "splitsSection": {},
+      "filesSection": {}
+    }
   }
 }

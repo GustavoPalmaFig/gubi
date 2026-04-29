@@ -213,7 +213,7 @@ export function PaymentMethodSelect({
                 openModal();
               }}
             >
-              <Text size="sm">{tPaymentMethod('add_payment_method')}</Text>
+              <Text size="sm">{tPaymentMethod('add')}</Text>
             </Button>
           </Combobox.Footer>
         </Combobox.Dropdown>

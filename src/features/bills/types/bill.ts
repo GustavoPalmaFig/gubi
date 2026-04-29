@@ -13,6 +13,6 @@ export interface Bill {
   payer?: User;
   paid_at: string | null;
 
-  splits: BillSplit[];
-  files: BillFile[];
+  splits?: BillSplit[];
+  files?: BillFile[];
 }
