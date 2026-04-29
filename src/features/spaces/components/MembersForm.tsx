@@ -14,7 +14,7 @@ import {
 import { AppAvatar } from '@/components/shared/AppAvatar';
 import { ConfirmModal } from '@/components/shared/ConfirmModal';
 import { IconLock, IconTrash } from '@tabler/icons-react';
-import { useAuth } from '@/features/auth/hooks/useAuth';
+import { useAuthenticatedUser } from '@/features/auth/hooks/useAuthenticatedUser';
 import { useDisclosure } from '@mantine/hooks';
 import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -26,8 +26,7 @@ import { spaceMemberRoleOptions } from '../constants/spaceMemberRoleOptions';
 import type { SpaceMember } from '../types/spaceMember';
 import type { SpaceMemberRole } from '../types/spaceMemberRole';
 
-function isMemberEditable(member: SpaceMember, currentUser: User | null): boolean {
-  if (!currentUser) return false;
+function isMemberEditable(member: SpaceMember, currentUser: User): boolean {
   return member.user_id !== currentUser.id && member.role !== 'owner';
 }
 
@@ -41,7 +40,7 @@ export default function MembersForm({ spaceId, members, onChange }: MembersFormP
   const [isConfirmModalOpen, { open: openConfirmModal, close: closeConfirmModal }] =
     useDisclosure(false);
 
-  const { user: currentUser } = useAuth();
+  const { user: currentUser } = useAuthenticatedUser();
 
   const { t } = useTranslation('translation', { keyPrefix: 'spaces.membersForm' });
 

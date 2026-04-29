@@ -10,6 +10,7 @@ import { AppShell, ScrollArea, Button, Divider } from '@mantine/core';
 import { cn } from '@/lib/utils';
 import { NavLink } from 'react-router-dom';
 import { useAuth } from '@/features/auth/hooks/useAuth';
+import { useAuthenticatedUser } from '@/features/auth/hooks/useAuthenticatedUser';
 import { useTranslation } from 'react-i18next';
 import { AppAvatar } from '../shared/AppAvatar';
 
@@ -18,7 +19,8 @@ type AppNavBarProps = {
 };
 
 export function AppNavBar({ isExpanded }: AppNavBarProps) {
-  const { user, logout } = useAuth();
+  const { logout } = useAuth();
+  const { user } = useAuthenticatedUser();
   const { t } = useTranslation('translation', { keyPrefix: 'navigation' });
 
   const items = [

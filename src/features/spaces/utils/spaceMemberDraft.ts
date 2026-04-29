@@ -11,14 +11,7 @@ export function createCurrentUserMember(currentUser: User): SpaceMember {
   };
 }
 
-export function getInitialSpaceMembers(
-  spaceMembers: SpaceMember[] | undefined,
-  currentUser: User | null
-) {
-  if (!currentUser) {
-    return [];
-  }
-
+export function getInitialSpaceMembers(spaceMembers: SpaceMember[] | undefined, currentUser: User) {
   return spaceMembers && spaceMembers.length > 0
     ? spaceMembers
     : [createCurrentUserMember(currentUser)];

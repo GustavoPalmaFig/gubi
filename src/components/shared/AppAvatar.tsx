@@ -4,7 +4,7 @@ import { stringToColor } from '@/utils/helpers';
 import type { User } from '@/features/auth/types/user';
 
 type AppAvatarProps = {
-  user: User | null;
+  user: User;
   showName?: boolean;
   showEmail?: boolean;
   size?: MantineSize;
@@ -18,8 +18,6 @@ export function AppAvatar({
   size = 'md',
   className
 }: AppAvatarProps) {
-  if (!user) return null;
-
   const color = stringToColor(user.full_name);
 
   return (

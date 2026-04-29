@@ -21,7 +21,7 @@ import { PageFrame } from '@/components/layout/PageFrame';
 import { PaymentMethodSelect } from '@/features/payment-methods/components/shared/PaymentMethodSelect';
 import { showErrorNotification } from '@/utils/errors';
 import { showNotification } from '@/utils/showNotification';
-import { useAuth } from '@/features/auth/hooks/useAuth';
+import { useAuthenticatedUser } from '@/features/auth/hooks/useAuthenticatedUser';
 import { useEffect, useRef } from 'react';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { usePaymentMethodsWithOwner } from '@/features/payment-methods/hooks/usePaymentMethod';
@@ -42,7 +42,7 @@ import type { Space } from '../types/space';
 export default function SpaceFormPage() {
   const { id } = useParams();
   const isEditing = !!id;
-  const { user: currentUser } = useAuth();
+  const { user: currentUser } = useAuthenticatedUser();
   const location = useLocation();
   const membersSectionRef = useRef<HTMLDivElement | null>(null);
 
