@@ -39,7 +39,6 @@ export const mantineTheme = createTheme({
     semibold: '600',
     bold: '700'
   },
-
   colors: {
     primary: generateColorScale('primary'),
     primaryForeground: generateColorScale('primary-foreground'),
@@ -67,6 +66,7 @@ export const mantineTheme = createTheme({
     red: generateColorScale('red'),
     yellow: generateColorScale('yellow')
   },
+
   components: {
     Button: {
       defaultProps: {
@@ -156,6 +156,34 @@ export const mantineTheme = createTheme({
       },
       classNames: {
         label: 'text-base'
+      }
+    },
+    MonthPickerInput: {
+      defaultProps: {
+        size: 'md',
+        radius: 'md'
+      },
+      classNames: {
+        label: 'mb-1',
+        input: 'text-sm bg-background'
+      }
+    },
+    DatePickerInput: {
+      defaultProps: {
+        size: 'md',
+        radius: 'md'
+      },
+      classNames: {
+        label: 'mb-1',
+        input: 'text-sm bg-background'
+      }
+    },
+    InputClearButton: {
+      defaultProps: {
+        size: 'sm'
+      },
+      classNames: {
+        root: 'bg-background!'
       }
     },
     Notification: {

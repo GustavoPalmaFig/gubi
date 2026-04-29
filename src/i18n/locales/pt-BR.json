@@ -13,6 +13,20 @@
     "description": "Oops! Página não encontrada",
     "link": "Retornar para a <0>página inicial</0>"
   },
+  "forms": {
+    "datePickerInput": {
+      "placeholder": "Selecione uma data",
+      "yesterday": "Ontem",
+      "today": "Hoje",
+      "clear": "Limpar"
+    },
+    "monthPickerInput": {
+      "placeholder": "Selecione um mês"
+    },
+    "numberInput": {
+      "placeholder": "Digite um valor"
+    }
+  },
   "auth": {
     "layout": {
       "title": "Seus gastos em um só lugar.",

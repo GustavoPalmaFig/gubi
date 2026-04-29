@@ -20,3 +20,9 @@ export function formatCurrency(
 ): string {
   return getCurrencyFormatter(locale, currency).format(amount);
 }
+
+export function getCurrencySymbol(locale: SystemLocale, currency: SystemCurrency): string {
+  const formatter = getCurrencyFormatter(locale, currency);
+  const symbol = formatter.formatToParts(0).find(p => p.type === 'currency')?.value;
+  return symbol ?? currency;
+}

@@ -1,6 +1,7 @@
 import './i18n';
 import './index.css';
 import './lib/dayjs';
+import '@mantine/dates/styles.css';
 import '@mantine/notifications/styles.css';
 import { createAsyncStoragePersister } from '@tanstack/query-async-storage-persister';
 import { createRoot } from 'react-dom/client';
