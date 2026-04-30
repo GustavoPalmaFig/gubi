@@ -1,4 +1,6 @@
-export type DateInput = string | Date | undefined;
+import type { Dayjs } from 'dayjs';
+
+export type DateInput = string | Date | Dayjs | undefined;
 
 /**
  * Converts a DateInput to a Date object considering the mode only date or datetime.
@@ -7,6 +9,10 @@ export function toDate(value: DateInput, mode: 'date' | 'datetime' = 'date'): Da
   if (!value) return undefined;
 
   if (value instanceof Date) return value;
+
+  if (typeof value === 'object' && 'toDate' in value) {
+    return (value as Dayjs).toDate();
+  }
 
   if (mode === 'date') {
     return parseDateOnly(value);

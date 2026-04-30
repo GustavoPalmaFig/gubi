@@ -1,12 +1,9 @@
 import { DatePickerInput, type DatePickerInputProps, type DatesRangeValue } from '@mantine/dates';
 import { IconCalendar } from '@tabler/icons-react';
+import { toISODateString } from '@/utils/formatDate';
 import { useAuthenticatedUser } from '@/features/auth/hooks/useAuthenticatedUser';
-import { useMediaQuery } from '@mantine/hooks';
 import { useTranslation } from 'react-i18next';
 import dayjs from 'dayjs';
-import localizedFormat from 'dayjs/plugin/localizedFormat';
-
-dayjs.extend(localizedFormat);
 
 type AppDatePickerInputProps = Omit<DatePickerInputProps, 'onChange'> & {
   onChange: (value: string | string[] | DatesRangeValue<string> | null) => void;
@@ -24,15 +21,20 @@ export default function AppDatePickerInput({
 }: AppDatePickerInputProps) {
   const { locale } = useAuthenticatedUser();
   const { t } = useTranslation('translation', { keyPrefix: 'forms.datePickerInput' });
-  const isTablet = useMediaQuery('(max-width: 768px)');
 
-  const valueFormat = dayjs().format('L');
+  const today = dayjs();
+  const yesterday = today.subtract(1, 'day');
 
   const yesterdayPreset = {
-    value: dayjs().subtract(1, 'day').format('YYYY-MM-DD'),
+    value: toISODateString(yesterday),
     label: t('yesterday')
   };
-  const todayPreset = { value: dayjs().format('YYYY-MM-DD'), label: t('today') };
+
+  const todayPreset = {
+    value: toISODateString(today),
+    label: t('today')
+  };
+
   const clearPreset = { value: null, label: t('clear') };
 
   return (
@@ -43,8 +45,7 @@ export default function AppDatePickerInput({
       locale={locale}
       firstDayOfWeek={0}
       leftSection={<IconCalendar size={18} stroke={1.5} />}
-      valueFormat={valueFormat}
-      popoverProps={{ position: isTablet ? 'bottom' : 'bottom-start' }}
+      valueFormat="L"
       presets={[
         ...(rest.presets ?? []),
         ...(yesterdayButton ? [yesterdayPreset] : []),

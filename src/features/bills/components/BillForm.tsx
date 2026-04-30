@@ -22,7 +22,7 @@ interface BillFormProps {
   onFinish: (bill?: Bill) => void;
 }
 
-const CURRENT_MONTH_REFERENCE_PERIOD = toISODateString(dayjs().startOf('month').toDate());
+const CURRENT_MONTH_REFERENCE_PERIOD = toISODateString(dayjs().startOf('month'));
 
 export default function BillForm({ bill, space, onFinish }: BillFormProps) {
   const isEditing = !!bill?.id;
