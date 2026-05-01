@@ -2,7 +2,8 @@
   "common": {
     "confirm": "Confirmar",
     "cancel": "Cancelar",
-    "nothing_found": "Nenhum resultado encontrado"
+    "nothing_found": "Nenhum resultado encontrado",
+    "you": "Você"
   },
   "error": {
     "title": "Erro",
@@ -15,7 +16,7 @@
   },
   "forms": {
     "datePickerInput": {
-      "placeholder": "Selecione uma data",
+      "placeholder": "dd/mm/yyyy",
       "yesterday": "Ontem",
       "today": "Hoje",
       "clear": "Limpar"
@@ -241,8 +242,8 @@
         "title": "Titulo",
         "titlePlaceholder": "Ex.: Fatura de energia",
         "titleRequiredMessage": "Titulo e obrigatorio",
-        "referencePeriod": "Periodo de referencia",
-        "referencePeriodRequiredMessage": "Periodo de referencia e obrigatorio",
+        "referencePeriod": "Periodo de referência",
+        "referencePeriodRequiredMessage": "Periodo de referência e obrigatorio",
         "value": "Valor",
         "valuePlaceholder": "0,00",
         "valueRequiredMessage": "Valor deve ser maior que zero",
@@ -251,8 +252,31 @@
         "payerPlaceholder": "Selecione um membro",
         "paidAt": "Pago em"
       },
-      "splitsSection": {},
-      "filesSection": {}
+      "splitsSection": {
+        "sectionTitle": "Divisão",
+        "totalValue": "Total",
+        "pendingValue": "Pendente",
+        "paidValue": "Pago",
+        "splitEqual": "Dividir igualmente",
+        "paid": "Pago",
+        "valueLabel": "Valor",
+        "valuePlaceholder": "0,00",
+        "percentageLabel": "%",
+        "percentagePlaceholder": "0",
+        "valueRequiredMessage": "Valor deve ser maior que zero",
+        "marksAsPaid": "Pago",
+        "totalValueRequiredMessage": "Preencha o valor total da conta para calcular a divisão.",
+        "splitedTotalValue": "Total dividido",
+        "differenceSplitedValue": "Diferença"
+      },
+      "filesSection": {
+        "sectionTitle": "Arquivos",
+        "addFile": "Adicionar arquivo",
+        "removeFile": "Remover arquivo",
+        "fileLabel": "Arquivo",
+        "filePlaceholder": "Selecione um arquivo",
+        "fileRequiredMessage": "Arquivo é obrigatório"
+      }
     }
   }
 }

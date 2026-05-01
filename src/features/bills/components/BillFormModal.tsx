@@ -27,7 +27,10 @@ export function BillFormModal({
       onClose={onClose}
       title={isEditing ? t('editTitle') : t('createTitle')}
       subTitle={isEditing ? t('editDescription') : t('createDescription')}
-      size="90rem"
+      size="70rem"
+      classNames={{
+        content: 'bg-background'
+      }}
     >
       <BillForm bill={bill} space={space} onFinish={onClose} />
     </AppModal>

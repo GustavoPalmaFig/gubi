@@ -14,8 +14,9 @@ export default function AppNumberInput({
   onChange,
   ...rest
 }: AppNumberInputProps) {
-  const { t } = useTranslation('translation', { keyPrefix: 'forms.numberInput' });
   const { locale, currency } = useAuthenticatedUser();
+
+  const { t } = useTranslation('translation', { keyPrefix: 'forms.numberInput' });
 
   const currencyProps = isCurrency && {
     leftSection: getCurrencySymbol(locale, currency),
@@ -32,9 +33,17 @@ export default function AppNumberInput({
       {...currencyProps}
       placeholder={rest.placeholder ?? t('placeholder')}
       onChange={value => {
-        if (typeof value === 'number' || value === null) {
-          onChange(value);
+        if (typeof value === 'string') {
+          const parsed = Number(value.replace(getNumberDecimalSeparator(locale), '.'));
+
+          if (!isNaN(parsed)) {
+            onChange(parsed);
+          }
+
+          return;
         }
+
+        onChange(value);
       }}
       hideControls
     />

@@ -147,7 +147,8 @@ export const mantineTheme = createTheme({
         radius: 'sm'
       },
       classNames: {
-        label: 'text-base'
+        label: 'text-base',
+        body: 'items-center'
       }
     },
     Switch: {

@@ -18,7 +18,8 @@ export function AppModal({ children, title, subTitle, ...props }: AppModalProps)
         </Stack>
       }
       classNames={{
-        header: 'items-start'
+        header: 'items-start bg-background',
+        content: 'bg-background'
       }}
     >
       {children}

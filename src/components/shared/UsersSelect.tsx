@@ -14,7 +14,7 @@ import { AppAvatar } from './AppAvatar';
 
 export type UsersSelectProps = {
   users: User[];
-  value: string | null;
+  value?: string | null;
   onChange: (value: string | null) => void;
   label?: string;
   placeholder?: string;

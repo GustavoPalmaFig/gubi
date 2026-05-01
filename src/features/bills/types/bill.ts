@@ -8,11 +8,11 @@ export interface Bill {
   reference_period: string;
   title: string;
   value: number;
-  deadline: string | null;
-  payer_id: string | null;
+  deadline?: string | null;
+  payer_id?: string | null;
   payer?: User;
-  paid_at: string | null;
+  paid_at?: string | null;
 
-  splits?: BillSplit[];
+  splits: BillSplit[];
   files?: BillFile[];
 }
