@@ -1,5 +1,5 @@
-import type { SystemCurrency } from '@/features/types/systemCurrency';
-import type { SystemLocale } from '@/features/types/systemLocale';
+import type { SystemCurrency } from '@/types/systemCurrency';
+import type { SystemLocale } from '@/types/systemLocale';
 
 export interface User {
   id: string;

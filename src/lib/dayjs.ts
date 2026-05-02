@@ -4,7 +4,7 @@ import dayjs from 'dayjs';
 import i18n from '@/i18n';
 import localizedFormat from 'dayjs/plugin/localizedFormat';
 import relativeTime from 'dayjs/plugin/relativeTime';
-import type { SystemLocale } from '@/features/types/systemLocale';
+import type { SystemLocale } from '@/types/systemLocale';
 
 dayjs.extend(localizedFormat);
 dayjs.extend(relativeTime);

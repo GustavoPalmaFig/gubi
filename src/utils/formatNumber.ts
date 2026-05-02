@@ -1,4 +1,4 @@
-import type { SystemLocale } from '@/features/types/systemLocale';
+import type { SystemLocale } from '@/types/systemLocale';
 
 export function getNumberDecimalSeparator(locale: SystemLocale) {
   const parts = new Intl.NumberFormat(locale).formatToParts(1234.5);

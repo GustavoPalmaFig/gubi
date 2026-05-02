@@ -8,7 +8,7 @@ import { showErrorNotification } from '@/utils/errors';
 import { Trans, useTranslation } from 'react-i18next';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
-import type { SystemLocale } from '@/features/types/systemLocale';
+import type { SystemLocale } from '@/types/systemLocale';
 import { ProvidersLogin } from '../components/ProvidersLogin';
 import { useAuth } from '../hooks/useAuth';
 
