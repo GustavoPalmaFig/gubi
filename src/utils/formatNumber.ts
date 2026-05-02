@@ -8,3 +8,7 @@ export function getNumberDecimalSeparator(locale: SystemLocale) {
 export function roundValue(value: number) {
   return Math.round(value * 100) / 100;
 }
+
+export function formatFileSize(size: number) {
+  return `${(size / 1024 ** 2).toFixed(2)} MB`;
+}

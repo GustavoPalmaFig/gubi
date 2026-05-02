@@ -24,6 +24,7 @@
     "@hookform/resolvers": "^5.2.2",
     "@mantine/core": "^9.0.2",
     "@mantine/dates": "^9.0.2",
+    "@mantine/dropzone": "^9.0.2",
     "@mantine/hooks": "^9.0.2",
     "@mantine/notifications": "^9.0.2",
     "@supabase/supabase-js": "^2.102.1",

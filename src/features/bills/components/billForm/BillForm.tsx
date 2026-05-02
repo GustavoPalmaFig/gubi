@@ -3,7 +3,7 @@ import { Controller, useForm, useWatch } from 'react-hook-form';
 import { showErrorNotification } from '@/utils/errors';
 import { showNotification } from '@/utils/showNotification';
 import { toISODateString } from '@/utils/formatDate';
-import { useCallback, useEffect, useMemo } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { UsersSelect } from '@/components/shared/UsersSelect';
 import { useTranslation } from 'react-i18next';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -13,9 +13,11 @@ import AppNumberInput from '@/components/shared/AppNumberInput';
 import dayjs from 'dayjs';
 import type { Space } from '@/features/spaces/types/space';
 import z from 'zod';
-import { useCreateBillMutation, useUpdateBillMutation } from '../../hooks/useBill';
+import { useSaveBillMutation } from '../../hooks/useBill';
+import FileSection from './FileSection';
 import SplitsSection from './SplitsSection';
 import type { Bill } from '../../types/bill';
+import type { BillFile } from '../../types/billFile';
 
 interface BillFormProps {
   bill?: Bill;
@@ -30,8 +32,11 @@ const billSplitSchema = z.object({
 });
 
 const billFileSchema = z.object({
+  id: z.number().optional(),
+  bill_id: z.number().optional(),
   filename: z.string().trim(),
-  storage_path: z.string().trim()
+  storage_path: z.string().trim(),
+  size: z.number().min(0)
 });
 
 const CURRENT_MONTH_REFERENCE_PERIOD = toISODateString(dayjs().startOf('month'));
@@ -39,8 +44,8 @@ const CURRENT_MONTH_REFERENCE_PERIOD = toISODateString(dayjs().startOf('month'))
 export default function BillForm({ bill, space, onFinish }: BillFormProps) {
   const isEditing = !!bill?.id;
 
-  const { mutate: createBill, isPending: isCreatingBill } = useCreateBillMutation();
-  const { mutate: updateBill, isPending: isUpdatingBill } = useUpdateBillMutation();
+  const { mutate: saveBill, isPending: isSavingBill } = useSaveBillMutation();
+  const [removedFiles, setRemovedFiles] = useState<BillFile[]>([]);
 
   const { t } = useTranslation('translation', { keyPrefix: 'bills.form' });
 
@@ -84,17 +89,26 @@ export default function BillForm({ bill, space, onFinish }: BillFormProps) {
     defaultValues: {
       ...bill,
       space_id: space.id,
-      reference_period: CURRENT_MONTH_REFERENCE_PERIOD,
+      reference_period: bill?.reference_period ?? CURRENT_MONTH_REFERENCE_PERIOD,
       splits: defaultSplits,
-      files: []
+      files: bill?.files ?? []
     }
   });
 
   const watchedValue = useWatch({ control, name: 'value', defaultValue: 0 });
   const watchedSplits = useWatch({ control, name: 'splits', defaultValue: defaultSplits });
+  const watchedReferencePeriod = useWatch({
+    control,
+    name: 'reference_period',
+    defaultValue: bill?.reference_period ?? CURRENT_MONTH_REFERENCE_PERIOD
+  });
+  const watchedFiles = useWatch({ control, name: 'files', defaultValue: bill?.files ?? [] });
 
   useEffect(() => {
-    if (bill) reset(bill);
+    if (bill) {
+      reset(bill);
+      setRemovedFiles([]);
+    }
   }, [bill, reset]);
 
   const handleSplitsChange = useCallback(
@@ -107,31 +121,50 @@ export default function BillForm({ bill, space, onFinish }: BillFormProps) {
     [setValue]
   );
 
+  const handleFilesChange = useCallback(
+    (nextFiles: BillFormValues['files']) => {
+      setValue('files', nextFiles, {
+        shouldDirty: true,
+        shouldValidate: true
+      });
+    },
+    [setValue]
+  );
+
+  const handleSavedFileRemove = useCallback((file: BillFile) => {
+    setRemovedFiles(prevFiles =>
+      prevFiles.some(removedFile => removedFile.storage_path === file.storage_path)
+        ? prevFiles
+        : [...prevFiles, file]
+    );
+  }, []);
+
   const handleSubmitBill = (data: BillFormValues) => {
     const payload: Bill = {
       ...data,
       id: bill?.id
     };
 
-    const mutate = isEditing ? updateBill : createBill;
-
-    mutate(payload, {
-      onSuccess: () => {
-        showNotification({
-          title: isEditing ? t('updateSuccess') : t('createSuccess'),
-          message: isEditing ? t('updateSuccessDescription') : t('createSuccessDescription'),
-          type: 'positive'
-        });
-        onFinish();
-      },
-      onError: showErrorNotification
-    });
+    saveBill(
+      { bill: payload, removed_files: removedFiles },
+      {
+        onSuccess: () => {
+          showNotification({
+            title: isEditing ? t('updateSuccess') : t('createSuccess'),
+            message: isEditing ? t('updateSuccessDescription') : t('createSuccessDescription'),
+            type: 'positive'
+          });
+          onFinish();
+        },
+        onError: showErrorNotification
+      }
+    );
   };
 
   return (
     <form onSubmit={handleSubmit(handleSubmitBill)}>
       <Stack gap="xl">
-        <Grid>
+        <Grid gap="xl">
           <Grid.Col span={{ base: 12, md: 8 }}>
             <Stack gap="xl">
               <Card radius="lg" padding="lg" shadow="sm" withBorder>
@@ -231,13 +264,13 @@ export default function BillForm({ bill, space, onFinish }: BillFormProps) {
             </Stack>
           </Grid.Col>
           <Grid.Col span={{ base: 12, md: 4 }}>
-            <Stack gap="xl">
-              <Card radius="lg" padding="lg" shadow="sm" withBorder>
-                <Title order={4} mb="lg">
-                  {t('filesSection.sectionTitle')}
-                </Title>
-              </Card>
-            </Stack>
+            <FileSection
+              billId={bill?.id}
+              referencePeriod={watchedReferencePeriod}
+              files={watchedFiles ?? []}
+              onChange={handleFilesChange}
+              onRemoveSavedFile={handleSavedFileRemove}
+            />
           </Grid.Col>
         </Grid>
 
@@ -245,7 +278,7 @@ export default function BillForm({ bill, space, onFinish }: BillFormProps) {
           <Button
             type="submit"
             disabled={!isValid}
-            loading={isSubmitting || isCreatingBill || isUpdatingBill}
+            loading={isSubmitting || isSavingBill}
             loaderProps={{ type: 'dots' }}
           >
             {t('save')}

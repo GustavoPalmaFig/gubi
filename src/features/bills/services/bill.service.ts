@@ -1,16 +1,17 @@
 import { supabase } from '@/services/supabase.service';
 import type { Bill } from '../types/bill';
+import type { BillFile } from '../types/billFile';
 
-export const createBill = async (p_bill: Bill): Promise<number> => {
-  const { data, error } = await supabase.rpc('create_bill', { p_bill });
-
-  if (error) throw error;
-
-  return data;
-};
-
-export const updateBill = async (p_bill: Bill): Promise<void> => {
-  const { error } = await supabase.rpc('update_bill', { p_bill });
+export const saveBill = async ({
+  bill,
+  removed_files = []
+}: {
+  bill: Bill;
+  removed_files: BillFile[];
+}): Promise<void> => {
+  const { error } = await supabase.functions.invoke('save-bill', {
+    body: { bill, removed_files }
+  });
 
   if (error) throw error;
 };

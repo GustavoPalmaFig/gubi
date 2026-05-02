@@ -3,4 +3,5 @@ export interface BillFile {
   bill_id?: number;
   filename: string;
   storage_path: string;
+  size: number;
 }

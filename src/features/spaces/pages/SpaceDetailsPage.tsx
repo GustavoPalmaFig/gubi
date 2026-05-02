@@ -94,8 +94,8 @@ export default function SpaceDetailsPage() {
                   </Button>
                 </Group>
                 <Grid>
-                  <Grid.Col span={{ base: 12, md: 4 }}>
-                    {bills?.map(bill => (
+                  {bills?.map(bill => (
+                    <Grid.Col span={{ base: 12, md: 4 }}>
                       <Button
                         key={bill.id}
                         variant="outline"
@@ -111,8 +111,8 @@ export default function SpaceDetailsPage() {
                           <Text>{bill.value}</Text>
                         </div>
                       </Button>
-                    ))}
-                  </Grid.Col>
+                    </Grid.Col>
+                  ))}
                 </Grid>
               </Stack>
             </Tabs.Panel>

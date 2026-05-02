@@ -270,12 +270,10 @@
         "differenceSplitedValue": "Diferença"
       },
       "filesSection": {
-        "sectionTitle": "Arquivos",
-        "addFile": "Adicionar arquivo",
-        "removeFile": "Remover arquivo",
-        "fileLabel": "Arquivo",
-        "filePlaceholder": "Selecione um arquivo",
-        "fileRequiredMessage": "Arquivo é obrigatório"
+        "sectionTitle": "Arquivos (Comprovantes)",
+        "addFile": "Clique ou arraste para fazer upload",
+        "addFileDescription": "JPG, PNG ou PDF (Máximo de 5MB)",
+        "removeFile": "Remover arquivo"
       }
     }
   }

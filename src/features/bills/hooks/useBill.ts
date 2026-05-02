@@ -1,5 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { createBill, deleteBill, fetchBillsBySpace, updateBill } from '../services/bill.service';
+import { deleteBill, fetchBillsBySpace, saveBill } from '../services/bill.service';
 
 const billKeys = {
   root: ['bill'] as const,
@@ -26,12 +26,8 @@ function useBillMutation<T>(mutateFn: (payload: T) => Promise<void | number>) {
   });
 }
 
-export function useCreateBillMutation() {
-  return useBillMutation(createBill);
-}
-
-export function useUpdateBillMutation() {
-  return useBillMutation(updateBill);
+export function useSaveBillMutation() {
+  return useBillMutation(saveBill);
 }
 
 export function useDeleteBillMutation() {
