@@ -13,9 +13,9 @@ import AppNumberInput from '@/components/shared/AppNumberInput';
 import dayjs from 'dayjs';
 import type { Space } from '@/features/spaces/types/space';
 import z from 'zod';
-import { useCreateBillMutation, useUpdateBillMutation } from '../hooks/useBill';
-import SplitsSection from './billForm/SplitsSection';
-import type { Bill } from '../types/bill';
+import { useCreateBillMutation, useUpdateBillMutation } from '../../hooks/useBill';
+import SplitsSection from './SplitsSection';
+import type { Bill } from '../../types/bill';
 
 interface BillFormProps {
   bill?: Bill;

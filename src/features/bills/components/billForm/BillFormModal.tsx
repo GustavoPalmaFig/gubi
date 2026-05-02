@@ -2,7 +2,7 @@ import { AppModal } from '@/components/shared/AppModal';
 import { useTranslation } from 'react-i18next';
 import type { Space } from '@/features/spaces/types/space';
 import BillForm from './BillForm';
-import type { Bill } from '../types/bill';
+import type { Bill } from '../../types/bill';
 
 interface BillFormModalProps {
   opened: boolean;

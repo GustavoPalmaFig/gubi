@@ -1,4 +1,4 @@
-import { BillFormModal } from '@/features/bills/components/BillFormModal';
+import { BillFormModal } from '@/features/bills/components/billForm/BillFormModal';
 import { Center, Group, Loader, Stack, Title, Text, Tabs, Button } from '@mantine/core';
 import { IconCalendarWeek, IconPlus } from '@tabler/icons-react';
 import { NotFound } from '@/components/layout/NotFound';
