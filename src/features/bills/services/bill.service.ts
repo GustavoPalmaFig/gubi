@@ -21,8 +21,14 @@ export const deleteBill = async (id: number): Promise<void> => {
   if (error) throw error;
 };
 
-export const fetchBillsBySpace = async (spaceId: number): Promise<Bill[]> => {
-  const { data, error } = await supabase.from('bill').select('*').eq('space_id', spaceId);
+export const fetchBillsBySpace = async (
+  p_space_id: number,
+  p_reference_period: string
+): Promise<Bill[]> => {
+  const { data, error } = await supabase.rpc('get_bills_tab_data', {
+    p_space_id,
+    p_reference_period
+  });
 
   if (error) throw error;
 

@@ -82,6 +82,7 @@ export default function BillForm({ bill, space, onFinish }: BillFormProps) {
     resolver: zodResolver(billFormSchema),
     mode: 'onChange',
     defaultValues: {
+      ...bill,
       space_id: space.id,
       reference_period: CURRENT_MONTH_REFERENCE_PERIOD,
       splits: defaultSplits,

@@ -1,31 +1,17 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import {
-  createBill,
-  deleteBill,
-  fetchBillFormById,
-  fetchBillsBySpace,
-  updateBill
-} from '../services/bill.service';
+import { createBill, deleteBill, fetchBillsBySpace, updateBill } from '../services/bill.service';
 
 const billKeys = {
   root: ['bill'] as const,
-  form: (billId: number) => [...billKeys.root, billId, 'form'] as const,
-  bySpace: (spaceId: number) => [...billKeys.root, 'space', spaceId] as const
+  bySpace: (spaceId: number, referencePeriod: string) =>
+    [...billKeys.root, 'space', spaceId, referencePeriod] as const
 };
 
-export function useBillFormData(billId: number) {
+export function useBillsBySpace(spaceId: number, referencePeriod: string) {
   return useQuery({
-    queryKey: billKeys.form(billId),
-    queryFn: () => fetchBillFormById(billId),
-    enabled: !!billId
-  });
-}
-
-export function useBillsBySpace(spaceId: number) {
-  return useQuery({
-    queryKey: billKeys.bySpace(spaceId),
-    queryFn: () => fetchBillsBySpace(spaceId),
-    enabled: !!spaceId
+    queryKey: billKeys.bySpace(spaceId, referencePeriod),
+    queryFn: () => fetchBillsBySpace(spaceId, referencePeriod),
+    enabled: !!spaceId && !!referencePeriod
   });
 }
 

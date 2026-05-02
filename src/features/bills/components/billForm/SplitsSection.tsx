@@ -71,6 +71,13 @@ export default function SplitsSection({
     getSplitPercentages(splits, totalValue)
   );
 
+  const splitPercentagesRef = useRef(splitPercentages);
+  splitPercentagesRef.current = splitPercentages;
+
+  // Controla se as porcentagens já foram inicializadas com valores reais.
+  // Começa true apenas se já há totalValue > 0 com splits não-zerados (edição síncrona).
+  const percentagesInitialized = useRef(totalValue > 0 && splits.some(s => s.split_value > 0));
+
   const splitTotal = roundValue(splits.reduce((acc, s) => acc + s.split_value, 0));
   const paidTotal = roundValue(splits.reduce((acc, s) => acc + (s.paid_at ? s.split_value : 0), 0));
   const pendingTotal = roundValue(splitTotal - paidTotal);
@@ -80,9 +87,19 @@ export default function SplitsSection({
     shouldApplyDefaultSplitsRef.current = shouldApplyDefaultSplits;
   }, [shouldApplyDefaultSplits]);
 
+  useEffect(() => {
+    if (percentagesInitialized.current) return;
+    if (!totalValue || !splits.some(s => s.split_value > 0)) return;
+
+    percentagesInitialized.current = true;
+    const next = getSplitPercentages(splits, totalValue);
+    splitPercentagesRef.current = next; // atualização síncrona para o próximo effect
+    setSplitPercentages(next);
+  }, [totalValue, splits]);
+
   // Modo automático: aplica os percentuais padrão dos membros quando o total muda
   useEffect(() => {
-    if (!shouldApplyDefaultSplitsRef.current) return;
+    if (!shouldApplyDefaultSplitsRef.current || !totalValue) return;
 
     const membersCount = members.length;
     const fallback = membersCount > 0 ? 100 / membersCount : 0;
@@ -92,13 +109,9 @@ export default function SplitsSection({
       Math.round((totalCents * (m.default_split_percentage ?? fallback)) / 100)
     );
 
-    // Ajusta diferença de arredondamento no último membro
     const roundingDiff = totalCents - memberCents.reduce((s, v) => s + v, 0);
     if (memberCents.length > 0) memberCents[memberCents.length - 1] += roundingDiff;
 
-    const nextPercentages = Object.fromEntries(
-      members.map(m => [m.user.id, roundValue(m.default_split_percentage ?? fallback)])
-    );
     const nextSplits = members.map((m, i) => ({
       user_id: m.user.id,
       split_value: memberCents[i] / 100,
@@ -107,22 +120,30 @@ export default function SplitsSection({
     }));
 
     if (areSplitsEqual(nextSplits, splits)) return;
-    setSplitPercentages(nextPercentages);
     onChange(nextSplits);
   }, [totalValue, members, splits, onChange]);
 
-  // Modo manual: preserva as proporções atuais quando o total muda
+  // Modo manual: quando totalValue muda, preserva as porcentagens e recalcula valores.
   useEffect(() => {
-    if (shouldApplyDefaultSplitsRef.current) return;
+    if (shouldApplyDefaultSplitsRef.current || !totalValue) return;
 
     const nextSplits = splits.map(split => ({
       ...split,
-      split_value: roundValue(((splitPercentages[split.user_id] ?? 0) / 100) * totalValue)
+      split_value: roundValue(
+        ((splitPercentagesRef.current[split.user_id] ?? 0) / 100) * totalValue
+      )
     }));
 
     if (areSplitsEqual(nextSplits, splits)) return;
     onChange(nextSplits);
-  }, [totalValue, splits, splitPercentages, onChange]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [totalValue]);
+
+  const setPercentage = (userId: string, percentage: number) => {
+    const next = { ...splitPercentagesRef.current, [userId]: percentage };
+    splitPercentagesRef.current = next;
+    setSplitPercentages(next);
+  };
 
   const updateSplit = (index: number, patch: Partial<BillSplit>) => {
     shouldApplyDefaultSplitsRef.current = false;
@@ -142,7 +163,9 @@ export default function SplitsSection({
       split_value: (base + (i < remainder ? 1 : 0)) / 100
     }));
 
-    setSplitPercentages(getSplitPercentages(nextSplits, totalValue));
+    const next = getSplitPercentages(nextSplits, totalValue);
+    splitPercentagesRef.current = next;
+    setSplitPercentages(next);
     shouldApplyDefaultSplitsRef.current = false;
     onChange(nextSplits);
   };
@@ -214,7 +237,7 @@ export default function SplitsSection({
                           max={100}
                           onChange={v => {
                             const percentage = roundValue(Number(v) || 0);
-                            setSplitPercentages(prev => ({ ...prev, [split.user_id]: percentage }));
+                            setPercentage(split.user_id, percentage);
                             updateSplit(index, {
                               split_value: roundValue((percentage / 100) * totalValue)
                             });
@@ -229,11 +252,10 @@ export default function SplitsSection({
                           value={split.split_value || 0}
                           onChange={v => {
                             const splitValue = roundValue(Number(v) || 0);
-                            setSplitPercentages(prev => ({
-                              ...prev,
-                              [split.user_id]:
-                                totalValue > 0 ? roundValue((splitValue / totalValue) * 100) : 0
-                            }));
+                            setPercentage(
+                              split.user_id,
+                              totalValue > 0 ? roundValue((splitValue / totalValue) * 100) : 0
+                            );
                             updateSplit(index, { split_value: splitValue });
                           }}
                         />

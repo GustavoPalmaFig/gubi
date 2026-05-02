@@ -1,12 +1,15 @@
 import { BillFormModal } from '@/features/bills/components/billForm/BillFormModal';
-import { Center, Group, Loader, Stack, Title, Text, Tabs, Button } from '@mantine/core';
+import { Center, Group, Loader, Stack, Title, Text, Tabs, Button, Grid } from '@mantine/core';
 import { IconCalendarWeek, IconPlus } from '@tabler/icons-react';
 import { NotFound } from '@/components/layout/NotFound';
+import { toISODateString } from '@/utils/formatDate';
+import { useBillsBySpace } from '@/features/bills/hooks/useBill';
 import { useDisclosure } from '@mantine/hooks';
 import { useLocalizationFormatters } from '@/hooks/useLocalizationFormatters';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import dayjs from 'dayjs';
 import type { Bill } from '@/features/bills/types/bill';
 import { SpaceMenu } from '../components/SpaceMenu';
 import { useSpaceFormData } from '../hooks/useSpace';
@@ -17,14 +20,24 @@ export default function SpaceDetailsPage() {
   const { id } = useParams();
   const navigate = useNavigate();
 
-  const [isBillFormOpen, { open: openBillForm, close: closeBillForm }] = useDisclosure(false);
-  const [selectedBill] = useState<Bill | undefined>(undefined);
+  const referencePeriod = toISODateString(dayjs().startOf('month'));
 
+  const { data: bills } = useBillsBySpace(Number(id), referencePeriod);
+
+  const [isBillFormOpen, { open: openBillForm, close: closeBillForm }] = useDisclosure(false);
+  const [selectedBill, setSelectedBill] = useState<Bill | undefined>(undefined);
+
+  // TODO: Add useSpaceOverviewData hook to get the specific reference period data
   const { data: space, isLoading: isLoadingSpace } = useSpaceFormData(Number(id));
 
   const { formatDate } = useLocalizationFormatters();
 
   const { t } = useTranslation('translation', { keyPrefix: 'spaces' });
+
+  const handleCloseBillForm = () => {
+    setSelectedBill(undefined);
+    closeBillForm();
+  };
 
   if (!space && !isLoadingSpace) return <NotFound />;
 
@@ -80,6 +93,27 @@ export default function SpaceDetailsPage() {
                     {t('tabs.bills.add_bill')}
                   </Button>
                 </Group>
+                <Grid>
+                  <Grid.Col span={{ base: 12, md: 4 }}>
+                    {bills?.map(bill => (
+                      <Button
+                        key={bill.id}
+                        variant="outline"
+                        className="h-16"
+                        fullWidth
+                        onClick={() => {
+                          setSelectedBill(bill);
+                          openBillForm();
+                        }}
+                      >
+                        <div>
+                          <Text>{bill.title}</Text>
+                          <Text>{bill.value}</Text>
+                        </div>
+                      </Button>
+                    ))}
+                  </Grid.Col>
+                </Grid>
               </Stack>
             </Tabs.Panel>
 
@@ -101,7 +135,7 @@ export default function SpaceDetailsPage() {
 
         <BillFormModal
           opened={isBillFormOpen}
-          onClose={closeBillForm}
+          onClose={handleCloseBillForm}
           bill={selectedBill}
           space={space}
         />
