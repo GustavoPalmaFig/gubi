@@ -35,6 +35,7 @@ export function AppAvatar({
         color="initials"
         allowedInitialsColors={[color]}
         size={size}
+        className="border-none"
       />
       {(showName || showEmail) && (
         <div className="flex flex-col truncate">

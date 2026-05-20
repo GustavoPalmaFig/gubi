@@ -25,6 +25,8 @@ export default function AppDatePickerInput({
   const today = dayjs();
   const yesterday = today.subtract(1, 'day');
 
+  const value = rest.value ? toISODateString(rest.value) : null;
+
   const yesterdayPreset = {
     value: toISODateString(yesterday),
     label: t('yesterday')
@@ -40,6 +42,7 @@ export default function AppDatePickerInput({
   return (
     <DatePickerInput
       {...rest}
+      value={value}
       placeholder={rest.placeholder ?? t('placeholder')}
       onChange={onChange}
       locale={locale}

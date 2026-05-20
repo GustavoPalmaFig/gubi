@@ -1,10 +1,16 @@
+import {
+  IconCloudUpload,
+  IconDownload,
+  IconExclamationCircleFilled,
+  IconFileDescription,
+  IconX
+} from '@tabler/icons-react';
 import { ActionIcon, Card, Group, Stack, Text, Title } from '@mantine/core';
 import { bucketName } from '@/types/bucketName';
 import { cn } from '@/lib/utils';
 import { downloadAndSave, uploadFile } from '@/services/storage.service';
 import { Dropzone, IMAGE_MIME_TYPE, PDF_MIME_TYPE } from '@mantine/dropzone';
 import { formatFileSize } from '@/utils/formatNumber';
-import { IconCloudUpload, IconDownload, IconFileDescription, IconX } from '@tabler/icons-react';
 import { showErrorNotification } from '@/utils/errors';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -84,36 +90,43 @@ export default function FileSection({
         <Stack gap="lg">
           <Title order={4}>{t('sectionTitle')}</Title>
 
-          <Dropzone
-            onDrop={handleDrop}
-            disabled={isUploading || files.length >= 3}
-            maxSize={5 * 1024 ** 2}
-            maxFiles={Math.max(1, 3 - files.length)}
-            accept={[...IMAGE_MIME_TYPE, ...PDF_MIME_TYPE]}
-            loading={isUploading}
-            loaderProps={{ type: 'dots' }}
-          >
-            <Group
-              justify="center"
-              align="center"
-              gap="0"
-              mih={220}
-              style={{ pointerEvents: 'none' }}
+          {files.length >= 3 ? (
+            <div className="bg-yellow/10 border-yellow/20 text-yellow flex gap-2 rounded-md border p-2">
+              <IconExclamationCircleFilled size={16} />
+              <Text size="sm">{t('maxFilesReached')}</Text>
+            </div>
+          ) : (
+            <Dropzone
+              onDrop={handleDrop}
+              disabled={isUploading}
+              maxSize={5 * 1024 ** 2}
+              maxFiles={Math.max(5, 3 - files.length)}
+              accept={[...IMAGE_MIME_TYPE, ...PDF_MIME_TYPE]}
+              loading={isUploading}
+              loaderProps={{ type: 'dots' }}
             >
-              <Dropzone.Idle>
-                <Group className="text-primary bg-primary-foreground flex flex-col items-center justify-center rounded-full p-4">
-                  <IconCloudUpload size={26} />
-                </Group>
-              </Dropzone.Idle>
+              <Group
+                justify="center"
+                align="center"
+                gap="0"
+                mih={220}
+                style={{ pointerEvents: 'none' }}
+              >
+                <Dropzone.Idle>
+                  <Group className="text-primary bg-primary-foreground flex flex-col items-center justify-center rounded-full p-4">
+                    <IconCloudUpload size={26} />
+                  </Group>
+                </Dropzone.Idle>
 
-              <Stack gap="xs" align="center" className="text-center">
-                <Text inline>{t('addFile')}</Text>
-                <Text size="sm" className="text-muted-foreground">
-                  {t('addFileDescription')}
-                </Text>
-              </Stack>
-            </Group>
-          </Dropzone>
+                <Stack gap="xs" align="center" className="text-center">
+                  <Text inline>{t('addFile')}</Text>
+                  <Text size="sm" className="text-muted-foreground">
+                    {t('addFileDescription')}
+                  </Text>
+                </Stack>
+              </Group>
+            </Dropzone>
+          )}
 
           {files.length > 0 && (
             <Stack gap="xs">

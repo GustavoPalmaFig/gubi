@@ -273,7 +273,8 @@
         "sectionTitle": "Arquivos (Comprovantes)",
         "addFile": "Clique ou arraste para fazer upload",
         "addFileDescription": "JPG, PNG ou PDF (Máximo de 5MB)",
-        "removeFile": "Remover arquivo"
+        "removeFile": "Remover arquivo",
+        "maxFilesReached": "Máximo de 3 arquivos permitidos"
       }
     }
   }
