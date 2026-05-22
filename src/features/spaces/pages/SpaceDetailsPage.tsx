@@ -1,5 +1,6 @@
 import { BillFormModal } from '@/features/bills/components/billForm/BillFormModal';
 import { Center, Group, Loader, Stack, Title, Text, Tabs, Button, Grid } from '@mantine/core';
+import { cn } from '@/lib/utils';
 import { IconCalendarWeek, IconPlus } from '@tabler/icons-react';
 import { NotFound } from '@/components/layout/NotFound';
 import { toISODateString } from '@/utils/formatDate';
@@ -9,12 +10,17 @@ import { useLocalizationFormatters } from '@/hooks/useLocalizationFormatters';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import BillCard from '@/features/bills/components/details/BillCard';
 import dayjs from 'dayjs';
 import type { Bill } from '@/features/bills/types/bill';
 import { SpaceMenu } from '../components/SpaceMenu';
 import { useSpaceFormData } from '../hooks/useSpace';
 import SpaceIcon from '../components/SpaceIcon';
 import SpaceMembers from '../components/SpaceMembers';
+
+const tabs = ['bills', 'expenses', 'members'];
+
+type Tabs = (typeof tabs)[number];
 
 export default function SpaceDetailsPage() {
   const { id } = useParams();
@@ -24,6 +30,7 @@ export default function SpaceDetailsPage() {
 
   const { data: bills } = useBillsBySpace(Number(id), referencePeriod);
 
+  const [activeTab, setActiveTab] = useState<Tabs>('bills');
   const [isBillFormOpen, { open: openBillForm, close: closeBillForm }] = useDisclosure(false);
   const [selectedBill, setSelectedBill] = useState<Bill | undefined>(undefined);
 
@@ -75,11 +82,21 @@ export default function SpaceDetailsPage() {
 
           <Text className="text-sm">{space.description}</Text>
 
-          <Tabs defaultValue="bills">
-            <Tabs.List>
-              <Tabs.Tab value="bills">{t('tabs.bills.title')}</Tabs.Tab>
-              <Tabs.Tab value="expenses">{t('tabs.expenses.title')}</Tabs.Tab>
-              <Tabs.Tab value="members">{t('tabs.members.title')}</Tabs.Tab>
+          <Tabs
+            defaultValue="bills"
+            value={activeTab}
+            onChange={value => setActiveTab(value as Tabs)}
+          >
+            <Tabs.List className="text-muted-foreground text-xl">
+              {tabs.map(tab => (
+                <Tabs.Tab
+                  key={tab}
+                  value={tab}
+                  className={cn('font-medium', activeTab === tab && 'text-primary')}
+                >
+                  {t(`tabs.${tab}.title`)}
+                </Tabs.Tab>
+              ))}
             </Tabs.List>
 
             <Tabs.Panel value="bills" pt="md">
@@ -95,22 +112,14 @@ export default function SpaceDetailsPage() {
                 </Group>
                 <Grid>
                   {bills?.map(bill => (
-                    <Grid.Col span={{ base: 12, md: 4 }}>
-                      <Button
-                        key={bill.id}
-                        variant="outline"
-                        className="h-16"
-                        fullWidth
-                        onClick={() => {
+                    <Grid.Col key={bill.id} span={{ base: 12, md: 4 }}>
+                      <BillCard
+                        bill={bill}
+                        onEdit={bill => {
                           setSelectedBill(bill);
                           openBillForm();
                         }}
-                      >
-                        <div>
-                          <Text>{bill.title}</Text>
-                          <Text>{bill.value}</Text>
-                        </div>
-                      </Button>
+                      />
                     </Grid.Col>
                   ))}
                 </Grid>

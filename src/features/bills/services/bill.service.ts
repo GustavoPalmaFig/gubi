@@ -43,3 +43,9 @@ export const fetchBillFormById = async (id: number): Promise<Bill> => {
 
   return data;
 };
+
+export const markAsPaid = async (id: number): Promise<void> => {
+  const { error } = await supabase.rpc('pay_bill', { p_bill_id: id });
+
+  if (error) throw error;
+};

@@ -1,4 +1,6 @@
+import dayjs from 'dayjs';
 import type { Dayjs } from 'dayjs';
+import type { TFunction } from 'i18next';
 
 export type DateInput = string | Date | Dayjs | undefined;
 
@@ -80,4 +82,19 @@ export function toISODateString(value: DateInput): string {
   const day = String(date.getDate()).padStart(2, '0');
 
   return `${year}-${month}-${day}`;
+}
+
+export function formatRelativeDate(date: string | Date, t: TFunction) {
+  const d = dayjs(date);
+  const now = dayjs();
+
+  if (d.isToday()) return t('today');
+  if (d.isYesterday()) return t('yesterday');
+  if (d.isTomorrow()) return t('tomorrow');
+
+  if (d.year() !== now.year()) {
+    return d.format('L');
+  }
+
+  return d.format(t('monthShortAndDay'));
 }

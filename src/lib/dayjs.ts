@@ -2,10 +2,16 @@ import 'dayjs/locale/en';
 import 'dayjs/locale/pt-br';
 import dayjs from 'dayjs';
 import i18n from '@/i18n';
+import isToday from 'dayjs/plugin/isToday';
+import isTomorrow from 'dayjs/plugin/isTomorrow';
+import isYesterday from 'dayjs/plugin/isYesterday';
 import localizedFormat from 'dayjs/plugin/localizedFormat';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import type { SystemLocale } from '@/types/systemLocale';
 
+dayjs.extend(isToday);
+dayjs.extend(isYesterday);
+dayjs.extend(isTomorrow);
 dayjs.extend(localizedFormat);
 dayjs.extend(relativeTime);
 
