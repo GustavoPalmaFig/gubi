@@ -1,4 +1,4 @@
-import { Center, Group, Loader, Stack, Title, Text } from '@mantine/core';
+import { Center, Group, Loader, Stack, Title, Text, Flex } from '@mantine/core';
 import { IconCalendarWeek } from '@tabler/icons-react';
 import { NotFound } from '@/components/layout/NotFound';
 import { toISODateString } from '@/utils/formatDate';
@@ -56,7 +56,9 @@ export default function SpaceDetailsPage() {
               </Stack>
             </Group>
 
-            <SpaceMembers members={space.members} />
+            <Flex visibleFrom="md">
+              <SpaceMembers members={space.members} />
+            </Flex>
           </Group>
 
           <Text className="text-sm">{space.description}</Text>

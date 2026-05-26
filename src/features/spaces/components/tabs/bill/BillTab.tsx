@@ -9,6 +9,9 @@ import BillCard from '@/features/bills/components/details/BillCard';
 import Skeletons from '@/components/shared/Skeletons';
 import type { Bill } from '@/features/bills/types/bill';
 import type { Space } from '@/features/spaces/types/space';
+import { MemberBreakdownCard } from './MemberBreakdownCard';
+import { PaymentSummaryCard } from './PaymentSummaryCard';
+import { TotalSummaryCard } from './TotalSummaryCard';
 
 export function BillTab({ space, referencePeriod }: { space: Space; referencePeriod: string }) {
   const {
@@ -31,6 +34,17 @@ export function BillTab({ space, referencePeriod }: { space: Space; referencePer
   return (
     <>
       <Stack>
+        {!isLoading && billTabContent && billTabContent.summaryCards && (
+          <SimpleGrid cols={{ base: 1, md: 3 }} spacing="lg">
+            <TotalSummaryCard
+              totalSummary={billTabContent.summaryCards.totalSummary}
+              referencePeriod={referencePeriod}
+            />
+            <PaymentSummaryCard paymentSummary={billTabContent.summaryCards.paymentSummary} />
+            <MemberBreakdownCard memberBreakdown={billTabContent.summaryCards.memberBreakdown} />
+          </SimpleGrid>
+        )}
+
         <Group justify="space-between" align="center">
           <Title order={4}>{t('title')}</Title>
           <Button variant="outline" leftSection={<IconPlus size={16} />} onClick={openBillForm}>

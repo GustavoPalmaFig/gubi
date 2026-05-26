@@ -221,7 +221,20 @@
     "tabs": {
       "bills": {
         "title": "Contas",
-        "add": "Adicionar conta"
+        "add": "Adicionar conta",
+        "totalSummary": {
+          "title": "Total a Pagar",
+          "comparedToDate": "Comparado com {{date}}"
+        },
+        "paymentSummary": {
+          "title": "Pago / Pendente",
+          "paidBillsCount": "{{paidBillsCount}} de {{totalBillsCount}} contas pagas"
+        },
+        "memberBreakdown": {
+          "title": "Divisão por membro",
+          "paidAndTotalValues": "{{paidValue}} de {{totalValue}}",
+          "pendingValue": "Falta {{pendingValue}}"
+        }
       },
       "expenses": {
         "title": "Despesas",
