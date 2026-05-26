@@ -221,7 +221,8 @@
     "tabs": {
       "bills": {
         "title": "Contas",
-        "add": "Adicionar conta",
+        "sectionTitle": "Contas do Mês",
+        "add": "Nova conta",
         "totalSummary": {
           "title": "Total a Pagar",
           "comparedToDate": "Comparado com {{date}}"

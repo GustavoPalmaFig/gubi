@@ -33,7 +33,7 @@ export function BillTab({ space, referencePeriod }: { space: Space; referencePer
 
   return (
     <>
-      <Stack>
+      <Stack gap="lg">
         {!isLoading && billTabContent && billTabContent.summaryCards && (
           <SimpleGrid cols={{ base: 1, md: 3 }} spacing="lg">
             <TotalSummaryCard
@@ -45,9 +45,9 @@ export function BillTab({ space, referencePeriod }: { space: Space; referencePer
           </SimpleGrid>
         )}
 
-        <Group justify="space-between" align="center">
-          <Title order={4}>{t('title')}</Title>
-          <Button variant="outline" leftSection={<IconPlus size={16} />} onClick={openBillForm}>
+        <Group justify="space-between" align="center" mt="md">
+          <Title order={4}>{t('sectionTitle')}</Title>
+          <Button leftSection={<IconPlus size={16} stroke={2} />} onClick={openBillForm}>
             {t('add')}
           </Button>
         </Group>
