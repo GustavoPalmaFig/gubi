@@ -221,7 +221,7 @@
     "tabs": {
       "bills": {
         "title": "Contas",
-        "add_bill": "Adicionar conta"
+        "add": "Adicionar conta"
       },
       "expenses": {
         "title": "Despesas",

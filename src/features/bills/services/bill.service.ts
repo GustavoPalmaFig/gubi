@@ -1,6 +1,7 @@
 import { supabase } from '@/services/supabase.service';
 import type { Bill } from '../types/bill';
 import type { BillFile } from '../types/billFile';
+import type { BillTabContent } from '../types/billTabContent';
 
 export const saveBill = async ({
   bill,
@@ -25,7 +26,7 @@ export const deleteBill = async (id: number): Promise<void> => {
 export const fetchBillsBySpace = async (
   p_space_id: number,
   p_reference_period: string
-): Promise<Bill[]> => {
+): Promise<BillTabContent> => {
   const { data, error } = await supabase.rpc('get_bills_tab_data', {
     p_space_id,
     p_reference_period

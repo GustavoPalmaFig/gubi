@@ -122,15 +122,14 @@ export default function BillCard({ bill, onEdit }: { bill: Bill; onEdit: (bill: 
           </div>
         </div>
 
-        {/* TODO: Adicionar payer ao DTO de contas e exibir aqui */}
-        {bill.paid_at ? (
+        {bill.paid_at && bill.payer ? (
           <Group className="text-green gap-1">
             <IconCircleCheckFilled size={16} />
             <Text className="font-bold">{formatRelativeDate(bill.paid_at, tDate)}</Text>
             <Group className="text-muted-foreground ml-auto gap-1">
               <IconUserCircle size={16} />
               <Text className="text-sm">{tBills('responsible')}:</Text>
-              <Text className="text-foreground font-medium">{bill.splits[0].user?.full_name}</Text>
+              <Text className="text-foreground font-medium">{bill.payer.full_name}</Text>
             </Group>
           </Group>
         ) : (
