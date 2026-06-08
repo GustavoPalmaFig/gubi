@@ -6,6 +6,7 @@ import { useTranslation } from 'react-i18next';
 import FrameContent from '@/components/shared/FrameContent';
 import { BillPaidBadge } from '../BillPaidBadge';
 import BasicInfosTab from './BasicInfosTab';
+import FilesTab from './FilesTab';
 import SplitsTab from './SplitsTab';
 import type { Bill } from '../../../types/bill';
 
@@ -56,7 +57,9 @@ export function BillDetailsModal({ opened, onClose, bill }: BillDetailsModalProp
             <SplitsTab splits={bill.splits} totalValue={bill.value} />
           </Tabs.Panel>
 
-          <Tabs.Panel value="files">texto</Tabs.Panel>
+          <Tabs.Panel value="files">
+            <FilesTab files={bill.files ?? []} />
+          </Tabs.Panel>
         </FrameContent>
       </Tabs>
     </AppModal>

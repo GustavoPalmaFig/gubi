@@ -140,13 +140,15 @@ export default function FileSection({
                 >
                   <IconFileDescription size={20} className="text-primary" />
                   <Text size="sm">{file.filename}</Text>
+
                   <Text size="xs" className="text-muted-foreground ml-4">
                     {formatFileSize(file.size)}
                   </Text>
+
                   <Group className="ml-auto" gap="0">
                     {file.id && (
                       <ActionIcon
-                        variant="subtle"
+                        variant="transparent"
                         size="xs"
                         onClick={() => handleDownload(file)}
                         aria-label={t('downloadFile')}
@@ -156,7 +158,7 @@ export default function FileSection({
                       </ActionIcon>
                     )}
                     <ActionIcon
-                      variant="subtle"
+                      variant="transparent"
                       color="red"
                       size="xs"
                       onClick={() => handleRemove(file)}
