@@ -7,7 +7,11 @@ export type AppMonthPickerInputProps = Omit<MonthPickerInputProps, 'onChange'> &
   onChange: (value: string | string[] | DatesRangeValue<string> | null) => void;
 };
 
-export default function AppMonthPickerInput({ onChange, ...rest }: AppMonthPickerInputProps) {
+export default function AppMonthPickerInput({
+  onChange,
+  leftSection = <IconCalendar size={18} stroke={1.5} />,
+  ...rest
+}: AppMonthPickerInputProps) {
   const { t } = useTranslation('translation', { keyPrefix: 'forms.monthPickerInput' });
   const { locale } = useAuthenticatedUser();
 
@@ -16,7 +20,7 @@ export default function AppMonthPickerInput({ onChange, ...rest }: AppMonthPicke
       {...rest}
       placeholder={rest.placeholder ?? t('placeholder')}
       onChange={onChange}
-      leftSection={<IconCalendar size={18} stroke={1.5} />}
+      leftSection={leftSection}
       locale={locale}
     />
   );

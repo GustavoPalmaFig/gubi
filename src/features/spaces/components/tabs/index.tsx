@@ -8,6 +8,20 @@ import type { Space } from '../../types/space';
 const spaceTabs = ['bills', 'expenses', 'members'] as const;
 type SpaceTabs = (typeof spaceTabs)[number];
 
+const spaceTabsVisibility: { tab: SpaceTabs; key?: keyof Space }[] = [
+  {
+    tab: 'bills',
+    key: 'bill_tab'
+  },
+  {
+    tab: 'expenses',
+    key: 'expense_tab'
+  },
+  {
+    tab: 'members'
+  }
+];
+
 export function SpaceTabs({ space, referencePeriod }: { space: Space; referencePeriod: string }) {
   const { t } = useTranslation('translation', { keyPrefix: 'spaces' });
 
@@ -20,15 +34,22 @@ export function SpaceTabs({ space, referencePeriod }: { space: Space; referenceP
       onChange={value => setActiveTab(value as SpaceTabs)}
     >
       <Tabs.List className="text-muted-foreground">
-        {spaceTabs.map(tab => (
-          <Tabs.Tab
-            key={tab}
-            value={tab}
-            className={cn('text-base font-medium', activeTab === tab && 'text-primary')}
-          >
-            {t(`tabs.${tab}.title`)}
-          </Tabs.Tab>
-        ))}
+        {spaceTabs.map(tab => {
+          const key = spaceTabsVisibility.find(item => item.tab === tab)?.key;
+          const isVisible = key ? space[key] : true;
+
+          if (!isVisible) return null;
+
+          return (
+            <Tabs.Tab
+              key={tab}
+              value={tab}
+              className={cn('text-base font-medium', activeTab === tab && 'text-primary')}
+            >
+              {t(`tabs.${tab}.title`)}
+            </Tabs.Tab>
+          );
+        })}
       </Tabs.List>
 
       <Tabs.Panel value="bills" pt="lg">
