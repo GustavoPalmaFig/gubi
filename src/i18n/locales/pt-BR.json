@@ -323,6 +323,14 @@
           "delete_confirmation": "Tem certeza que deseja excluir esta conta? Esta ação não pode ser desfeita."
         }
       }
+    },
+    "copyModal": {
+      "title": "Copiar contas",
+      "description": "Você não possui contas cadastradas para este mês.<br />Deseja copiar as contas do mês anterior?",
+      "success": "Contas copiadas",
+      "successDescription": "As contas foram copiadas com sucesso.",
+      "yes": "Sim",
+      "no": "Não"
     }
   }
 }

@@ -1,9 +1,10 @@
 import { BillFormModal } from '@/features/bills/components/billForm/BillFormModal';
 import { Button, Group, SimpleGrid, Stack, Title } from '@mantine/core';
+import { CopyModal } from '@/features/bills/components/billForm/CopyModal';
 import { IconPlus } from '@tabler/icons-react';
 import { useBillsBySpace } from '@/features/bills/hooks/useBill';
 import { useDisclosure } from '@mantine/hooks';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import AddCardButton from '@/components/shared/AddCardButton';
 import BillCard from '@/features/bills/components/details/BillCard';
@@ -23,10 +24,17 @@ export function BillTab({ space, referencePeriod }: { space: Space; referencePer
   } = useBillsBySpace(space.id!, referencePeriod);
 
   const [isBillFormOpen, { open: openBillForm, close: closeBillForm }] = useDisclosure(false);
+  const [isCopyModalOpen, { open: openCopyModal, close: closeCopyModal }] = useDisclosure(false);
 
   const { t } = useTranslation('translation', { keyPrefix: 'spaces.tabs.bills' });
 
   const [selectedBill, setSelectedBill] = useState<Bill | undefined>(undefined);
+
+  useEffect(() => {
+    if (!isLoading && !isRefetching && billTabContent?.showCopyModal) {
+      openCopyModal();
+    }
+  }, [isLoading, isRefetching, billTabContent?.showCopyModal, openCopyModal]);
 
   const handleCloseBillForm = () => {
     setSelectedBill(undefined);
@@ -36,7 +44,7 @@ export function BillTab({ space, referencePeriod }: { space: Space; referencePer
   return (
     <>
       <Stack gap="lg">
-        {!isLoading && billTabContent && billTabContent.summaryCards && (
+        {!isLoading && billTabContent?.summaryCards && (
           <SimpleGrid cols={{ base: 1, md: 3 }} spacing="lg">
             <TotalSummaryCard
               totalSummary={billTabContent.summaryCards.totalSummary}
@@ -61,7 +69,7 @@ export function BillTab({ space, referencePeriod }: { space: Space; referencePer
         </Group>
 
         <SimpleGrid cols={{ base: 1, sm: 2, lg: 3 }} spacing="lg">
-          {!isLoading && !billTabContent && (
+          {!isLoading && !billTabContent?.bills && (
             <AddCardButton
               title={t('add')}
               description={t('add_description')}
@@ -92,6 +100,13 @@ export function BillTab({ space, referencePeriod }: { space: Space; referencePer
         onClose={handleCloseBillForm}
         bill={selectedBill}
         space={space}
+      />
+
+      <CopyModal
+        opened={isCopyModalOpen}
+        onClose={closeCopyModal}
+        space={space}
+        referencePeriod={referencePeriod}
       />
     </>
   );

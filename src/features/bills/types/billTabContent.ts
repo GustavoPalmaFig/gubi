@@ -31,6 +31,7 @@ export interface BillSummaryCards {
 }
 
 export interface BillTabContent {
-  bills: Bill[];
-  summaryCards: BillSummaryCards;
+  bills: Bill[] | null;
+  summaryCards: BillSummaryCards | null;
+  showCopyModal: boolean;
 }

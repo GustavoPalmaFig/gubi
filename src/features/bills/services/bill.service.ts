@@ -50,3 +50,12 @@ export const markAsPaid = async (id: number): Promise<void> => {
 
   if (error) throw error;
 };
+
+export const copyBills = async (spaceId: number, referencePeriod: string): Promise<void> => {
+  const { error } = await supabase.rpc('copy_bills_from_previous_period', {
+    p_space_id: spaceId,
+    p_reference_period: referencePeriod
+  });
+
+  if (error) throw error;
+};
