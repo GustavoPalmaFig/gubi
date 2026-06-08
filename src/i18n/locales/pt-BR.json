@@ -336,7 +336,7 @@
           "splits": {
             "tabTitle": "Divisão",
             "title": "Divisão da Conta",
-            "percentageFromTotalValue": "{percentage}% do total",
+            "percentageFromTotalValue": "{{percentage}}% do total",
             "totalValue": "Total"
           },
           "files": {

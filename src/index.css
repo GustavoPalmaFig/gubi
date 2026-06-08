@@ -29,7 +29,7 @@
   --color-positive-foreground: var(--positive-foreground);
   --color-negative: var(--red);
   --color-negative-foreground: var(--negative-foreground);
-  --color-warning: var(--yellow);
+  --color-warning: var(--warning);
   --color-warning-foreground: var(--warning-foreground);
   --color-info: var(--info);
   --color-info-foreground: var(--info-foreground);
