@@ -320,6 +320,32 @@
         "delete_success_description": "A conta foi excluída com sucesso.",
         "delete_confirmation_title": "Excluir conta",
         "delete_confirmation": "Tem certeza que deseja excluir esta conta? Esta ação não pode ser desfeita."
+      },
+      "detailsModal": {
+        "tabs": {
+          "basicInfos": {
+            "tabTitle": "Detalhes",
+            "title": "Informações Básicas",
+            "value": "Valor",
+            "deadline": "Vencimento",
+            "paidBy": "Pago por",
+            "paidAt": "Pago em",
+            "createdBy": "Criado por",
+            "createdAt": "Criado em"
+          },
+          "splits": {
+            "tabTitle": "Divisão",
+            "title": "Divisão da Conta",
+            "percentageFromTotalValue": "{percentage}% do total",
+            "totalValue": "Total"
+          },
+          "files": {
+            "tabTitle": "Arquivos",
+            "title": "Anexos Vinculados",
+            "noFiles": "Nenhum arquivo vinculado a esta conta",
+            "downloadFile": "Baixar arquivo"
+          }
+        }
       }
     },
     "copyModal": {

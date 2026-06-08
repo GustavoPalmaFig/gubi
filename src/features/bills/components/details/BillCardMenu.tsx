@@ -10,6 +10,7 @@ import { showErrorNotification } from '@/utils/errors';
 import { showNotification } from '@/utils/showNotification';
 import { useDisclosure } from '@mantine/hooks';
 import { useTranslation } from 'react-i18next';
+import { BillDetailsModal } from './detailsModal';
 import { useDeleteBillMutation } from '../../hooks/useBill';
 import type { Bill } from '../../types/bill';
 
@@ -21,6 +22,7 @@ interface BillCardMenuProps {
 export function BillCardMenu({ bill, onEdit }: BillCardMenuProps) {
   const { mutateAsync: deleteBill, isPending } = useDeleteBillMutation();
   const [opened, { open, close }] = useDisclosure(false);
+  const [openedDetails, { open: openDetails, close: closeDetails }] = useDisclosure(false);
 
   const { t } = useTranslation('translation', { keyPrefix: 'bills.card.menu' });
 
@@ -47,7 +49,7 @@ export function BillCardMenu({ bill, onEdit }: BillCardMenuProps) {
           </ActionIcon>
         </Menu.Target>
         <Menu.Dropdown className="py-2">
-          <Menu.Item leftSection={<IconInfoCircleFilled size={16} />} onClick={() => onEdit(bill)}>
+          <Menu.Item leftSection={<IconInfoCircleFilled size={16} />} onClick={openDetails}>
             {t('details')}
           </Menu.Item>
           <Menu.Item leftSection={<IconPencilFilled size={16} />} onClick={() => onEdit(bill)}>
@@ -72,6 +74,8 @@ export function BillCardMenu({ bill, onEdit }: BillCardMenuProps) {
         description={t('delete_confirmation')}
         loading={isPending}
       />
+
+      <BillDetailsModal opened={openedDetails} onClose={closeDetails} bill={bill} />
     </>
   );
 }

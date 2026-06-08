@@ -9,9 +9,14 @@ export interface Bill {
   title: string;
   value: number;
   deadline?: string | null;
+
   payer_id?: string | null;
   payer?: User;
   paid_at?: string | null;
+
+  created_at?: string;
+  created_by?: string;
+  creator?: User;
 
   splits: BillSplit[];
   files?: BillFile[];

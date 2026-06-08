@@ -5,7 +5,7 @@ import {
   IconUserCircle
 } from '@tabler/icons-react';
 import { AppAvatar } from '@/components/shared/AppAvatar';
-import { Badge, Button, Card, Group, Stack, Text } from '@mantine/core';
+import { Button, Card, Group, Stack, Text } from '@mantine/core';
 import { cn } from '@/lib/utils';
 import { dayjs } from '@/lib/dayjs';
 import { formatRelativeDate } from '@/utils/formatDate';
@@ -14,6 +14,7 @@ import { showNotification } from '@/utils/showNotification';
 import { useLocalizationFormatters } from '@/hooks/useLocalizationFormatters';
 import { useTranslation } from 'react-i18next';
 import { BillCardMenu } from './BillCardMenu';
+import { BillPaidBadge } from './BillPaidBadge';
 import { useMarkAsPaidMutation } from '../../hooks/useBill';
 import type { Bill } from '../../types/bill';
 
@@ -110,13 +111,7 @@ export default function BillCard({ bill, onEdit }: { bill: Bill; onEdit: (bill: 
                   />
                   <Text className="text-sm font-medium">{formatCurrency(split.split_value)}</Text>
                 </div>
-                <Badge
-                  color={split.paid_at ? 'positive' : 'warning'}
-                  variant="light"
-                  className="ml-auto"
-                >
-                  {split.paid_at ? tBills('paid') : tBills('pending')}
-                </Badge>
+                <BillPaidBadge isPaid={!!split.paid_at} />
               </div>
             ))}
           </div>

@@ -85,7 +85,7 @@ export function toISODateString(value: DateInput): string {
 }
 
 export function formatRelativeDate(date: string | Date, t: TFunction) {
-  const d = dayjs(date);
+  const d = dayjs(toISODateString(date));
   const now = dayjs();
 
   if (d.isToday()) return t('today');
