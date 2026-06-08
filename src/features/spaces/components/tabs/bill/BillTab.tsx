@@ -11,6 +11,7 @@ import Skeletons from '@/components/shared/Skeletons';
 import type { Bill } from '@/features/bills/types/bill';
 import type { Space } from '@/features/spaces/types/space';
 import { MemberBreakdownCard } from './MemberBreakdownCard';
+import { NextDeadlineSummaryCard } from './NextDeadlineSummaryCard';
 import { PaymentSummaryCard } from './PaymentSummaryCard';
 import { TotalSummaryCard } from './TotalSummaryCard';
 
@@ -42,7 +43,13 @@ export function BillTab({ space, referencePeriod }: { space: Space; referencePer
               referencePeriod={referencePeriod}
             />
             <PaymentSummaryCard paymentSummary={billTabContent.summaryCards.paymentSummary} />
-            <MemberBreakdownCard memberBreakdown={billTabContent.summaryCards.memberBreakdown} />
+            {space.members.length > 1 ? (
+              <MemberBreakdownCard memberBreakdown={billTabContent.summaryCards.memberBreakdown} />
+            ) : (
+              billTabContent.summaryCards.nextDeadline && (
+                <NextDeadlineSummaryCard nextDeadline={billTabContent.summaryCards.nextDeadline} />
+              )
+            )}
           </SimpleGrid>
         )}
 

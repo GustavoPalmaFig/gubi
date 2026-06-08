@@ -236,6 +236,10 @@
           "title": "Divisão por membro",
           "paidAndTotalValues": "{{paidValue}} de {{totalValue}}",
           "pendingValue": "Falta {{pendingValue}}"
+        },
+        "nextDeadlineSummary": {
+          "title": "Próximo Vencimento",
+          "deadline": "Vencimento: {{date}}"
         }
       },
       "expenses": {

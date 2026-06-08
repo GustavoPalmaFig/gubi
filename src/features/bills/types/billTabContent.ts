@@ -27,6 +27,7 @@ export interface BillSummaryCards {
   totalSummary: BillTotalSummary;
   paymentSummary: BillPaymentSummary;
   memberBreakdown: BillMemberBreakdown[];
+  nextDeadline: Bill | null;
 }
 
 export interface BillTabContent {
