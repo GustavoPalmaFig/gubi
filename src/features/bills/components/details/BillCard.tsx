@@ -42,7 +42,7 @@ export default function BillCard({ bill, onEdit }: { bill: Bill; onEdit: (bill: 
   const { formatCurrency } = useLocalizationFormatters();
 
   const { t: tDate } = useTranslation('translation', { keyPrefix: 'date' });
-  const { t: tBills } = useTranslation('translation', { keyPrefix: 'bills.details.card' });
+  const { t: tBills } = useTranslation('translation', { keyPrefix: 'bills.card' });
 
   const handleMarkAsPaid = () => {
     if (!bill.id) return;

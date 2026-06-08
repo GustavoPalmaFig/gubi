@@ -302,26 +302,24 @@
         "maxFilesReached": "Máximo de 3 arquivos permitidos"
       }
     },
-    "details": {
-      "card": {
-        "value": "Valor",
-        "deadline": "Vencimento",
-        "splits": "Divisão",
-        "paid": "Pago",
-        "pending": "Pendente",
-        "markAsPaid": "Marcar como paga",
-        "responsible": "Responsável",
-        "markAsPaid_success": "Conta paga",
-        "markAsPaid_success_description": "A conta foi marcada como paga com sucesso.",
-        "menu": {
-          "details": "Detalhes",
-          "edit": "Editar",
-          "delete": "Excluir",
-          "delete_success": "Conta excluída",
-          "delete_success_description": "A conta foi excluída com sucesso.",
-          "delete_confirmation_title": "Excluir conta",
-          "delete_confirmation": "Tem certeza que deseja excluir esta conta? Esta ação não pode ser desfeita."
-        }
+    "card": {
+      "value": "Valor",
+      "deadline": "Vencimento",
+      "splits": "Divisão",
+      "paid": "Pago",
+      "pending": "Pendente",
+      "markAsPaid": "Marcar como paga",
+      "responsible": "Responsável",
+      "markAsPaid_success": "Conta paga",
+      "markAsPaid_success_description": "A conta foi marcada como paga com sucesso.",
+      "menu": {
+        "details": "Detalhes",
+        "edit": "Editar",
+        "delete": "Excluir",
+        "delete_success": "Conta excluída",
+        "delete_success_description": "A conta foi excluída com sucesso.",
+        "delete_confirmation_title": "Excluir conta",
+        "delete_confirmation": "Tem certeza que deseja excluir esta conta? Esta ação não pode ser desfeita."
       }
     },
     "copyModal": {

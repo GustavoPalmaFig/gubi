@@ -22,7 +22,7 @@ export function BillCardMenu({ bill, onEdit }: BillCardMenuProps) {
   const { mutateAsync: deleteBill, isPending } = useDeleteBillMutation();
   const [opened, { open, close }] = useDisclosure(false);
 
-  const { t } = useTranslation('translation', { keyPrefix: 'bills.details.card.menu' });
+  const { t } = useTranslation('translation', { keyPrefix: 'bills.card.menu' });
 
   const handleConfirm = async () => {
     try {
