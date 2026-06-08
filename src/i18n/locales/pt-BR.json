@@ -223,6 +223,7 @@
         "title": "Contas",
         "sectionTitle": "Contas do Mês",
         "add": "Nova conta",
+        "add_description": "Crie uma nova conta (Energia, Água, Seguro, etc)",
         "totalSummary": {
           "title": "Total a Pagar",
           "comparedToDate": "Comparado com {{date}}"

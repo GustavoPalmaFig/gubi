@@ -5,6 +5,7 @@ import { useBillsBySpace } from '@/features/bills/hooks/useBill';
 import { useDisclosure } from '@mantine/hooks';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import AddCardButton from '@/components/shared/AddCardButton';
 import BillCard from '@/features/bills/components/details/BillCard';
 import Skeletons from '@/components/shared/Skeletons';
 import type { Bill } from '@/features/bills/types/bill';
@@ -53,6 +54,16 @@ export function BillTab({ space, referencePeriod }: { space: Space; referencePer
         </Group>
 
         <SimpleGrid cols={{ base: 1, sm: 2, lg: 3 }} spacing="lg">
+          {!isLoading && !billTabContent && (
+            <AddCardButton
+              title={t('add')}
+              description={t('add_description')}
+              height={220}
+              show={!isLoading && !isRefetching}
+              onClick={openBillForm}
+            />
+          )}
+
           {isLoading || isRefetching ? (
             <Skeletons />
           ) : (
