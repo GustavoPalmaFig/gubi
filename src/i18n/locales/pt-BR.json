@@ -1,5 +1,7 @@
 {
-  "common": {},
+  "common": {
+    "insert": "Insira"
+  },
   "notFound": {
     "title": "404",
     "description": "Oops! Página não encontrada",
