@@ -1,3 +1,7 @@
 {
-  "common": {}
+  "notFound": {
+    "title": "404",
+    "description": "Oops! Página não encontrada",
+    "link": "Retornar para a <0>página inicial</0>"
+  }
 }

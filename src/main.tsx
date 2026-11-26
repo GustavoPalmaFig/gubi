@@ -1,3 +1,4 @@
+import './i18n';
 import './index.css';
 import { createAsyncStoragePersister } from '@tanstack/query-async-storage-persister';
 import { createRoot } from 'react-dom/client';
