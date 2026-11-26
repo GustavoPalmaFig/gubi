@@ -9,6 +9,7 @@ import { RouterProvider } from 'react-router-dom';
 import { StrictMode } from 'react';
 import localforage from 'localforage';
 import { AuthProvider } from './features/auth/contexts/AuthProvider';
+import { Toaster } from './components/ui/toast';
 import { router } from './routes/AppRouter';
 
 const queryClient = new QueryClient({
@@ -43,6 +44,7 @@ root.render(
       <AuthProvider>
         <RouterProvider router={router} />
       </AuthProvider>
+      <Toaster />
       {import.meta.env.DEV && <ReactQueryDevtools initialIsOpen={false} />}
     </PersistQueryClientProvider>
   </StrictMode>

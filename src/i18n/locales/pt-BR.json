@@ -2,7 +2,8 @@
   "common": {
     "insert": "Insira",
     "select": "Selecione",
-    "noResults": "Nenhum resultado encontrado"
+    "noResults": "Nenhum resultado encontrado",
+    "error": "Erro"
   },
   "error": {
     "unexpected": "Erro inesperado"

@@ -1,9 +1,9 @@
-import { AppTextInput } from '@/components/shared/input/AppTextInput';
 import { AppPasswordInput } from '@/components/shared/input/AppPasswordInput';
+import { AppTextInput } from '@/components/shared/input/AppTextInput';
 import { Button } from '@/components/ui/button';
-import { MailIcon } from 'lucide-react';
-import { getSupabaseErrorMessage } from '@/utils/errorGuard';
 import { Link } from 'react-router-dom';
+import { MailIcon } from 'lucide-react';
+import { showErrorToast } from '@/utils/errors';
 import { Trans, useTranslation } from 'react-i18next';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
@@ -36,7 +36,7 @@ export default function LoginPage() {
     try {
       await simpleLogin(data.email, data.password);
     } catch (error: unknown) {
-      console.log(getSupabaseErrorMessage(error));
+      showErrorToast(error);
     }
   };
 

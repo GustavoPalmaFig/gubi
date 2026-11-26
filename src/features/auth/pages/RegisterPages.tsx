@@ -9,9 +9,9 @@ import { AppTextInput } from '@/components/shared/input/AppTextInput';
 import { Button } from '@/components/ui/button';
 import { CoinsIcon, GlobeIcon, MailIcon, UserIcon } from 'lucide-react';
 import { Controller, useForm } from 'react-hook-form';
-import { getSupabaseErrorMessage } from '@/utils/errorGuard';
 import { Link } from 'react-router-dom';
 import { LOCALE_OPTIONS, LOCALE_OPTIONS_SELECT } from '@/constants/localeOptions';
+import { showErrorToast } from '@/utils/errors';
 import { Trans, useTranslation } from 'react-i18next';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -64,7 +64,7 @@ export default function RegisterPage() {
         data.password
       );
     } catch (error: unknown) {
-      console.log(getSupabaseErrorMessage(error));
+      showErrorToast(error);
     }
   };
 
