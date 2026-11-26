@@ -1,4 +1,4 @@
-import { AppTextInput } from '@/components/shared/AppTextInput';
+import { AppTextInput } from '@/components/shared/input/AppTextInput';
 import { AuthApiError } from '@supabase/supabase-js';
 import { Button } from '@/components/ui/button';
 import { EyeIcon, EyeOffIcon, LockIcon, MailIcon } from 'lucide-react';

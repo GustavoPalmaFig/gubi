@@ -9,7 +9,7 @@ import { useTranslation } from 'react-i18next';
 import { XIcon } from 'lucide-react';
 import type { ComponentPropsWithRef, ReactNode } from 'react';
 
-export type AppTextInputProps = ComponentPropsWithRef<'input'> & {
+export type AppInputBaseProps = ComponentPropsWithRef<'input'> & {
   label: ReactNode;
   leftSection?: ReactNode;
   rightSection?: ReactNode;
@@ -18,7 +18,7 @@ export type AppTextInputProps = ComponentPropsWithRef<'input'> & {
   onClear?: () => void;
 };
 
-export function AppTextInput({
+export function AppInputBase({
   id,
   type = 'text',
   ref,
@@ -32,7 +32,7 @@ export function AppTextInput({
   onClear,
   className,
   ...inputProps
-}: AppTextInputProps) {
+}: AppInputBaseProps) {
   const { t } = useTranslation('translation', { keyPrefix: 'common' });
 
   return (
