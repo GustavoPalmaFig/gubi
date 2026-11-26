@@ -7,7 +7,7 @@ type AuthContextValue = {
   user: User | null;
   supabaseUser: SupabaseUser | null;
   isLoading: boolean;
-  register: (user: User, password: string) => Promise<void>;
+  register: (user: Omit<User, 'id'>, password: string) => Promise<void>;
   simpleLogin: (email: string, password: string) => Promise<void>;
   loginWithOAuth: (provider: Provider) => Promise<void>;
   logout: () => Promise<void>;

@@ -1,11 +1,11 @@
 import { AppTextInput } from '@/components/shared/input/AppTextInput';
-import { AuthApiError } from '@supabase/supabase-js';
+import { AppPasswordInput } from '@/components/shared/input/AppPasswordInput';
 import { Button } from '@/components/ui/button';
-import { EyeIcon, EyeOffIcon, LockIcon, MailIcon } from 'lucide-react';
+import { MailIcon } from 'lucide-react';
+import { getSupabaseErrorMessage } from '@/utils/errorGuard';
 import { Link } from 'react-router-dom';
 import { Trans, useTranslation } from 'react-i18next';
 import { useForm } from 'react-hook-form';
-import { useState } from 'react';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { ProvidersLogin } from '../components/ProvidersLogin';
@@ -23,8 +23,6 @@ export default function LoginPage() {
 
   const { simpleLogin } = useAuth();
 
-  const [showPassword, setShowPassword] = useState(false);
-
   const {
     register,
     handleSubmit,
@@ -38,16 +36,14 @@ export default function LoginPage() {
     try {
       await simpleLogin(data.email, data.password);
     } catch (error: unknown) {
-      if (error instanceof AuthApiError) {
-        console.error(t(`error.${error.code}`));
-      }
+      console.log(getSupabaseErrorMessage(error));
     }
   };
 
   return (
     <form onSubmit={handleSubmit(handleLogin)} className="h-full">
       <div className="flex h-full flex-col justify-center gap-7">
-        <div className="gap-2">
+        <div>
           <p className="text-2xl font-bold">{t('login.title')}</p>
           <span className="text-muted-foreground text-sm">{t('login.description')}</span>
         </div>
@@ -62,27 +58,10 @@ export default function LoginPage() {
             {...register('email')}
           />
 
-          <AppTextInput
+          <AppPasswordInput
             id="loginPassword"
-            type={showPassword ? 'text' : 'password'}
             label={t('login.password')}
             placeholder={t('login.password_placeholder')}
-            leftSection={<LockIcon size={18} />}
-            rightSection={
-              showPassword ? (
-                <EyeOffIcon
-                  size={18}
-                  onClick={() => setShowPassword(false)}
-                  className="cursor-pointer"
-                />
-              ) : (
-                <EyeIcon
-                  size={18}
-                  onClick={() => setShowPassword(true)}
-                  className="cursor-pointer"
-                />
-              )
-            }
             {...register('password')}
           />
         </div>
