@@ -8,6 +8,7 @@ import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { RouterProvider } from 'react-router-dom';
 import { StrictMode } from 'react';
 import localforage from 'localforage';
+import { AuthProvider } from './features/auth/contexts/AuthProvider';
 import { router } from './routes/AppRouter';
 
 const queryClient = new QueryClient({
@@ -39,7 +40,9 @@ root.render(
       client={queryClient}
       persistOptions={{ persister, maxAge: 1000 * 60 * 60 * 24 }}
     >
-      <RouterProvider router={router} />
+      <AuthProvider>
+        <RouterProvider router={router} />
+      </AuthProvider>
       {import.meta.env.DEV && <ReactQueryDevtools initialIsOpen={false} />}
     </PersistQueryClientProvider>
   </StrictMode>
